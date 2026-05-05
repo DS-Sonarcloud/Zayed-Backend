@@ -186,20 +186,21 @@ function wp_remote_retrieve_body_elementor_adapter($response)
 function wp_get_attachment_image_elementor_adapter($attachment_id, $size = 'thumbnail', $icon = false, $attr = '')
 {
     $html = '';
-    // Fix namespace and access.
-    $src = \Drupal\elementor\ElementorPlugin::instance()->sdk->get_file($attachment_id, $size);
+    $src = \Drupal\Elementor\ElementorPlugin::$instance->sdk->get_file($attachment_id, $style = $size);
     if ($src) {
-        $classes = is_array($attr) && isset($attr['class']) ? $attr['class'] : (is_string($attr) ? $attr : '');
-        
-        $attributes = array(
+
+        $attr = array(
             'src' => $src,
-            'class' => $classes,
-            'alt' => '',
+            'class' => $attr['class'],
+            'alt' => trim(''),
+            // 'width' => $attr['width'] ?? NULL,
+            // 'height' => $attr['height'] ?? NULL,
+            // 'style' => $attr['style'] ?? NULL,
         );
 
-        $html = '<img';
-        foreach ($attributes as $name => $value) {
-            $html .= ' ' . \Drupal\Component\Utility\Html::escape($name) . '="' . \Drupal\Component\Utility\Html::escape($value) . '"';
+        $html = rtrim("<img ");
+        foreach ($attr as $name => $value) {
+            $html .= " $name=" . '"' . $value . '"';
         }
         $html .= ' />';
     }
@@ -462,7 +463,7 @@ function check_admin_referer_elementor_adapter()
 {}
 function add_menu_page_elementor_adapter()
 {}
-function add_submenu_page_elementor_adapter()
+function add_submenu_page_elementor_adapter($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $callback = '') // NOSONAR
 {}
 function register_activation_hook_elementor_adapter()
 {}
@@ -585,8 +586,10 @@ function get_the_ID_elementor_adapter()
 }
 function post_type_supports_elementor_adapter()
 {}
-function get_post_type_elementor_adapter()
-{}
+function get_post_type_elementor_adapter($post_id = 0) // NOSONAR
+{
+    return null;
+}
 function delete_option_elementor_adapter()
 {}
 function get_the_title_elementor_adapter()

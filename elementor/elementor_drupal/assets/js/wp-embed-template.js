@@ -1,8 +1,8 @@
 
 (function ( window, document ) {
 	'use strict';
-	var supportedBrowser = ( document.querySelector && window.addEventListener ),
-		loaded = false,
+	const supportedBrowser = ( document.querySelector && window.addEventListener );
+	let loaded = false,
 		secret,
 		secretTimeout,
 		resizing;
@@ -21,13 +21,13 @@
 			return;
 		}
 		loaded = true;
-		var share_dialog = document.querySelector( '.wp-embed-share-dialog' ),
+		const share_dialog = document.querySelector( '.wp-embed-share-dialog' ),
 			share_dialog_open = document.querySelector( '.wp-embed-share-dialog-open' ),
 			share_dialog_close = document.querySelector( '.wp-embed-share-dialog-close' ),
 			share_input = document.querySelectorAll( '.wp-embed-share-input' ),
 			share_dialog_tabs = document.querySelectorAll( '.wp-embed-share-tab-button button' ),
-			featured_image = document.querySelector( '.wp-embed-featured-image img' ),
-			i;
+			featured_image = document.querySelector( '.wp-embed-featured-image img' );
+		let i;
 		if ( share_input ) {
 			for ( i = 0; i < share_input.length; i++ ) {
 				share_input[ i ].addEventListener( 'click', function ( e ) {
@@ -54,20 +54,20 @@
 			} );
 		}
 		function shareClickHandler( e ) {
-			var currentTab = document.querySelector( '.wp-embed-share-tab-button [aria-selected="true"]' );
+			const currentTab = document.querySelector( '.wp-embed-share-tab-button [aria-selected="true"]' );
 			currentTab.setAttribute( 'aria-selected', 'false' );
 			document.querySelector( '#' + currentTab.getAttribute( 'aria-controls' ) ).setAttribute( 'aria-hidden', 'true' );
 			e.target.setAttribute( 'aria-selected', 'true' );
 			document.querySelector( '#' + e.target.getAttribute( 'aria-controls' ) ).setAttribute( 'aria-hidden', 'false' );
 		}
 		function shareKeyHandler( e ) {
-			var target = e.target,
+			const target = e.target,
 				previousSibling = target.parentElement.previousElementSibling,
-				nextSibling = target.parentElement.nextElementSibling,
-				newTab, newTabChild;
-			if ( 37 === e.keyCode ) {
+				nextSibling = target.parentElement.nextElementSibling;
+			let newTab, newTabChild;
+			if ( 'ArrowLeft' === e.key ) {
 				newTab = previousSibling;
-			} else if ( 39 === e.keyCode ) {
+			} else if ( 'ArrowRight' === e.key ) {
 				newTab = nextSibling;
 			} else {
 				return false;
@@ -93,14 +93,14 @@
 			}
 		}
 		document.addEventListener( 'keydown', function ( e ) {
-			if ( 27 === e.keyCode && -1 === share_dialog.className.indexOf( 'hidden' ) ) {
+			if ( 'Escape' === e.key && -1 === share_dialog.className.indexOf( 'hidden' ) ) {
 				closeSharingDialog();
-			} else if ( 9 === e.keyCode ) {
+			} else if ( 'Tab' === e.key ) {
 				constrainTabbing( e );
 			}
 		}, false );
 		function constrainTabbing( e ) {
-			var firstFocusable = document.querySelector( '.wp-embed-share-tab-button [aria-selected="true"]' );
+			const firstFocusable = document.querySelector( '.wp-embed-share-tab-button [aria-selected="true"]' );
 			if ( share_dialog_close === e.target && ! e.shiftKey ) {
 				firstFocusable.focus();
 				e.preventDefault();
@@ -124,7 +124,7 @@
 			} else {
 				href = target.parentElement.getAttribute( 'href' );
 			}
-			if ( event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ) {
+			if ( e.altKey || e.ctrlKey || e.metaKey || e.shiftKey ) {
 				return;
 			}
 			if ( href ) {
@@ -142,7 +142,7 @@
 		resizing = setTimeout( sendHeightMessage, 100 );
 	}
 	function onMessage( event ) {
-		var data = event.data;
+		const data = event.data;
 		if ( ! data ) {
 			return;
 		}
@@ -163,7 +163,7 @@
 		if ( window.self === window.top || !!secret ) {
 			return;
 		}
-		secret = window.location.hash.replace( /.*secret=([\d\w]{10}).*/, '$1' );
+		secret = window.location.hash.replace( /.*secret=(\w{10}).*/, '$1' );
 		clearTimeout( secretTimeout );
 		secretTimeout = setTimeout( function () {
 			getSecret();
