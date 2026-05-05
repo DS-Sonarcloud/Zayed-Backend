@@ -1,0 +1,18 @@
+name: Elementor
+type: module
+description: 'Implement the "Elementor" page builder into drupal.'
+core_version_requirement: ^10 || ^11
+
+libraries:
+  - elementor/global
+
+# Information added by Drupal.org packaging script on 2018-09-12
+# version: '8.x-1.6'
+core: '8.x'
+# project: 'elementor'
+# datestamp: 1536748392
+
+# Information added by Drupal.org packaging script on 2025-03-17
+version: '3.0.x-dev'
+project: 'elementor'
+datestamp: 1742208244

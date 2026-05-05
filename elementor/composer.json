@@ -1,0 +1,29 @@
+{
+    "name": "drupal/elementor",
+    "description": "Implement the Elementor page builder into drupal.",
+    "type": "drupal-module",
+    "keywords": ["Drupal", "Elementor"],
+    "homepage": "http://drupal.org/project/elementor",
+    "license": "GPL-2.0-or-later",
+    "support": {
+      "issues": "https://www.drupal.org/project/issues/elementor",
+      "source": "https://git.drupalcode.org/project/elementor"
+    },
+    "repositories": [
+        {
+            "type":"package",
+            "package": {
+                "name": "elementor",
+                "version": "3.4.8",
+                "source": {
+                    "url": "https://github.com/elementor/elementor.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ],
+    "require": {
+      "elementor/elementor": "^3.4.8"
+    }
+}

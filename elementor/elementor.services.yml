@@ -1,0 +1,8 @@
+services:
+  elementor_event_subscriber:
+    class: Drupal\elementor\EventSubscriber\EelementorSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  elementor.drupal_block_service:
+    class: Drupal\elementor\DrupalBlockService

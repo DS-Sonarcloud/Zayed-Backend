@@ -1,0 +1,459 @@
+<?php
+
+// require drupal_get_path('module', 'elementor') . '/elementor_drupal/ElementorPlugin.php';
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\elementor\ElementorPlugin;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function elementor_page_attachments(array &$attachments)
+{
+  // Elementor
+  $attachments['#attached']['library'][] = 'elementor/slick-carousel';
+  $attachments['#attached']['library'][] = 'elementor/global';
+  $attachments['#attached']['library'][] = 'elementor/slick-init';
+  $attachments['#attached']['library'][] = 'elementor/elementor_custom';
+  $attachments['#attached']['library'][] = 'elementor/scroll_animation';
+
+  // Views core libraries
+  $attachments['#attached']['library'][] = 'views/views.ajax';
+  $attachments['#attached']['library'][] = 'views/views.theme';
+
+  // Views grid and responsive grid
+  $attachments['#attached']['library'][] = 'views/views.grid';
+  $attachments['#attached']['library'][] = 'views/views.responsive-grid';
+}
+/**
+ * Implements hook_theme().
+ */
+
+function elementor_theme($existing, $type, $theme, $path)
+{
+
+  return [
+    'elementor_field' => [
+      'variables' => [
+        'is_rtl' => null,
+        'elementor_data' => null,
+        'elementor_tmp' => null,
+        'base_path' => \Drupal::request()->getBasePath()
+      ],
+    ],
+    // 'elementor_editor' => [
+    //   'template' => 'elementor-editor',
+    //   'variables' => [
+    //     'is_rtl' => null,
+    //     'elementor_data' => null,
+    //     'elementor_tmp' => null,
+    //     'base_path' => \Drupal::request()->getBasePath()
+    //   ],
+    // ],
+
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function elementor_theme_suggestions_alter(array &$suggestions, array $variables, $hook)
+{
+  if ($hook !== 'page' && $hook !== 'node') {
+    return;
+  }
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $allow_content_types = \Drupal::config('elementor.settings')->get('node_types');
+
+  if ($node && in_array($node->getType(), $allow_content_types, true)) {
+    // Check that instance and sdk are initialized
+    if (
+      !empty(ElementorPlugin::$instance) &&
+      !empty(ElementorPlugin::$instance->sdk)
+    ) {
+      $config = ElementorPlugin::$instance->sdk->get_data($node->id());
+
+      if ($hook == 'page' && isset($config['settings']['template']) && $config['settings']['template'] == 'elementor_canvas') {
+        $suggestions[] = 'elementor_field';
+      } elseif ($hook == 'page' && isset($config['settings']['template']) && $config['settings']['template'] == 'elementor_header_footer') {
+        $suggestions[] = 'elementor_field';
+      } elseif ($hook == 'node' && (!isset($config['settings']['template']) || empty($config['settings']['template']))) {
+        $suggestions[] = 'elementor_field';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+
+function elementor_preprocess_node(&$variables)
+{
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $allow_content_types = \Drupal::config('elementor.settings')->get('node_types');
+
+  if ($node && in_array($node->getType(), $allow_content_types, true)) {
+    $variables['#cache']['max-age'] = 0;
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+
+function elementor_preprocess_elementor_field(&$variables)
+{
+  global $base_path;
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $id = $node->id();
+  $ElementorPlugin = ElementorPlugin::$instance;
+  $frontend_data = $ElementorPlugin->frontend($id);
+  $dir = \Drupal::languageManager()->getCurrentLanguage()->getDirection();
+  $variables['is_rtl'] = $dir == 'rtl';
+  $variables['base_path'] = $base_path . \Drupal::moduleHandler()->getModule('elementor')->getPath();
+  $variables['elementor_tmp'] = $frontend_data;
+  $variables['uid'] = $id;
+  $variables['#cache']['max-age'] = 0;
+}
+/**
+ * Implements hook__menu_local_tasks_alter().
+ */
+
+function elementor_menu_local_tasks_alter(&$data, $route_name)
+{
+  global $base_url;
+
+  $allow_content_types = \Drupal::config('elementor.settings')->get('node_types');
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $nid = $node->id(); // Node object -> use id() method
+  } elseif (is_numeric($node)) {
+    $nid = $node; // Already a node ID
+  } else {
+    $nid = 1; // Default fallback
+  }
+  if ($route_name == 'entity.node.canonical' && in_array($node->getType(), $allow_content_types, true)) {
+    $data['tabs'][0]['entity.node.canonical'] = [
+      '#theme' => 'menu_local_task',
+      '#link' => [
+        'title' => t('Elementor'),
+        'url' => \Drupal\Core\Url::fromRoute('elementor.editor', ['node' => $nid]),
+        'localized_options' => [
+          'attributes' => [
+            'title' => t('Edit with Elementor'),
+          ],
+        ],
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function elementor_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  $params = explode("_", $form_id);
+  if ($params[0] == 'node') {
+    $allow_content_types = \Drupal::config('elementor.settings')->get('node_types');
+
+    // Ensure $allow_content_types is an array before using in_array
+    if (is_array($allow_content_types) && in_array($params[1], $allow_content_types, true)) {
+      $form['edit_with_elementor'] = [
+        '#type' => 'submit',
+        '#value' => t('Edit with Elementor'),
+        '#weight' => 0.1,
+        '#attributes' => [
+          'class' => ['eicon-elementor', 'edit-with-elementor'],
+        ],
+      ];
+
+      $form['#submit'][] = 'elementor_edit_with_elementor_form_submit';
+    }
+  }
+}
+
+
+/**
+ * Form submit handler.
+ */
+function elementor_edit_with_elementor_form_submit($form, FormStateInterface &$form_state)
+{
+  $entity = $form_state->getFormObject()->getEntity();
+  // Skip basic page deployment for this save
+  \Drupal::request()->attributes->set('zu_skip_basic_page_deploy', true);
+  $entity->save();
+
+  // Use watchdog() or Drupal's logging system for debugging.
+  \Drupal::logger('elementor')->notice('Node @nid is saved.', ['@nid' => $entity->id()]);
+  $url = Url::fromRoute('elementor.editor', ['node' => $entity->id()]);
+  header('Location: ' . $url->toString());
+  exit;
+  $form_state->setRedirect('elementor.editor', ['node' => $entity->id()]);
+}
+
+/**
+ * Add new field to existing table.
+ */
+function elementor_update_9002()
+{
+  $schema = \Drupal::database()->schema();
+  $table = 'elementor_template';
+
+  if (!$schema->fieldExists($table, 'nid')) {
+    $schema->addField($table, 'nid', [
+      'type' => 'int',
+      'length' => 11,
+      'not null' => FALSE,
+      'description' => 'Stores nid for node instance where template is created',
+    ]);
+  }
+}
+
+/**
+ * Add new field to existing table.
+ */
+function elementor_update_9003()
+{
+  $schema = \Drupal::database()->schema();
+
+  $table = 'elementor_data';
+
+  // Alter the 'data' field structure in 'elementor_data' table.
+  if ($schema->fieldExists($table, 'data')) {
+    $schema->changeField($table, 'data', 'data', [
+      'type' => 'blob',
+      'size' => 'big', // this ensures LONGBLOB in MySQL
+      'not null' => FALSE,
+      'description' => 'Stores elementor data in longblob format',
+    ]);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function elementor_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'page') {
+    if (_elementor_has_data($entity->id())) {
+      \Drupal\elementor\ElementorPageExporter::delete_page_json($entity);
+    }
+    _elementor_cleanup_webform_usage($entity->id());
+  }
+}
+
+/**
+ * Clean up webform_usage entries for a deleted node.
+ *
+ */
+function _elementor_cleanup_webform_usage($nid) {
+  try {
+    $connection = \Drupal::database();
+
+    if ($connection->schema()->tableExists('webform_usage')) {
+      $connection->delete('webform_usage')
+        ->condition('node_id', $nid)
+        ->execute();
+    }
+  } catch (\Exception $e) {
+    \Drupal::logger('elementor')->error('Error cleaning up webform_usage: @msg', ['@msg' => $e->getMessage()]);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function elementor_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'page') {
+    $original = $entity->original;
+    if ($original && $original->isPublished() && !$entity->isPublished()) {
+      \Drupal\elementor\ElementorPageExporter::delete_page_json($entity);
+    }
+    if (!$original || !$entity->isPublished()) {
+      return;
+    }
+
+    // Only do alias-change deploy work if the alias actually changed.
+    $old_alias = '';
+    $new_alias = '';
+    if ($original->hasField('path') && !$original->get('path')->isEmpty()) {
+      $old_alias = (string) ($original->get('path')->alias ?? '');
+    }
+    if ($entity->hasField('path') && !$entity->get('path')->isEmpty()) {
+      $new_alias = (string) ($entity->get('path')->alias ?? '');
+    }
+    if ($old_alias === $new_alias) {
+      return;
+    }
+
+    if (!_elementor_is_deploy_enabled($entity->id())) {
+      return;
+    }
+
+    $langcode = $entity->language()->getId();
+    $context = _elementor_get_path_context($entity);
+    $pathPrefix = $context['pathPrefix'];
+    $subsite_folder = $context['subsite_folder'];
+    \Drupal\elementor\ElementorPageExporter::deleteAliasJsonByPath(
+      $entity,
+      $langcode,
+      $old_alias,
+      $pathPrefix,
+      $subsite_folder
+    );
+    $data = _elementor_get_latest_data($entity->id());
+    if (!empty($data)) {
+      \Drupal\elementor\ElementorPageExporter::export($entity->id(), $data);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function elementor_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'page') {
+    $aliases = _elementor_collect_aliases($entity);
+    \Drupal::request()->attributes->set('elementor_deleted_aliases_' . $entity->id(), $aliases);
+  }
+}
+
+/**
+ * Load latest Elementor data for a node.
+ */
+function _elementor_get_latest_data(int $nid): ?array {
+  static $cache = [];
+  static $table_exists = null;
+
+  if (array_key_exists($nid, $cache)) {
+    return $cache[$nid];
+  }
+
+  try {
+    $connection = \Drupal::database();
+    if ($table_exists === null) {
+      $table_exists = $connection->schema()->tableExists('elementor_data');
+    }
+    if (!$table_exists) {
+      $cache[$nid] = null;
+      return null;
+    }
+
+    $result = $connection->query(
+      "SELECT data FROM elementor_data WHERE uid = :nid ORDER BY ID DESC LIMIT 1",
+      [':nid' => $nid]
+    )->fetch();
+
+    if (!$result || empty($result->data)) {
+      $cache[$nid] = null;
+      return null;
+    }
+
+    $cache[$nid] = json_decode($result->data, true);
+    return $cache[$nid];
+  } catch (\Exception $e) {
+    \Drupal::logger('elementor')->error('Failed to load elementor_data: @msg', ['@msg' => $e->getMessage()]);
+    $cache[$nid] = null;
+    return null;
+  }
+}
+
+/**
+ * Check if Elementor deploy is enabled for a node.
+ */
+function _elementor_is_deploy_enabled(int $nid): bool {
+  $data = _elementor_get_latest_data($nid);
+  return isset($data['settings']['deploy']) && $data['settings']['deploy'] === 'yes';
+}
+
+/**
+ * Check if a node has Elementor data stored.
+ */
+function _elementor_has_data(int $nid): bool {
+  return _elementor_get_latest_data($nid) !== null;
+}
+
+/**
+ * Resolve deploy path context.
+ */
+function _elementor_get_path_context(\Drupal\node\NodeInterface $node): array {
+  $host_name = strtolower(\Drupal::request()->getHost());
+  if ($node->hasField('field_domain_access') && !$node->get('field_domain_access')->isEmpty()) {
+    $domain = $node->get('field_domain_access')->entity;
+    if ($domain && !empty($domain->hostname)) {
+      $host_name = strtolower(trim($domain->hostname));
+    }
+  }
+
+  $subsite_folder = '';
+  if ($node->hasField('field_site') && !$node->get('field_site')->isEmpty()) {
+    $subsite_folder = strtolower($node->field_site->entity->name->value);
+  }
+
+  $author = \Drupal\user\Entity\User::load($node->getOwnerId());
+  $author_roles = $author ? $author->getRoles() : [];
+  $mapped_folder = null;
+  static $multidomain_records = null;
+  if ($multidomain_records === null) {
+    try {
+      $multidomain_records = \Drupal::database()->select('zu_multidomain', 'z')
+        ->fields('z', ['folder_name', 'roles'])
+        ->execute()
+        ->fetchAll();
+    } catch (\Exception $e) {
+      \Drupal::logger('elementor')->error('Folder lookup failed: @msg', ['@msg' => $e->getMessage()]);
+      $multidomain_records = [];
+    }
+  }
+
+  foreach ($multidomain_records as $record) {
+    $record_roles = array_filter(array_map('trim', explode(',', $record->roles)));
+    if (array_intersect($record_roles, $author_roles)) {
+      $mapped_folder = trim($record->folder_name);
+      break;
+    }
+  }
+
+  $pathPrefix = !empty($mapped_folder)
+    ? '/' . $mapped_folder
+    : '/' . $host_name;
+
+  return [
+    'pathPrefix' => $pathPrefix,
+    'subsite_folder' => $subsite_folder,
+  ];
+}
+
+/**
+ * Collect aliases by language for a node.
+ */
+function _elementor_collect_aliases(\Drupal\node\NodeInterface $node): array {
+  $aliases = [];
+  $path_alias_manager = \Drupal::service('path_alias.manager');
+  $langcodes = array_keys($node->getTranslationLanguages());
+  if (empty($langcodes)) {
+    $langcodes = [$node->language()->getId()];
+  }
+
+  foreach ($langcodes as $langcode) {
+    $node_lang = $node->hasTranslation($langcode) ? $node->getTranslation($langcode) : $node;
+    $alias = '';
+    if ($node_lang->hasField('path') && !$node_lang->get('path')->isEmpty()) {
+      $alias = (string) ($node_lang->get('path')->alias ?? '');
+    }
+    if (empty($alias)) {
+      $alias = $path_alias_manager->getAliasByPath('/node/' . $node->id(), $langcode);
+    }
+    if (!empty($alias) && $alias !== '/node/' . $node->id()) {
+      $aliases[$langcode] = $alias;
+    }
+  }
+
+  return $aliases;
+}

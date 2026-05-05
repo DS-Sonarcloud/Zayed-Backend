@@ -1,0 +1,123 @@
+elementor.settings:
+  path: '/admin/config/services/elementor/settings'
+  defaults:
+    _form: 'Drupal\elementor\Form\ElementorSettingsForm'
+    _title: 'Elementor Settings'
+  requirements:
+    _permission: 'administer student verification'
+
+elementor.editor:
+  path: '/node/{node}/elementor'
+  defaults: { _controller: '\Drupal\elementor\Controller\ElementorController::editor' }
+  methods:  [GET]
+  requirements:
+    _format: 'html'
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'FALSE'
+
+elementor.update:
+  path: 'elementor/update'
+  defaults: { _controller: '\Drupal\elementor\Controller\ElementorController::update' }
+  methods:  [POST, GET]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+elementor.autosave:
+  path: '/elementor/autosave'
+  defaults: { _controller: '\Drupal\elementor\Controller\ElementorController::autosave' }
+  methods:  [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+elementor.upload:
+  path: '/elementor/upload'
+  defaults: { _controller: '\Drupal\elementor\Controller\ElementorController::upload' }
+  methods:  [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+elementor.delete_upload:
+  path: '/elementor/delete_upload/{fid}'
+  defaults: { _controller: '\Drupal\elementor\Controller\ElementorController::delete_upload' }
+  methods:  [DELETE]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+elementor.fields_ajax:
+  path: '/elementor/fields/{content_type}'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\ElementorController::getFields'
+    _title: 'Elementor Fields Ajax'
+  requirements:
+    _permission: 'access content'
+
+elementor.drupal_block_data:
+  path: '/elementor/drupal-block-data/{content_type}'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\ElementorController::data'
+    _format: 'json'
+  requirements:
+    _permission: 'access content'
+
+elementor.webform_fields_json:
+  path: '/elementor/webform-fields-json/{webform_id}'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\ElementorController::getWebformFields'
+  requirements:
+    _permission: 'access content'
+
+elementor.webform_ajax_conditions:
+  path: '/elementor/webform-ajax-conditions/{webform_id}'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\WebformAjaxController::getAjaxConditions'
+    _title: 'Get Webform AJAX Conditions'
+  requirements:
+    _permission: 'access content'
+
+elementor.file_browser:
+  path: '/elementor/file-browser'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\FileBrowserController::popup'
+    _title: 'File Browser'
+  requirements:
+    _permission: 'access content'
+
+elementor.file_upload:
+  path: '/elementor/file-upload'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\FileBrowserController::upload'
+  requirements:
+    _permission: 'upload files'
+  options:
+    _csrf_token: FALSE
+    _auth: ['basic_auth', 'cookie']
+
+elementor.multifile_upload:
+  path: '/elementor/multifile-upload'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\FileBrowserGalleryController::upload'
+  requirements:
+    _permission: 'upload files'
+  options:
+    _csrf_token: FALSE
+    _auth: ['basic_auth', 'cookie']
+
+
+elementor.gallery_browser:
+  path: '/elementor/gallery-browser'
+  defaults:
+    _controller: '\Drupal\elementor\Controller\FileBrowserGalleryController::popup'
+    _title: 'Gallery Browser'
+  requirements:
+    _permission: 'access content'
+
+

@@ -1,0 +1,43 @@
+global:
+  version: 2.2
+  css:
+    component:
+      https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.13/dist/fancybox/fancybox.css: { type: external }
+      elementor/assets/lib/eicons/css/elementor-icons.min.css: {}
+      assets/style.css: {}
+
+slick-carousel:
+  version: 1.8.1
+  js:
+    elementor/assets/lib/slick/slick.min.js: {}
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css: { type: external }
+  dependencies:
+    - core/jquery
+
+slick-init:
+  version: 2.1
+  js:
+    elementor/assets/js/slick-init.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - elementor/slick-carousel
+
+elementor_custom:
+  version: 2.1
+  js:
+    elementor/assets/js/custom.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+scroll_animation:
+  version: 2.1
+  js:
+    elementor/assets/js/scroll-animation.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

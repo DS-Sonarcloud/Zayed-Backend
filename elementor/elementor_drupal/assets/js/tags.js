@@ -1,0 +1,63 @@
+
+jQuery(document).ready(function($) {
+	$( '#the-list' ).on( 'click', '.delete-tag', function() {
+		var t = $(this), tr = t.parents('tr'), r = true, data;
+		if ( 'undefined' != showNotice )
+			r = showNotice.warn();
+		if ( r ) {
+			data = t.attr('href').replace(/[^?]*\?/, '').replace(/action=delete/, 'action=delete-tag');
+			$.post(ajaxurl, data, function(r){
+				if ( '1' == r ) {
+					$('#ajax-response').empty();
+					tr.fadeOut('normal', function(){ tr.remove(); });
+					$('select#parent option[value="' + data.match(/tag_ID=(\d+)/)[1] + '"]').remove();
+					$('a.tag-link-' + data.match(/tag_ID=(\d+)/)[1]).remove();
+				} else if ( '-1' == r ) {
+					$('#ajax-response').empty().append('<div class="error"><p>' + tagsl10n.noPerm + '</p></div>');
+					tr.children().css('backgroundColor', '');
+				} else {
+					$('#ajax-response').empty().append('<div class="error"><p>' + tagsl10n.broken + '</p></div>');
+					tr.children().css('backgroundColor', '');
+				}
+			});
+			tr.children().css('backgroundColor', '#f33');
+		}
+		return false;
+	});
+	$( '#edittag' ).on( 'click', '.delete', function( e ) {
+		if ( 'undefined' === typeof showNotice ) {
+			return true;
+		}
+		var response = showNotice.warn();
+		if ( ! response ) {
+			e.preventDefault();
+		}
+	});
+	$('#submit').click(function(){
+		var form = $(this).parents('form');
+		if ( ! validateForm( form ) )
+			return false;
+		$.post(ajaxurl, $('#addtag').serialize(), function(r){
+			var res, parent, term, indent, i;
+			$('#ajax-response').empty();
+			res = wpAjax.parseAjaxResponse( r, 'ajax-response' );
+			if ( ! res || res.errors )
+				return;
+			parent = form.find( 'select#parent' ).val();
+			if ( parent > 0 && $('#tag-' + parent ).length > 0 ) 
+				$( '.tags #tag-' + parent ).after( res.responses[0].supplemental.noparents ); 
+			else
+				$( '.tags' ).prepend( res.responses[0].supplemental.parents ); 
+			$('.tags .no-items').remove();
+			if ( form.find('select#parent') ) {
+				term = res.responses[1].supplemental;
+				indent = '';
+				for ( i = 0; i < res.responses[1].position; i++ )
+					indent += '&nbsp;&nbsp;&nbsp;';
+				form.find( 'select#parent option:selected' ).after( '<option value="' + term.term_id + '">' + indent + term.name + '</option>' );
+			}
+			$('input[type="text"]:visible, textarea:visible', form).val('');
+		});
+		return false;
+	});
+});
