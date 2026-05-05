@@ -186,21 +186,20 @@ function wp_remote_retrieve_body_elementor_adapter($response)
 function wp_get_attachment_image_elementor_adapter($attachment_id, $size = 'thumbnail', $icon = false, $attr = '')
 {
     $html = '';
-    $src = \Drupal\Elementor\ElementorPlugin::$instance->sdk->get_file($attachment_id, $style = $size);
+    // Fix namespace and access.
+    $src = \Drupal\elementor\ElementorPlugin::instance()->sdk->get_file($attachment_id, $size);
     if ($src) {
-
-        $attr = array(
+        $classes = is_array($attr) && isset($attr['class']) ? $attr['class'] : (is_string($attr) ? $attr : '');
+        
+        $attributes = array(
             'src' => $src,
-            'class' => $attr['class'],
-            'alt' => trim(''),
-            // 'width' => $attr['width'] ?? NULL,
-            // 'height' => $attr['height'] ?? NULL,
-            // 'style' => $attr['style'] ?? NULL,
+            'class' => $classes,
+            'alt' => '',
         );
 
-        $html = rtrim("<img ");
-        foreach ($attr as $name => $value) {
-            $html .= " $name=" . '"' . $value . '"';
+        $html = '<img';
+        foreach ($attributes as $name => $value) {
+            $html .= ' ' . \Drupal\Component\Utility\Html::escape($name) . '="' . \Drupal\Component\Utility\Html::escape($value) . '"';
         }
         $html .= ' />';
     }

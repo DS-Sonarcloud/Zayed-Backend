@@ -391,7 +391,7 @@
 
                         this.removeListeners(listenerID, event, to);
 
-                        if (to instanceof jQuery) {
+                        if (to.jquery) {
                             var eventNS = event + '.' + listenerID;
 
                             to.on(eventNS, callback);
@@ -405,7 +405,7 @@
                             from = self.getElements('$window');
                         }
 
-                        if (from instanceof jQuery) {
+                        if (from.jquery) {
                             var eventNS = event + '.' + listenerID;
 
                             from.off(eventNS, callback);
@@ -442,8 +442,6 @@
                     };
                 };
 
-                window.elementorFrontend = new ElementorFrontend();
-                // ✅ Add here
                 if (typeof window !== 'undefined') {
                     window.ElementorFrontend = ElementorFrontend;
                 }

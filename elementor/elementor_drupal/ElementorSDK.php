@@ -46,7 +46,12 @@ class ElementorSDK
 
   public function get_data($uid)
   {
-    $result = $this->connection->query("SELECT data FROM elementor_data WHERE uid = " . $uid . " ORDER BY ID DESC LIMIT 1")
+    $result = $this->connection->select('elementor_data', 'ed')
+      ->fields('ed', ['data'])
+      ->condition('uid', $uid)
+      ->orderBy('id', 'DESC')
+      ->range(0, 1)
+      ->execute()
       ->fetch();
 
     if (!$result || empty($result->data)) {
@@ -76,12 +81,28 @@ class ElementorSDK
       ])
       ->execute();
 
-    $result_count = $this->connection->query("SELECT COUNT(uid) as num FROM elementor_data WHERE uid = " . $uid)
-      ->fetch();
-    $count = $result_count->num - 10;
+    $result_count = $this->connection->select('elementor_data', 'ed')
+      ->condition('uid', $uid)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $count = $result_count - 10;
     if ($count > 0) {
-      $result = $this->connection->query("DELETE FROM elementor_data WHERE uid = " . $uid . " LIMIT " . $count)
-        ->execute();
+      // Find IDs to delete (oldest ones).
+      $ids_to_delete = $this->connection->select('elementor_data', 'ed')
+        ->fields('ed', ['id'])
+        ->condition('uid', $uid)
+        ->orderBy('id', 'ASC')
+        ->range(0, $count)
+        ->execute()
+        ->fetchCol();
+
+      if (!empty($ids_to_delete)) {
+        $this->connection->delete('elementor_data')
+          ->condition('id', $ids_to_delete, 'IN')
+          ->execute();
+      }
     }
 
     $node = Node::load($uid);
@@ -103,7 +124,8 @@ class ElementorSDK
    */
   public function delete_data($id)
   {
-    return $this->connection->query("DELETE FROM elementor_data WHERE id = " . $id)
+    return $this->connection->delete('elementor_data')
+      ->condition('id', $id)
       ->execute();
   }
 
@@ -115,7 +137,10 @@ class ElementorSDK
    */
   public function get_revisions($uid)
   {
-    $result = $this->connection->query("SELECT * FROM elementor_data WHERE uid = " . $uid)
+    $result = $this->connection->select('elementor_data', 'ed')
+      ->fields('ed')
+      ->condition('uid', $uid)
+      ->execute()
       ->fetchAll();
 
     foreach ($result as $revision) {
@@ -132,7 +157,10 @@ class ElementorSDK
    */
   public function get_revisions_ids($uid)
   {
-    $result = $this->connection->query("SELECT id FROM elementor_data WHERE uid = " . $uid)
+    $result = $this->connection->select('elementor_data', 'ed')
+      ->fields('ed', ['id'])
+      ->condition('uid', $uid)
+      ->execute()
       ->fetchAll();
 
     $revisions = [];
@@ -151,7 +179,10 @@ class ElementorSDK
    */
   public function get_revision_data($id)
   {
-    $result = $this->connection->query("SELECT * FROM elementor_data WHERE id = " . $id)
+    $result = $this->connection->select('elementor_data', 'ed')
+      ->fields('ed')
+      ->condition('id', $id)
+      ->execute()
       ->fetch();
     return json_decode($result->data, true);
   }
@@ -175,7 +206,8 @@ class ElementorSDK
    */
   public function delete_revision($id)
   {
-    return $this->connection->query("DELETE FROM elementor_data WHERE id = " . $id)
+    return $this->connection->delete('elementor_data')
+      ->condition('id', $id)
       ->execute();
   }
 
@@ -187,7 +219,10 @@ class ElementorSDK
    */
   public function get_local_templates_ids($type)
   {
-    return $this->connection->query("SELECT id FROM elementor_template WHERE type = '" . $type . "'")
+    return $this->connection->select('elementor_template', 'et')
+      ->fields('et', ['id'])
+      ->condition('type', $type)
+      ->execute()
       ->fetchAll();
   }
 
@@ -199,7 +234,10 @@ class ElementorSDK
    */
   public function get_local_template($id)
   {
-    $result = $this->connection->query("SELECT * FROM elementor_template WHERE id = " . $id)
+    $result = $this->connection->select('elementor_template', 'et')
+      ->fields('et')
+      ->condition('id', $id)
+      ->execute()
       ->fetch();
     $result->data = json_decode($result->data, true);
     return $result;
@@ -234,7 +272,8 @@ class ElementorSDK
    */
   public function delete_local_template($id)
   {
-    return $this->connection->query("DELETE FROM elementor_template WHERE id = " . $id)
+    return $this->connection->delete('elementor_template')
+      ->condition('id', $id)
       ->execute();
   }
 
@@ -331,9 +370,13 @@ class ElementorSDK
    */
   public function get_file($fid, $style)
   {
+    $src = '';
     $image = \Drupal\file\Entity\File::load($fid);
     if ($image) {
-      $src = \Drupal\image\Entity\ImageStyle::load($style)->buildUrl($image->getFileUri());
+      $style_entity = \Drupal\image\Entity\ImageStyle::load($style);
+      if ($style_entity) {
+        $src = $style_entity->buildUrl($image->getFileUri());
+      }
     }
     return $src;
   }

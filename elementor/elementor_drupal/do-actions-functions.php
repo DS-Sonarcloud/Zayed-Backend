@@ -136,25 +136,25 @@ function _n_elementor_adapter($text)
 
 function esc_url_elementor_adapter($value)
 {
-    return $value;
+    return \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols($value);
 }
 function esc_html_elementor_adapter($text)
 {
-    return $text;
+    return \Drupal\Component\Utility\Html::escape($text);
 }
 function esc_html___elementor_adapter($text)
 {
-    return $text;
+    return \Drupal\Component\Utility\Html::escape($text);
 }
 function esc_attr_elementor_adapter($text)
 {
-    return $text;
+    return \Drupal\Component\Utility\Html::escape($text);
 }
 function esc_attr___elementor_adapter($text)
 {
-    return $text;
+    return \Drupal\Component\Utility\Html::escape($text);
 }
 function esc_attr_e_elementor_adapter($text, $domain = 'default')
 {
-    echo $text;
+    echo \Drupal\Component\Utility\Html::escape($text);
 }
