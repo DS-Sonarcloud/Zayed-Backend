@@ -1,5 +1,0 @@
-drupal_layoutbuilder.settings:
-  title: 'Layout builder (Elementor)'
-  description: 'Configure the visual layout builder integration.'
-  parent: system.admin_config_content
-  route_name: drupal_layoutbuilder.settings
