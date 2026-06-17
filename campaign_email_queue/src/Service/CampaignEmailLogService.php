@@ -11,6 +11,8 @@ use Psr\Log\LoggerInterface;
 class CampaignEmailLogService
 {
 
+  private const RUN_ID_DESCRIPTION = 'The run sequence number.';
+
   protected Connection $database;
   protected LoggerInterface $logger;
 
@@ -33,7 +35,7 @@ class CampaignEmailLogService
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-        'description' => 'The run sequence number.',
+        'description' => self::RUN_ID_DESCRIPTION,
       ]);
       $schema->dropIndex('campaign_email_log', 'campaign_status');
       $schema->addIndex('campaign_email_log', 'run_id', ['run_id'], []);
@@ -45,12 +47,15 @@ class CampaignEmailLogService
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-        'description' => 'The run sequence number.',
+        'description' => self::RUN_ID_DESCRIPTION,
       ]);
 
       try {
         $this->database->query("ALTER TABLE {campaign_statistics} DROP PRIMARY KEY, ADD PRIMARY KEY (campaign_id, run_id)");
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
+        // Primary key change is best-effort; table continues to work without it.
+        $this->logger->warning('Could not update campaign_statistics PK: @msg', ['@msg' => $e->getMessage()]);
       }
     }
 
@@ -59,7 +64,7 @@ class CampaignEmailLogService
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-        'description' => 'The run sequence number.',
+        'description' => self::RUN_ID_DESCRIPTION,
       ]);
     }
   }
@@ -454,7 +459,7 @@ class CampaignEmailLogService
       ->execute()
       ->fetch();
 
-    return $result ?: null;
+    return $result ?: NULL;
   }
 
   /**

@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class CampaignQueueController extends ControllerBase {
 
+  private const ACCESS_DENIED = 'Access denied';
+
   public function __construct(
     protected QueueFactory $queueFactory,
     protected CampaignEmailQueueService $campaignQueueService,
@@ -98,7 +100,7 @@ class CampaignQueueController extends ControllerBase {
    */
   public function ajaxProcessQueue(NodeInterface $node): JsonResponse {
     if (!$this->campaignQueueService->checkCampaignAccess($node, $this->currentUser(), 'manage')) {
-      return new JsonResponse(['error' => 'Access denied'], 403);
+      return new JsonResponse(['error' => self::ACCESS_DENIED], 403);
     }
 
     $campaign_id = (int) $node->id();
@@ -140,14 +142,14 @@ class CampaignQueueController extends ControllerBase {
 
   public function ajaxStatus(NodeInterface $node): JsonResponse {
     if (!$this->campaignQueueService->checkCampaignAccess($node, $this->currentUser(), 'view')) {
-      return new JsonResponse(['error' => 'Access denied'], 403);
+      return new JsonResponse(['error' => self::ACCESS_DENIED], 403);
     }
     return new JsonResponse($this->campaignQueueService->getDashboardStatus((int) $node->id()));
   }
 
   public function ajaxClearQueue(NodeInterface $node): JsonResponse {
     if (!$this->campaignQueueService->checkCampaignAccess($node, $this->currentUser(), 'manage')) {
-      return new JsonResponse(['error' => 'Access denied'], 403);
+      return new JsonResponse(['error' => self::ACCESS_DENIED], 403);
     }
     $campaign_id = (int) $node->id();
     $this->clearCampaignQueue($campaign_id);
@@ -157,7 +159,7 @@ class CampaignQueueController extends ControllerBase {
 
   public function ajaxRerunCampaign(NodeInterface $node): JsonResponse {
     if (!$this->campaignQueueService->checkCampaignAccess($node, $this->currentUser(), 'manage')) {
-      return new JsonResponse(['error' => 'Access denied'], 403);
+      return new JsonResponse(['error' => self::ACCESS_DENIED], 403);
     }
     $campaign_id = (int) $node->id();
     $this->campaignQueueService->stopBackgroundSending($campaign_id);

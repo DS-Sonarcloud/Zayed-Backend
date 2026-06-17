@@ -43,7 +43,7 @@ class SearchController extends ControllerBase
     }
 
     $config = \Drupal::config('custom_elastic_search.settings');
-    $es_url = $config->get('elasticsearch_url') ?: 'http://192.168.1.40:9208/elasticsearch_index/_search';
+    $es_url = $config->get('elasticsearch_url') ?: 'https://192.168.1.40:9208/elasticsearch_index/_search';
 
     $payload = [
       'query' => [

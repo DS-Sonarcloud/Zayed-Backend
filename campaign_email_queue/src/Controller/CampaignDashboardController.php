@@ -20,6 +20,10 @@ use Drupal\Core\Queue\QueueFactory;
 
 class CampaignDashboardController extends ControllerBase
 {
+
+  private const DASHBOARD_ROUTE = 'campaign_email_queue.dashboard';
+  private const DASHBOARD_LIBRARY = 'campaign_email_queue/dashboard';
+  private const SUMMARY_CARDS_SELECTOR = '.summary-cards-wrapper';
   protected CampaignEmailQueueService $queueService;
   protected CampaignEmailLogService $logService;
   protected DateFormatterInterface $dateFormatter;
@@ -65,7 +69,7 @@ class CampaignDashboardController extends ControllerBase
       '#weight' => -50,
     ];
 
-    $build['#attached']['library'][] = 'campaign_email_queue/dashboard';
+    $build['#attached']['library'][] = self::DASHBOARD_LIBRARY;
     $build['#attached']['library'][] = 'campaign_email_queue/admin_keepalive';
     $build['#attached']['drupalSettings']['campaignEmailQueueKeepalive'] = [
       'url' => Url::fromRoute('campaign_email_queue.keepalive')->toString(),
@@ -295,7 +299,7 @@ class CampaignDashboardController extends ControllerBase
 
     if (\Drupal::request()->isXmlHttpRequest()) {
       $response = new AjaxResponse();
-      $response->addCommand(new ReplaceCommand('.summary-cards-wrapper', $build['summary']));
+      $response->addCommand(new ReplaceCommand(self::SUMMARY_CARDS_SELECTOR, $build['summary']));
       $response->addCommand(new ReplaceCommand('.campaign-matrix-table', $build['campaigns']));
       $response->addCommand(new ReplaceCommand('.campaign-dashboard-messages', $build['current_time']));
 
@@ -392,10 +396,9 @@ class CampaignDashboardController extends ControllerBase
     }
 
     $campaign_id = $node->id();
-    $stats = $this->logService->getCampaignStatistics($campaign_id);
     $real_time_status = $this->logService->getRealTimeStatus($campaign_id);
 
-    $build['#attached']['library'][] = 'campaign_email_queue/dashboard';
+    $build['#attached']['library'][] = self::DASHBOARD_LIBRARY;
 
     $build['header'] = [
       '#type' => 'container',
@@ -509,7 +512,7 @@ class CampaignDashboardController extends ControllerBase
 
     if (\Drupal::request()->isXmlHttpRequest()) {
       $response = new AjaxResponse();
-      $response->addCommand(new ReplaceCommand('.summary-cards-wrapper', $build['summary']));
+      $response->addCommand(new ReplaceCommand(self::SUMMARY_CARDS_SELECTOR, $build['summary']));
       if (isset($build['rerun_section']['runs_table'])) {
         $response->addCommand(new ReplaceCommand('.rerun-history-table', $build['rerun_section']['runs_table']));
       }
@@ -531,7 +534,7 @@ class CampaignDashboardController extends ControllerBase
     }
 
     $campaign_id = $node->id();
-    $build['#attached']['library'][] = 'campaign_email_queue/dashboard';
+    $build['#attached']['library'][] = self::DASHBOARD_LIBRARY;
 
     $build['header'] = [
       '#type' => 'container',
@@ -646,7 +649,7 @@ class CampaignDashboardController extends ControllerBase
 
     if (\Drupal::request()->isXmlHttpRequest()) {
       $response = new AjaxResponse();
-      $response->addCommand(new ReplaceCommand('.summary-cards-wrapper', $build['summary']));
+      $response->addCommand(new ReplaceCommand(self::SUMMARY_CARDS_SELECTOR, $build['summary']));
       $response->addCommand(new ReplaceCommand('.email-logs-table', $build['logs']));
       return $response;
     }

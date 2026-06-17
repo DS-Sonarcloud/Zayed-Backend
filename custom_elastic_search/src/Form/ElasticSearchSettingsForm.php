@@ -35,7 +35,7 @@ class ElasticSearchSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Elasticsearch URL'),
       '#description' => $this->t('Enter the full Elasticsearch search URL, e.g. site_url/elasticsearch_index/_search'),
-      '#default_value' => $config->get('elasticsearch_url') ?: 'http://192.168.1.40:9208/elasticsearch_index/_search',
+      '#default_value' => $config->get('elasticsearch_url') ?: 'https://192.168.1.40:9208/elasticsearch_index/_search',
       '#required' => TRUE,
     ];
 

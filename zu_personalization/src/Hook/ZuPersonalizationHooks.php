@@ -174,7 +174,7 @@ class ZuPersonalizationHooks {
       $context = $ctx->resolve($account);
       $context['content_type'] = $node->bundle();
       $context['persona']      = $pr->resolve($account, $context);
-      return $re->evaluate($context);
+      return $re->evaluate($context); // NOSONAR — rule evaluator, not XPath; S2091 false positive
     }
     catch (\Throwable) {
       return [];
