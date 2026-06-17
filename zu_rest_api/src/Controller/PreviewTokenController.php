@@ -39,7 +39,7 @@ class PreviewTokenController extends ControllerBase {
     }
 
     $payload = [
-      'iss'  => \Drupal::request()->getSchemeAndHttpHost(),
+      'iss'  => $request->getSchemeAndHttpHost(),
       'iat'  => time(),
       'exp'  => time() + self::PREVIEW_TTL,
       'nid'  => $nid,

@@ -71,7 +71,9 @@ class JobApplicationEditForm extends FormBase
     return $form;
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // No additional validation needed beyond HTML5 required attributes.
+  }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {

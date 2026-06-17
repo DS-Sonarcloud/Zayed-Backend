@@ -21,6 +21,8 @@ use Drupal\Core\Field\WidgetBase;
 class ShortAliasWidget extends WidgetBase
 {
 
+  private const URI_PREFIX = 'internal:/';
+
   /**
    * Resolve target language for current form context.
    */
@@ -93,11 +95,11 @@ class ShortAliasWidget extends WidgetBase
 
         /** @var \Drupal\Core\Entity\EntityInterface $entity */
         if (method_exists($entity, 'getEntityTypeId') && method_exists($entity, 'id')) {
-          $clean_uri = 'internal:/' . $entity->getEntityTypeId() . '/' . $entity->id();
+          $clean_uri = self::URI_PREFIX . $entity->getEntityTypeId() . '/' . $entity->id();
           $destination_uris = [
             $clean_uri,
             $clean_uri . '?language=' . $langcode,
-            'internal:/' . $langcode . '/' . $entity->getEntityTypeId() . '/' . $entity->id(),
+            self::URI_PREFIX . $langcode . '/' . $entity->getEntityTypeId() . '/' . $entity->id(),
             'entity:' . $entity->getEntityTypeId() . '/' . $entity->id(),
           ];
 
@@ -189,11 +191,11 @@ class ShortAliasWidget extends WidgetBase
 
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       if ($entity && method_exists($entity, 'id') && method_exists($entity, 'isNew') && !$entity->isNew()) {
-        $clean_uri = 'internal:/' . $entity->getEntityTypeId() . '/' . $entity->id();
+        $clean_uri = self::URI_PREFIX . $entity->getEntityTypeId() . '/' . $entity->id();
         $destination_uris = [
           $clean_uri,
           $clean_uri . '?language=' . $langcode,
-          'internal:/' . $langcode . '/' . $entity->getEntityTypeId() . '/' . $entity->id(),
+          self::URI_PREFIX . $langcode . '/' . $entity->getEntityTypeId() . '/' . $entity->id(),
           'entity:' . $entity->getEntityTypeId() . '/' . $entity->id(),
         ];
 

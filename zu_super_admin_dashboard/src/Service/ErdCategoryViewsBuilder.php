@@ -110,22 +110,6 @@ final class ErdCategoryViewsBuilder {
   /**
    * @return list<array<string, mixed>>
    */
-  private function buildAcademicViews(): array {
-    if ($this->database->schema()->tableExists('zu_course')
-      && $this->database->schema()->tableExists('zu_enrollment')) {
-      return [$this->viewCoursesWithEnrollments()];
-    }
-    $fallback = $this->viewNodesByBundleSample(
-      'courses',
-      (string) $this->t('Courses (content nodes)'),
-      (string) $this->t('Academic content stored as nodes until zu_course schema is fully deployed.'),
-    );
-    return $fallback !== NULL ? [$fallback] : [];
-  }
-
-  /**
-   * @return list<array<string, mixed>>
-   */
   private function buildCommunityViews(): array {
     $views = [];
     $blogs = $this->viewNodesByBundleSample('blogs', (string) $this->t('Recent blog posts'), (string) $this->t('Blog content with author — comments link via BLOG_COMMENT entity.'));
@@ -189,23 +173,6 @@ final class ErdCategoryViewsBuilder {
     $forms = $this->viewWebformsWithSubmissions();
     if ($forms !== NULL) {
       $views[] = $forms;
-    }
-    return $views;
-  }
-
-  /**
-   * @return list<array<string, mixed>>
-   */
-  private function buildConfigViews(): array {
-    $views = [];
-    if ($this->database->schema()->tableExists('zu_site')) {
-      $views[] = $this->viewZuSites();
-    }
-    if ($this->database->schema()->tableExists('zu_admin_audit_log')) {
-      $audit = $this->viewRecentAuditLog();
-      if ($audit !== NULL) {
-        $views[] = $audit;
-      }
     }
     return $views;
   }
@@ -469,77 +436,6 @@ final class ErdCategoryViewsBuilder {
       'columns' => ['nid', 'title', 'type', 'terms'],
       'rows' => $rows,
     ];
-  }
-
-  /**
-   * @return array<string, mixed>
-   */
-  private function viewCoursesWithEnrollments(): array {
-    try {
-      $course_cols = $this->getTableColumns('zu_course');
-      $enrollment_cols = $this->getTableColumns('zu_enrollment');
-      $course_id_col = in_array('course_id', $course_cols, TRUE) ? 'course_id' : ($course_cols[0] ?? 'course_id');
-      $title_col = in_array('title', $course_cols, TRUE) ? 'title' : NULL;
-      $code_col = in_array('code', $course_cols, TRUE) ? 'code' : NULL;
-      $enrollment_fk = in_array('course_id', $enrollment_cols, TRUE) ? 'course_id' : NULL;
-      $enrollment_pk = in_array('enrollment_id', $enrollment_cols, TRUE) ? 'enrollment_id' : ($enrollment_cols[0] ?? 'id');
-
-      $query = $this->database->select('zu_course', 'c');
-      if ($enrollment_fk !== NULL) {
-        $query->leftJoin('zu_enrollment', 'e', "e.{$enrollment_fk} = c.{$course_id_col}");
-        $query->addExpression("COUNT(e.{$enrollment_pk})", 'enrollments');
-      }
-      else {
-        $query->addExpression('0', 'enrollments');
-      }
-      $query->addField('c', $course_id_col, 'course_id');
-      if ($title_col !== NULL) {
-        $query->addField('c', $title_col, 'title');
-      }
-      if ($code_col !== NULL) {
-        $query->addField('c', $code_col, 'code');
-      }
-      $query->groupBy('c.' . $course_id_col);
-      if ($title_col !== NULL) {
-        $query->groupBy('c.' . $title_col);
-      }
-      if ($code_col !== NULL) {
-        $query->groupBy('c.' . $code_col);
-      }
-      $query->orderBy('enrollments', 'DESC');
-      $query->range(0, self::MAX_ROWS);
-
-      $rows = [];
-      foreach ($query->execute() as $record) {
-        $rows[] = [
-          (string) ($record->course_id ?? ''),
-          (string) ($record->title ?? $this->dash()),
-          (string) ($record->code ?? $this->dash()),
-          (string) number_format((int) ($record->enrollments ?? 0)),
-        ];
-      }
-
-      return [
-        'id' => 'academic_courses',
-        'title' => (string) $this->t('Courses with enrollments'),
-        'description' => (string) $this->t('COURSE ↔ ENROLLMENT from zu_course and zu_enrollment tables.'),
-        'columns' => ['course_id', 'title', 'code', 'enrollments'],
-        'rows' => $rows,
-      ];
-    }
-    catch (\Exception) {
-      $fallback = $this->viewNodesByBundleSample(
-        'courses',
-        (string) $this->t('Courses (content nodes)'),
-        (string) $this->t('Could not join zu_course / zu_enrollment; showing node fallback.'),
-      );
-      return $fallback ?? $this->emptyView(
-        'academic_courses',
-        (string) $this->t('Courses with enrollments'),
-        (string) $this->t('COURSE ↔ ENROLLMENT'),
-        ['course_id', 'title', 'code', 'enrollments'],
-      );
-    }
   }
 
   /**

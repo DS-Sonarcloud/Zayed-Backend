@@ -33,8 +33,6 @@ class CustomWebformSettingsForm extends ConfigFormBase
     {
 
         $webform_entity = Webform::load($webform);
-        // $data = $webform_entity->getThirdPartySetting('student_verification', NULL);
-        // $webform_entity = Webform::load($webform_id);
         $data = $webform_entity->getThirdPartySettings('student_verification');
         $datasource = $data['datasource'] ?? NULL;
         $field_mapping = $data['field_mapping'] ?? NULL;
@@ -77,7 +75,7 @@ class CustomWebformSettingsForm extends ConfigFormBase
                         if (!is_array($element)) {
                             continue;
                         }
-                        $title = isset($element['#title']) ? $element['#title'] : $key;
+                        $title = $element['#title'] ?? $key;
                         $webform_fields[$key] = $title;
 
                         // Recurse into explicitly nested children structures.
@@ -143,7 +141,7 @@ class CustomWebformSettingsForm extends ConfigFormBase
     public function submitForm(array &$form, FormStateInterface $form_state)
     {
         $build_info = $form_state->getBuildInfo();
-        $webform_id = isset($build_info['args'][0]) ? $build_info['args'][0] : NULL;
+        $webform_id = $build_info['args'][0] ?? NULL;
         $datasource = $form_state->getValue("datasource");
         $field_mapping = $form_state->getValue("field_mapping");
 

@@ -16,6 +16,8 @@ final class DashboardAdminLinkResolver {
 
   use StringTranslationTrait;
 
+  private const PERM_ACCESS_CONTENT = 'access content overview';
+
   public function __construct(
     private readonly AccountProxyInterface $currentUser,
     private readonly ModuleHandlerInterface $moduleHandler,
@@ -98,7 +100,7 @@ final class DashboardAdminLinkResolver {
         ],
         [
           'route' => 'entity.node.collection',
-          'permission' => 'access content overview',
+          'permission' => self::PERM_ACCESS_CONTENT,
           'label' => (string) $this->t('All content'),
         ],
         [
@@ -139,7 +141,7 @@ final class DashboardAdminLinkResolver {
       'jobs_forms' => [
         [
           'route' => 'entity.node.collection',
-          'permission' => 'access content overview',
+          'permission' => self::PERM_ACCESS_CONTENT,
           'label' => (string) $this->t('Job listings'),
           'options' => ['query' => ['type' => 'jobs']],
         ],
@@ -191,7 +193,7 @@ final class DashboardAdminLinkResolver {
       ],
       'content_by_bundle' => [
         'route' => 'entity.node.collection',
-        'permission' => 'access content overview',
+        'permission' => self::PERM_ACCESS_CONTENT,
       ],
       'content_taxonomy' => [
         'route' => 'entity.taxonomy_vocabulary.collection',
@@ -199,12 +201,12 @@ final class DashboardAdminLinkResolver {
       ],
       'nodes_blogs' => [
         'route' => 'entity.node.collection',
-        'permission' => 'access content overview',
+        'permission' => self::PERM_ACCESS_CONTENT,
         'options' => ['query' => ['type' => 'blogs']],
       ],
       'nodes_forum' => [
         'route' => 'entity.node.collection',
-        'permission' => 'access content overview',
+        'permission' => self::PERM_ACCESS_CONTENT,
         'options' => ['query' => ['type' => 'forum']],
       ],
       'community_email_templates' => [
@@ -213,7 +215,7 @@ final class DashboardAdminLinkResolver {
       ],
       'community_campaigns' => [
         'route' => 'entity.node.collection',
-        'permission' => 'access content overview',
+        'permission' => self::PERM_ACCESS_CONTENT,
         'options' => ['query' => ['type' => 'campaign']],
       ],
       'community_campaign_queues' => [
@@ -230,7 +232,7 @@ final class DashboardAdminLinkResolver {
       ],
       'nodes_jobs' => [
         'route' => 'entity.node.collection',
-        'permission' => 'access content overview',
+        'permission' => self::PERM_ACCESS_CONTENT,
         'options' => ['query' => ['type' => 'jobs']],
       ],
       'forms_submissions' => [

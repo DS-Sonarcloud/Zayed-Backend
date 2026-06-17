@@ -50,7 +50,7 @@ class JobApplicationForm extends FormBase
     }
 
     try {
-      $decoded = JWT::decode($token, new Key(Constants::JWT_SECRET, Constants::JWT_ALGO));
+      $decoded = JWT::decode($token, new Key(Constants::jwtSecret(), Constants::JWT_ALGO));
     } catch (\Exception $e) {
       return ['#type' => 'markup', '#markup' => '<script>window.location="/public-user/login";</script>'];
     }
@@ -171,10 +171,7 @@ class JobApplicationForm extends FormBase
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state)
-  {
-    // You can add extra validation for resume extension/size here if needed.
-  }
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}

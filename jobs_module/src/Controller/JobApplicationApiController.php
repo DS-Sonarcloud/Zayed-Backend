@@ -13,30 +13,38 @@ use Drupal\zu_rest_api\Constants;
 use Drupal\file\Entity\File;
 use Drupal\Core\File\FileExists;
 
-class JobApplicationApiController extends ControllerBase
-{
+class JobApplicationApiController extends ControllerBase {
+
+  private const ERR_MISSING_TOKEN = 'Missing token';
+  private const ERR_INVALID_TOKEN = 'Invalid token';
+  private const ERR_USER_NOT_FOUND = 'User not found';
 
   /**
-   * GET API — Prefill data
+   * GET API — Prefill data.
    */
-  public function getApplication($job_id, Request $request)
-  {
-
+  public function getApplication($job_id, Request $request) {
     $jwt = $this->extractToken($request);
-    if (!$jwt) return new JsonResponse(['error' => 'Missing token'], 401);
+    if (!$jwt) {
+      return new JsonResponse(['error' => self::ERR_MISSING_TOKEN], 401);
+    }
 
     try {
-      $decoded = JWT::decode($jwt, new Key(Constants::JWT_SECRET, Constants::JWT_ALGO));
-    } catch (\Exception $e) {
-      return new JsonResponse(['error' => 'Invalid token'], 401);
+      $decoded = JWT::decode($jwt, new Key(Constants::jwtSecret(), Constants::JWT_ALGO));
+    }
+    catch (\Exception $e) {
+      return new JsonResponse(['error' => self::ERR_INVALID_TOKEN], 401);
     }
 
     $uid = $decoded->user_id;
     $user = PublicUser::load($uid);
-    if (!$user) return new JsonResponse(['error' => 'User not found'], 404);
+    if (!$user) {
+      return new JsonResponse(['error' => self::ERR_USER_NOT_FOUND], 404);
+    }
 
     $job = Node::load($job_id);
-    if (!$job) return new JsonResponse(['error' => 'Job not found'], 404);
+    if (!$job) {
+      return new JsonResponse(['error' => 'Job not found'], 404);
+    }
 
     $record = \Drupal::database()->select('job_application', 'ja')
       ->fields('ja')
@@ -47,7 +55,7 @@ class JobApplicationApiController extends ControllerBase
 
     $resume_url = NULL;
     if (!empty($record['resume_fid']) && ($file = File::load($record['resume_fid']))) {
-      $resume_url = file_create_url($file->getFileUri());
+      $resume_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
     }
 
     return new JsonResponse([
@@ -67,30 +75,36 @@ class JobApplicationApiController extends ControllerBase
         'cover_letter' => $record['cover_letter'],
         'resume_url' => $resume_url,
         'status' => $record['status'],
-      ] : NULL
+      ] : NULL,
     ]);
   }
 
   /**
-   * POST API — Insert OR Update Application (Unified Logic)
+   * POST API — Insert OR Update Application.
    */
-  public function submit(Request $request, $job_id)
-  {
+  public function submit(Request $request, $job_id) {
     $jwt = $this->extractToken($request);
-    if (!$jwt) return new JsonResponse(['error' => 'Missing token'], 401);
+    if (!$jwt) {
+      return new JsonResponse(['error' => self::ERR_MISSING_TOKEN], 401);
+    }
 
     try {
-      $decoded = JWT::decode($jwt, new Key(Constants::JWT_SECRET, Constants::JWT_ALGO));
-    } catch (\Exception $e) {
-      return new JsonResponse(['error' => 'Invalid token'], 401);
+      $decoded = JWT::decode($jwt, new Key(Constants::jwtSecret(), Constants::JWT_ALGO));
+    }
+    catch (\Exception $e) {
+      return new JsonResponse(['error' => self::ERR_INVALID_TOKEN], 401);
     }
 
     $uid = $decoded->user_id;
     $user = PublicUser::load($uid);
-    if (!$user) return new JsonResponse(['error' => 'User not found'], 404);
+    if (!$user) {
+      return new JsonResponse(['error' => self::ERR_USER_NOT_FOUND], 404);
+    }
 
     $job = Node::load($job_id);
-    if (!$job) return new JsonResponse(['error' => 'Job not found'], 404);
+    if (!$job) {
+      return new JsonResponse(['error' => 'Job not found'], 404);
+    }
 
     $existing = \Drupal::database()->select('job_application', 'ja')
       ->fields('ja')
@@ -100,31 +114,18 @@ class JobApplicationApiController extends ControllerBase
       ->fetchAssoc();
 
     $data = $request->request->all();
-
     $applicant_name  = $data['name'] ?? '';
     $applicant_email = $data['email'] ?? '';
     $mobile          = $data['mobile'] ?? '';
     $cover_letter    = $data['cover_letter'] ?? '';
-
     $fid = $existing['resume_fid'] ?? NULL;
 
-    // Handle resume
     if (!empty($_FILES['resume']['tmp_name'])) {
       $filename = basename($_FILES['resume']['name']);
       $filecontent = file_get_contents($_FILES['resume']['tmp_name']);
       $destination = 'public://job-resumes/' . $filename;
-
-      \Drupal::service('file_system')->saveData(
-        $filecontent,
-        $destination,
-        FileExists::Replace
-      );
-
-      $file = File::create([
-        'uri' => $destination,
-        'filename' => $filename,
-        'status' => 1,
-      ]);
+      \Drupal::service('file_system')->saveData($filecontent, $destination, FileExists::Replace);
+      $file = File::create(['uri' => $destination, 'filename' => $filename, 'status' => 1]);
       $file->save();
       $fid = $file->id();
     }
@@ -133,11 +134,7 @@ class JobApplicationApiController extends ControllerBase
     $job_title = $job->getTitle();
     $admin_email = \Drupal::config('system.site')->get('mail');
 
-    // ======================================================
-    // UPDATE CASE
-    // ======================================================
     if ($existing) {
-
       if ($existing['status'] !== 'submitted') {
         return new JsonResponse(['error' => 'You cannot update form now.'], 403);
       }
@@ -154,17 +151,14 @@ class JobApplicationApiController extends ControllerBase
         ->condition('id', $existing['id'])
         ->execute();
 
-      // --- EMAIL TEMPLATE FOR UPDATE ---
       $body = $this->renderTemplate('modules/custom/jobs_module/templates/application_updated.html.twig', [
         'name' => $applicant_name,
         'job_title' => $job_title,
       ]);
-
       jobs_module_send_mail('application_updated_user', $applicant_email, [
         'subject' => "Application Updated – $job_title",
         'body' => $body,
       ]);
-
       if ($admin_email) {
         jobs_module_send_mail('application_updated_admin', $admin_email, [
           'subject' => "Application Updated: $job_title",
@@ -172,15 +166,9 @@ class JobApplicationApiController extends ControllerBase
         ]);
       }
 
-      return new JsonResponse([
-        'status' => 'success',
-        'message' => 'Application updated successfully.',
-      ], 200);
+      return new JsonResponse(['status' => 'success', 'message' => 'Application updated successfully.'], 200);
     }
 
-    // ======================================================
-    // INSERT / SUBMISSION CASE
-    // ======================================================
     \Drupal::database()->insert('job_application')
       ->fields([
         'job_id' => $job_id,
@@ -196,17 +184,14 @@ class JobApplicationApiController extends ControllerBase
       ])
       ->execute();
 
-    // --- EMAIL TEMPLATE FOR SUBMISSION ---
     $body = $this->renderTemplate('modules/custom/jobs_module/templates/application_submitted.html.twig', [
       'name' => $applicant_name,
       'job_title' => $job_title,
     ]);
-
     jobs_module_send_mail('application_received_applicant', $applicant_email, [
       'subject' => "Application Received – $job_title",
       'body' => $body,
     ]);
-
     if ($admin_email) {
       jobs_module_send_mail('application_received_admin', $admin_email, [
         'subject' => "New Application: $job_title",
@@ -214,43 +199,31 @@ class JobApplicationApiController extends ControllerBase
       ]);
     }
 
-    return new JsonResponse([
-      'status' => 'success',
-      'message' => 'Application submitted successfully.',
-    ], 201);
-  }
-
-
-  private function extractToken(Request $request)
-  {
-    $auth = $request->headers->get('Authorization');
-    if ($auth && preg_match('/Bearer\s+(\S+)/', $auth, $m)) {
-      return $m[1];
-    }
-    return $request->query->get('token');
+    return new JsonResponse(['status' => 'success', 'message' => 'Application submitted successfully.'], 201);
   }
 
   /**
    * GET API — All job applications for logged-in public user.
    */
-  public function JobApplicationList(Request $request)
-  {
+  public function jobApplicationList(Request $request) {
     $jwt = $this->extractToken($request);
-    if (!$jwt) return new JsonResponse(['error' => 'Missing token'], 401);
+    if (!$jwt) {
+      return new JsonResponse(['error' => self::ERR_MISSING_TOKEN], 401);
+    }
 
     try {
-      $decoded = JWT::decode($jwt, new Key(Constants::JWT_SECRET, Constants::JWT_ALGO));
-    } catch (\Exception $e) {
-      return new JsonResponse(['error' => 'Invalid token'], 401);
+      $decoded = JWT::decode($jwt, new Key(Constants::jwtSecret(), Constants::JWT_ALGO));
+    }
+    catch (\Exception $e) {
+      return new JsonResponse(['error' => self::ERR_INVALID_TOKEN], 401);
     }
 
     $uid = $decoded->user_id;
-
-    /** Load public user */
     $user = PublicUser::load($uid);
-    if (!$user) return new JsonResponse(['error' => 'User not found'], 404);
+    if (!$user) {
+      return new JsonResponse(['error' => self::ERR_USER_NOT_FOUND], 404);
+    }
 
-    /** Fetch all applications for this user */
     $records = \Drupal::database()->select('job_application', 'ja')
       ->fields('ja')
       ->condition('public_user_id', $uid)
@@ -259,64 +232,51 @@ class JobApplicationApiController extends ControllerBase
       ->fetchAll();
 
     $file_url_generator = \Drupal::service('file_url_generator');
-
     $applications = [];
 
     foreach ($records as $r) {
-
-      // Load the job node
       $job = Node::load($r->job_id);
-
-      if (!$job) continue;
-
-      // ------ Extract Job Fields ------
-      $job_title = $job->getTitle();
-
-      // Example: Department field (update based on actual field name)
-      $department = null;
-
-      $department = null;
-
-      if (
-        $job->hasField('field_job_department') &&
-        !$job->get('field_job_department')->isEmpty()
-      ) {
-        $term = $job->get('field_job_department')->entity;
-        $department = $term ? $term->getName() : null;
+      if (!$job) {
+        continue;
       }
 
-      // dd($department);
+      $department = NULL;
+      if ($job->hasField('field_job_department') && !$job->get('field_job_department')->isEmpty()) {
+        $term = $job->get('field_job_department')->entity;
+        $department = $term ? $term->getName() : NULL;
+      }
 
-      // Example: Job type field
-      $job_type = $job->hasField('field_job_type')
-        ? $job->get('field_job_type')->value
-        : null;
+      $job_type = $job->hasField('field_job_type') ? $job->get('field_job_type')->value : NULL;
 
-      // ------ Resume URL ------
-      $resume_url = null;
+      $resume_url = NULL;
       if (!empty($r->resume_fid) && ($file = File::load($r->resume_fid))) {
         $resume_url = $file_url_generator->generateAbsoluteString($file->getFileUri());
       }
 
       $applications[] = [
-        'job_id'            => $r->job_id,
-        'job_title'         => $job_title,
-        'department'        => $department,
-        'job_type'          => $job_type,
+        'job_id'             => $r->job_id,
+        'job_title'          => $job->getTitle(),
+        'department'         => $department,
+        'job_type'           => $job_type,
         'application_status' => $r->status,
-        'applied_on'        => $r->created,
-        'resume_url'        => $resume_url,
+        'applied_on'         => $r->created,
+        'resume_url'         => $resume_url,
       ];
     }
 
-    return new JsonResponse([
-      'status' => 'success',
-      'applications' => $applications,
-    ]);
+    return new JsonResponse(['status' => 'success', 'applications' => $applications]);
   }
 
-  private function renderTemplate($template, array $vars = [])
-  {
+  private function extractToken(Request $request) {
+    $auth = $request->headers->get('Authorization');
+    if ($auth && preg_match('/Bearer\s+(\S+)/', $auth, $m)) {
+      return $m[1];
+    }
+    return $request->query->get('token');
+  }
+
+  private function renderTemplate($template, array $vars = []) {
     return \Drupal::service('twig')->render($template, $vars);
   }
+
 }

@@ -52,7 +52,7 @@ class StudentListController extends ControllerBase
             ];
 
             // Table header.
-            $header = null;
+            $header = NULL;
             $rows = [];
 
             $limit = 20;

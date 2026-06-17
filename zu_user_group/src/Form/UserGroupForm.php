@@ -43,8 +43,8 @@ class UserGroupForm extends ContentEntityForm
     $persistent_selections = $form_state->get('persistent_webform_submissions');
     $user_table_selection = $form_state->getValue('submissions_table');
 
-    if ($user_table_selection !== null) {
-      if ($persistent_selections === null)
+    if ($user_table_selection !== NULL) {
+      if ($persistent_selections === NULL)
         $persistent_selections = [];
       foreach ($user_table_selection as $sid => $selected) {
         if ($selected) {
@@ -294,7 +294,7 @@ class UserGroupForm extends ContentEntityForm
     $connection = \Drupal::database();
 
     $roles = $form_state->getValue('target_roles');
-    if ($roles === null && $this->entity->id() && $this->entity->hasField('target_roles')) {
+    if ($roles === NULL && $this->entity->id() && $this->entity->hasField('target_roles')) {
       $roles = $this->entity->get('target_roles')->getValue();
     }
     if (!empty($roles) && is_array($roles)) {
@@ -315,7 +315,7 @@ class UserGroupForm extends ContentEntityForm
 
     $target_all = $form_state->getValue('target_all_public_users');
 
-    if ($target_all === null && $this->entity->id() && $this->entity->hasField('target_all_public_users')) {
+    if ($target_all === NULL && $this->entity->id() && $this->entity->hasField('target_all_public_users')) {
       $target_all = $this->entity->get('target_all_public_users')->value;
     }
 
@@ -333,7 +333,7 @@ class UserGroupForm extends ContentEntityForm
       $emails = array_merge($emails, $query->execute()->fetchCol());
     } else {
       $segments = $form_state->getValue('target_public_segments');
-      if ($segments === null && $this->entity->id() && $this->entity->hasField('target_public_segments')) {
+      if ($segments === NULL && $this->entity->id() && $this->entity->hasField('target_public_segments')) {
         $segments = $this->entity->get('target_public_segments')->getValue();
       }
       if (!empty($segments)) {
@@ -354,7 +354,7 @@ class UserGroupForm extends ContentEntityForm
       }
 
       $events = $form_state->getValue('target_event_types');
-      if ($events === null && $this->entity->id() && $this->entity->hasField('target_event_types')) {
+      if ($events === NULL && $this->entity->id() && $this->entity->hasField('target_event_types')) {
         $events = $this->entity->get('target_event_types')->getValue();
       }
       if (!empty($events)) {
@@ -382,7 +382,7 @@ class UserGroupForm extends ContentEntityForm
     }
 
     $target_webforms = $form_state->getValue('target_webforms');
-    if ($target_webforms === null && $this->entity->id()) {
+    if ($target_webforms === NULL && $this->entity->id()) {
       $target_webforms = $this->entity->get('target_webforms')->getValue();
     }
 
@@ -438,7 +438,7 @@ class UserGroupForm extends ContentEntityForm
     $form_state->setRedirect('entity.user_group.collection');
   }
 
-  protected function getWebformSubmissions($selected_webforms, $paginate = true, ?FormStateInterface $form_state = null)
+  protected function getWebformSubmissions($selected_webforms, $paginate = true, ?FormStateInterface $form_state = NULL)
   {
     if (empty($selected_webforms)) {
       return [];
@@ -453,7 +453,7 @@ class UserGroupForm extends ContentEntityForm
     }
 
     $current_page = 0;
-    if ($form_state && $form_state->getValue('current_page') !== null) {
+    if ($form_state && $form_state->getValue('current_page') !== NULL) {
       $current_page = $form_state->getValue('current_page');
       \Drupal::request()->query->set('page', $current_page);
     } else {

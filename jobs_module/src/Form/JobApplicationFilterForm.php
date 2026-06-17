@@ -14,6 +14,9 @@ use Drupal\zu_public_user\Entity\PublicUser;
 class JobApplicationFilterForm extends FormBase
 {
 
+  private const AJAX_CALLBACK = '::ajaxRefresh';
+  private const AJAX_WRAPPER = 'job-app-wrapper';
+
   public function getFormId()
   {
     return 'job_application_filter_form';
@@ -34,8 +37,7 @@ class JobApplicationFilterForm extends FormBase
       'status' => '',
     ];
 
-    // AJAX wrapper
-    $form['#prefix'] = '<div id="job-app-wrapper">';
+    $form['#prefix'] = '<div id="' . self::AJAX_WRAPPER . '">';
     $form['#suffix'] = '</div>';
 
     // -------------------------------------
@@ -51,8 +53,8 @@ class JobApplicationFilterForm extends FormBase
       '#title' => $this->t('Job Title'),
       '#default_value' => $filters['job_title'],
       '#ajax' => [
-        'callback' => '::ajaxRefresh',
-        'wrapper' => 'job-app-wrapper',
+        'callback' => self::AJAX_CALLBACK,
+        'wrapper' => self::AJAX_WRAPPER,
       ],
     ];
 
@@ -62,8 +64,8 @@ class JobApplicationFilterForm extends FormBase
       '#default_value' => $filters['public_user'],
       '#autocomplete_route_name' => 'jobs_module.public_user_autocomplete',
       '#ajax' => [
-        'callback' => '::ajaxRefresh',
-        'wrapper' => 'job-app-wrapper',
+        'callback' => self::AJAX_CALLBACK,
+        'wrapper' => self::AJAX_WRAPPER,
       ],
     ];
 
@@ -81,8 +83,8 @@ class JobApplicationFilterForm extends FormBase
       ],
       '#default_value' => $filters['status'],
       '#ajax' => [
-        'callback' => '::ajaxRefresh',
-        'wrapper' => 'job-app-wrapper',
+        'callback' => self::AJAX_CALLBACK,
+        'wrapper' => self::AJAX_WRAPPER,
       ],
     ];
 
@@ -92,8 +94,8 @@ class JobApplicationFilterForm extends FormBase
       '#value' => $this->t('Apply Filters'),
       '#submit' => ['::filtersSubmit'],
       '#ajax' => [
-        'callback' => '::ajaxRefresh',
-        'wrapper' => 'job-app-wrapper',
+        'callback' => self::AJAX_CALLBACK,
+        'wrapper' => self::AJAX_WRAPPER,
       ],
     ];
 

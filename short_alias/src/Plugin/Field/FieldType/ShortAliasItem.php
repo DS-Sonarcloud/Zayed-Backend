@@ -144,7 +144,6 @@ class ShortAliasItem extends FieldItemBase
 
         // If duplicate exists and it's not the same redirect for this node/language
         if (!empty($duplicate_ids) && (!$existing_alias || !in_array((int) $existing_alias->id(), $duplicate_ids, TRUE))) {
-          // \Drupal::messenger()->addWarning(t('This short alias already exists for another node/language combination. No changes were made.'));
           return;
         }
 

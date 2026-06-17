@@ -17,10 +17,7 @@ class RedirectNodeTitle extends FieldPluginBase
   /**
    * {@inheritdoc}
    */
-  public function query()
-  {
-    // This field doesn't need to add anything to the query.
-  }
+  public function query() {}
 
   /**
    * {@inheritdoc}
@@ -63,8 +60,8 @@ class RedirectNodeTitle extends FieldPluginBase
             $title = $node->getTitle();
           }
 
-          // Format: "Title (en)" or "Title (ar)"
-          $language_name = $langcode === 'en' ? 'English' : ($langcode === 'ar' ? 'Arabic' : $langcode);
+          $lang_map = ['en' => 'English', 'ar' => 'Arabic'];
+          $language_name = $lang_map[$langcode] ?? $langcode;
           return $this->t('@title (@lang)', [
             '@title' => $title,
             '@lang' => $language_name,

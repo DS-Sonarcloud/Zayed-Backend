@@ -15,6 +15,8 @@ use Drupal\zu_admin\Service\GroupManagerService;
  */
 class EditGroupForm extends FormBase {
 
+  private const PEOPLE_BASE = '/zu-admin/people/';
+
   protected EntityTypeManagerInterface $entityTypeManager;
   protected Connection $database;
   protected AuditService $auditService;
@@ -59,9 +61,9 @@ class EditGroupForm extends FormBase {
     $form['#group_name'] = $group_name;
 
     $form['#tabs'] = [
-      ['label' => 'View',          'key' => 'view',      'url' => '/zu-admin/people/' . $group_name . '/view'],
-      ['label' => 'Edit',          'key' => 'edit',      'url' => '/zu-admin/people/' . $group_name . '/edit', 'active' => TRUE],
-      ['label' => 'Workflows',     'key' => 'workflows', 'url' => '/zu-admin/people/' . $group_name . '/workflows'],
+      ['label' => 'View',          'key' => 'view',      'url' => self::PEOPLE_BASE . $group_name . '/view'],
+      ['label' => 'Edit',          'key' => 'edit',      'url' => self::PEOPLE_BASE . $group_name . '/edit', 'active' => TRUE],
+      ['label' => 'Workflows',     'key' => 'workflows', 'url' => self::PEOPLE_BASE . $group_name . '/workflows'],
       ['label' => 'Locked Assets', 'key' => 'locked',    'url' => '#'],
       ['label' => 'Audits',        'key' => 'audits',    'url' => '#'],
       ['label' => 'Delete',        'key' => 'delete',    'url' => '#'],

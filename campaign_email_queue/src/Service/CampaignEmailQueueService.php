@@ -438,13 +438,13 @@ class CampaignEmailQueueService
         }
 
         if (($handle = fopen($realpath, 'r')) !== FALSE) {
-          $header = null;
+          $header = NULL;
           while (($row = fgetcsv($handle)) !== FALSE) {
-            if ($row === [null] || $row === []) {
+            if ($row === [NULL] || $row === []) {
               continue;
             }
 
-            if ($header === null) {
+            if ($header === NULL) {
               $lower = array_map(function ($c) {
                 return strtolower(trim($c));
               }, $row);

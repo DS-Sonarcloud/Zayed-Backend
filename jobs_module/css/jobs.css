@@ -54,12 +54,6 @@
 /* ------------------------------
    2. Base Layout
 ------------------------------ */
-/* body {
-	font-family: "Roboto", -apple-system, BlinkMacSystemFont, 
-    system-ui, 'Ubuntu', 'Fira Sans', 
-    sans-serif;
-} */
-
 h1,h2,h3,h4,h5,h6 {
   color: var(--accent-meahrun);
 }

@@ -52,12 +52,8 @@ class WorkflowController extends ControllerBase {
       ->execute()
       ->fetchCol();
 
-    if (empty($uids)) {
-      return [];
-    }
-
-    if (!\Drupal::moduleHandler()->moduleExists('content_moderation')) {
-      return $this->getFakeWorkflowData($uids);
+    if (empty($uids) || !\Drupal::moduleHandler()->moduleExists('content_moderation')) {
+      return empty($uids) ? [] : $this->getFakeWorkflowData($uids);
     }
 
     try {
