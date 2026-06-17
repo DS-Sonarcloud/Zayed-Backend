@@ -1,0 +1,72 @@
+zu_personalization.bulk_modal:
+  path: '/admin/zu-personalization/bulk-modal/{action_type}'
+  defaults:
+    _form: '\Drupal\zu_personalization\Form\BulkPersonalizationModalForm'
+    _title: 'Personalization Rules'
+  requirements:
+    _permission: 'administer zu personalization'
+    action_type: 'assign|remove'
+  options:
+    _admin_route: TRUE
+
+zu_personalization.admin_dashboard:
+  path: '/admin/config/zu-personalization'
+  defaults:
+    _controller: '\Drupal\zu_personalization\Controller\PersonalizationAdminController::dashboard'
+    _title: 'Personalization'
+  requirements:
+    _permission: 'administer zu personalization'
+
+zu_personalization.rule_list:
+  path: '/admin/config/zu-personalization/rules'
+  defaults:
+    _controller: '\Drupal\zu_personalization\Controller\PersonalizationAdminController::ruleList'
+    _title: 'Personalization Rules'
+  requirements:
+    _permission: 'administer zu personalization'
+
+zu_personalization.rule_add:
+  path: '/admin/config/zu-personalization/rules/add'
+  defaults:
+    _form: '\Drupal\zu_personalization\Form\PersonalizationRuleForm'
+    _title: 'Add Personalization Rule'
+    rule_id: 0
+  requirements:
+    _permission: 'administer zu personalization'
+
+zu_personalization.rule_edit:
+  path: '/admin/config/zu-personalization/rules/{rule_id}/edit'
+  defaults:
+    _form: '\Drupal\zu_personalization\Form\PersonalizationRuleForm'
+    _title: 'Edit Personalization Rule'
+  requirements:
+    _permission: 'administer zu personalization'
+    rule_id: '\d+'
+
+zu_personalization.rule_delete:
+  path: '/admin/config/zu-personalization/rules/{rule_id}/delete'
+  defaults:
+    _form: '\Drupal\zu_personalization\Form\PersonalizationRuleDeleteForm'
+    _title: 'Delete Personalization Rule'
+  requirements:
+    _permission: 'administer zu personalization'
+    rule_id: '\d+'
+
+zu_personalization.content_variants:
+  path: '/admin/config/zu-personalization/content/{nid}/variants'
+  defaults:
+    _controller: '\Drupal\zu_personalization\Controller\PersonalizationAdminController::contentVariants'
+    _title: 'Manage Content Variants'
+  requirements:
+    _permission: 'administer zu personalization'
+    nid: '\d+'
+
+zu_personalization.variant_save:
+  path: '/admin/config/zu-personalization/content/{nid}/variants/{rule_id}'
+  defaults:
+    _form: '\Drupal\zu_personalization\Form\ContentVariantForm'
+    _title: 'Edit Content Variant'
+  requirements:
+    _permission: 'administer zu personalization'
+    nid: '\d+'
+    rule_id: '\d+'

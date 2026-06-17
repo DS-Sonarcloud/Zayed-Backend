@@ -1,0 +1,19 @@
+manage event dashboard:
+  title: 'Manage Event Dashboard'
+  description: 'Allow access to management columns (Publish/Unpublish, Bookmark Users) on the Event Dashboard.'
+
+view event bookmarks:
+  title: 'View Event Bookmarks'
+  description: 'Allow viewing the list of users who bookmarked an event.'
+
+export event bookmarks csv:
+  title: 'Export Event Bookmarks CSV'
+  description: 'Allow downloading the bookmarked users list as a CSV file.'
+
+view event subscribers:
+  title: 'View Event Subscribers'
+  description: 'Allow viewing the list of users subscribed to an event type.'
+
+export event subscribers csv:
+  title: 'Export Event Subscribers CSV'
+  description: 'Allow downloading the subscribed users list as a CSV file.'

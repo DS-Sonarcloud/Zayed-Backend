@@ -1,0 +1,39 @@
+
+blog:
+  body: content
+  field_blog_categories: categories
+  field_featured_image: featuredImage
+  field_summary: summary
+
+news:
+  body: content
+  field_thumbnail: thumbnail
+  field_featured_image: featuredImage
+  field_news_categories: categories
+  field_tags: tags
+  field_summary: summary
+  field_image_gallery: imageGallery
+
+event:
+  body: description
+  field_select_webform: field_select_webform
+  field_multimedia: field_multimedia
+
+job:
+  body: description
+
+forum:
+  body: body
+
+faculty:
+  field_department: department
+  field_area_of_expertise: area_of_expertise
+
+college:
+  body: college_description
+
+photo_gallery:
+  field_year: year
+  field_month: month
+  field_gallery_title: title
+  field_images: images

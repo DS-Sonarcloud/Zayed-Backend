@@ -1,0 +1,4 @@
+zu_super_admin_dashboard.settings:
+  type: config_object
+  label: 'ZU Super Admin Dashboard settings'
+  mapping: {}

@@ -1,0 +1,32 @@
+manage campaign email queues:
+  title: 'Manage campaign email queues (Super Admin)'
+  description: 'Full administrative access to all campaign queues. Grants all other permissions.'
+  restrict: TRUE
+
+access campaign email queue dashboard:
+  title: 'Access Campaign Email Queue Dashboard'
+  description: 'Allow user to access the main dashboard page.'
+
+view any campaign email queue:
+  title: 'View any campaign email queue'
+  description: 'Allow user to view all campaign queues regardless of ownership.'
+
+view department campaign email queue:
+  title: 'View department campaign email queue'
+  description: 'Allow user to view campaign queues created by users in their department.'
+
+view own campaign email queue:
+  title: 'View own campaign email queue'
+  description: 'Allow user to view their own campaign queues.'
+
+manage any campaign email queue:
+  title: 'Manage any campaign email queue'
+  description: 'Allow user to perform actions (Run, Pause, Clear) on any campaign queue.'
+
+manage department campaign email queue:
+  title: 'Manage department campaign email queue'
+  description: 'Allow user to perform actions on campaign queues created by users in their department.'
+
+manage own campaign email queue:
+  title: 'Manage own campaign email queue'
+  description: 'Allow user to perform actions on their own campaign queues.'

@@ -1,0 +1,4 @@
+access zu super admin dashboard:
+  title: 'Access ZU Super Admin Dashboard'
+  description: 'Reserved for the Super Admin role. Route access is enforced by role, not this permission alone.'
+  restrict: true

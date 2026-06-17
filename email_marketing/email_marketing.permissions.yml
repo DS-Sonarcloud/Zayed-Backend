@@ -1,0 +1,12 @@
+send marketing email:
+  title: "Send marketing email"
+  description: "Access Email Marketing form and send emails."
+  restrict access: true
+
+administer email marketing:
+  title: "Administer Email Marketing"
+  description: "Manage email campaigns and view sent list."
+
+access email templates:
+  title: "Access Email Templates Dashboard"
+  description: "Allow users to view and manage email templates from the content menu."

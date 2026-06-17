@@ -1,0 +1,8 @@
+administer zu personalization:
+  title: 'Administer ZU Personalization'
+  description: 'Create, edit, and delete personalization rules and per-node content variants.'
+  restrict access: true
+
+view zu personalization analytics:
+  title: 'View Personalization Analytics'
+  description: 'View persona data, rule evaluation counts, and variant statistics.'

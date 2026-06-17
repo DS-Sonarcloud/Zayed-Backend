@@ -1,0 +1,280 @@
+<?php
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function short_alias_entity_base_field_info(EntityTypeInterface $entity_type)
+{
+  $fields = [];
+  if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
+    $fields['short_alias'] = BaseFieldDefinition::create('short_alias')
+      ->setLabel(t('Short alias'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'short_alias_default',
+        'weight' => 30,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setComputed(TRUE);
+  }
+  return $fields;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function short_alias_views_data_alter(array &$data) {
+  $data['redirect']['redirect_node_title'] = [
+    'title' => t('Node Title & Language'),
+    'help' => t('Displays the node title and language for redirects pointing to nodes.'),
+    'field' => [
+      'id' => 'redirect_node_title',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function short_alias_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Alter redirect edit/add forms
+  if ($form_id === 'redirect_redirect_form' || $form_id === 'redirect_redirect_edit_form') {
+    /** @var \Drupal\redirect\Entity\Redirect $redirect */
+    $redirect = $form_state->getFormObject()->getEntity();
+    if (isset($form['language'])) {
+      $form['language']['#access'] = FALSE;
+    }
+    
+    // Get current target language
+    $current_langcode = 'en';
+    if (!$redirect->isNew()) {
+      try {
+        $redirect_url = $redirect->getRedirectUrl();
+        if ($redirect_url) {
+          $language_option = $redirect_url->getOption('language');
+          
+          if ($language_option instanceof \Drupal\Core\Language\LanguageInterface) {
+            $current_langcode = $language_option->getId();
+          } elseif (is_string($language_option)) {
+            $current_langcode = $language_option;
+          }
+        }
+      } catch (\Exception $e) {
+        \Drupal::logger('short_alias')->error('Error getting redirect URL for redirect ID @id: @message', [
+          '@id' => $redirect->id(),
+          '@message' => $e->getMessage(),
+        ]);
+      }
+    }
+    
+    if (isset($form['redirect_source']['widget'][0]['path'])) {
+      $form['redirect_source']['widget'][0]['path']['#maxlength'] = 255;
+      $form['redirect_source']['widget'][0]['path']['#description'] = t('The short alias should contain only uppercase letters, lowercase letters, and numbers.');
+    }
+
+    // Restrict redirect destination to node pages only.
+    if (isset($form['redirect_redirect']['widget'][0]['uri'])) {
+      $form['redirect_redirect']['widget'][0]['uri']['#target_type'] = 'node';
+      $form['redirect_redirect']['widget'][0]['uri']['#selection_handler'] = 'default:node';
+      $form['redirect_redirect']['widget'][0]['uri']['#selection_settings'] = [
+        'target_bundles' => NULL,
+      ];
+    }
+    
+    // Add editable language selector
+    $form['target_content_language'] = [
+      '#type' => 'select',
+      '#title' => t('Target Content Language'),
+      '#description' => t('Select which language version of the content this redirect should point to.'),
+      '#options' => [
+        'en' => t('English'),
+        'ar' => t('Arabic'),
+      ],
+      '#default_value' => $current_langcode,
+      '#required' => TRUE,
+      '#weight' => -10,
+    ];
+    
+    // custom validation and submit handlers
+    $form['#validate'][] = 'short_alias_redirect_form_validate';
+    $form['actions']['submit']['#submit'][] = 'short_alias_redirect_form_submit';
+  }
+}
+
+/**
+ * Custom validation handler for redirect form to check for missing translations and uniqueness.
+ */
+function short_alias_redirect_form_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $target_langcode = $form_state->getValue('target_content_language');
+  
+  // Get destination URI from the form
+  $redirect_redirect = $form_state->getValue('redirect_redirect');
+  $uri = '';
+  if (isset($redirect_redirect[0]['uri'])) {
+    $uri = $redirect_redirect[0]['uri'];
+  }
+
+  // Validate redirect source format
+  $source_path = $form_state->getValue(['redirect_source', 0, 'path']);
+  if ($source_path) {
+    $source_path = trim($source_path);
+    if (!preg_match('/^[A-Za-z0-9]+$/', $source_path)) {
+      $form_state->setErrorByName('redirect_source', t('The short alias must contain only uppercase letters, lowercase letters, and numbers.'));
+    }
+    else {
+      $redirect_repo = \Drupal::service('redirect.repository');
+      $duplicates = $redirect_repo->findBySourcePath($source_path);
+      
+      if (!empty($duplicates)) {
+        $duplicate_redirect = reset($duplicates);
+        /** @var \Drupal\redirect\Entity\Redirect $current_redirect */
+        $current_redirect = $form_state->getFormObject()->getEntity();
+        
+        // If it's not the same redirect we are currently editing
+        if ($current_redirect->isNew() || $duplicate_redirect->id() != $current_redirect->id()) {
+          $form_state->setErrorByName('redirect_source', t("The short alias '@alias' already exists. Each alias must be unique.", [
+            '@alias' => $source_path,
+          ]));
+        }
+      }
+    }
+  }
+
+  // Path Resolution & Node Language Uniqueness Validation
+  if ($target_langcode && $uri) {
+    $node_id = NULL;
+    $path_to_resolve = $uri;
+    if (strpos($path_to_resolve, 'internal:') === 0) {
+      $path_to_resolve = substr($path_to_resolve, 9);
+    }
+    elseif (strpos($path_to_resolve, 'entity:') === 0) {
+      try {
+        $url = \Drupal\Core\Url::fromUri($path_to_resolve);
+        if ($url->isRouted()) {
+          $params = $url->getRouteParameters();
+          $node_id = $params['node'] ?? NULL;
+        }
+      } catch (\Exception $e) {}
+    }
+
+    if (!$node_id) {
+      // Standardize path for validator
+      if (strpos($path_to_resolve, '/') !== 0 && !str_contains($path_to_resolve, ':')) {
+        $path_to_resolve = '/' . $path_to_resolve;
+      }
+      
+      // Try resolving directly
+      $url = \Drupal::service('path.validator')->getUrlIfValidWithoutAccessCheck($path_to_resolve);
+      if (!$url) {
+        $path_no_lang = preg_replace('/^\/(?:en|ar)\//', '/', $path_to_resolve);
+        if ($path_no_lang !== $path_to_resolve) {
+          $url = \Drupal::service('path.validator')->getUrlIfValidWithoutAccessCheck($path_no_lang);
+        }
+      }
+
+      if ($url && $url->isRouted()) {
+        $params = $url->getRouteParameters();
+        $node_id = $params['node'] ?? NULL;
+      }
+    }
+
+    if (!$node_id && preg_match('/node\/(\d+)/', $uri, $matches)) {
+      $node_id = $matches[1];
+    }
+
+    if ($node_id) {
+      try {
+        /** @var \Drupal\node\NodeInterface $node */
+        $node = \Drupal\node\Entity\Node::load($node_id);
+        
+        if ($node) {
+          // Ensure target node has the selected translation
+          if (!$node->hasTranslation($target_langcode)) {
+            $language_name = $target_langcode === 'en' ? 'English' : 'Arabic';
+            $form_state->setErrorByName('target_content_language', t('The target node does not have an @lang translation.', [
+              '@lang' => $language_name,
+            ]));
+          }
+          else {
+            // Node Language Uniqueness Validation: One alias per node/language
+            $short_alias_repo = \Drupal::service('short_alias.repository');
+            $node_path = 'node/' . $node_id;
+            $existing_node_alias = $short_alias_repo->findByDestinationUriAndLanguage([
+              "internal:/$node_path",
+              "internal:$node_path",
+              "entity:/$node_path",
+              "entity:$node_path",
+            ], $target_langcode);
+
+            if ($existing_node_alias) {
+              /** @var \Drupal\redirect\Entity\Redirect $current_redirect */
+              $current_redirect = $form_state->getFormObject()->getEntity();
+              if ($current_redirect->isNew() || $existing_node_alias->id() != $current_redirect->id()) {
+                $form_state->setErrorByName('target_content_language', t('A short alias already exists for this node in the selected language (@alias).', [
+                  '@alias' => $existing_node_alias->getSource()['path'] ?? '',
+                ]));
+              }
+            }
+          }
+        }
+      } catch (\Exception $e) {
+        \Drupal::logger('short_alias')->error('Error during redirect validation for node @id: @message', [
+          '@id' => $node_id,
+          '@message' => $e->getMessage(),
+        ]);
+      }
+    }
+  }
+}
+
+/**
+ * Custom submit handler for redirect form to save target language.
+ */
+function short_alias_redirect_form_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  /** @var \Drupal\redirect\Entity\Redirect $redirect */
+  try {
+    $redirect = $form_state->getFormObject()->getEntity();
+    $target_langcode = $form_state->getValue('target_content_language');
+    
+    if ($target_langcode) {
+      // Get the language object
+      $language = \Drupal::languageManager()->getLanguage($target_langcode);
+      if (!$language) {
+        throw new \Exception("Could not load language object for $target_langcode");
+      }
+      
+      // Get current redirect data
+      $redirect_field = $redirect->get('redirect_redirect');
+      if ($redirect_field->isEmpty()) {
+          return;
+      }
+      $redirect_data = $redirect_field->first()->getValue();
+      $uri = $redirect_data['uri'] ?? '';
+      $options = $redirect_data['options'] ?? [];
+      
+      // Update only the language option
+      $options['language'] = $language;
+      
+      // Update the redirect with existing URI and updated options
+      $redirect->set('redirect_redirect', [
+        'uri' => $uri,
+        'options' => $options,
+      ]);
+      $redirect->set('language', \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED);
+      $redirect->save();
+      
+      \Drupal::messenger()->addStatus(t('Redirect target language set to @lang.', [
+        '@lang' => $target_langcode === 'en' ? 'English' : 'Arabic',
+      ]));
+    }
+  } catch (\Exception $e) {
+    \Drupal::logger('short_alias')->error('Error saving redirect target language: @message', [
+      '@message' => $e->getMessage(),
+    ]);
+    \Drupal::messenger()->addError(t('An error occurred while saving the redirect. Please check the logs.'));
+  }
+}

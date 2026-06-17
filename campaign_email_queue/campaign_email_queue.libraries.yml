@@ -1,0 +1,23 @@
+dashboard:
+  version: 2.3
+  css:
+    theme:
+      css/dashboard.css: {}
+  js:
+    js/dashboard.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax
+    - core/drupalSettings
+    - core/once
+    - core/drupal.announce
+
+admin_keepalive:
+  version: 1.1
+  js:
+    js/admin-keepalive.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once

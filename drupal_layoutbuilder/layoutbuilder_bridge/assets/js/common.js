@@ -1,0 +1,828 @@
+
+var showNotice, adminMenu, columns, validateForm, screenMeta;
+( function( $, window, undefined ) {
+	var $document = $( document ),
+		$window = $( window ),
+		$body = $( document.body );
+adminMenu = {
+	init : function() {},
+	fold : function() {},
+	restoreMenuState : function() {},
+	toggle : function() {},
+	favorites : function() {}
+};
+columns = {
+	init : function() {
+		var that = this;
+		$('.hide-column-tog', '#adv-settings').click( function() {
+			var $t = $(this), column = $t.val();
+			if ( $t.prop('checked') )
+				that.checked(column);
+			else
+				that.unchecked(column);
+			columns.saveManageColumnsState();
+		});
+	},
+	saveManageColumnsState : function() {
+		var hidden = this.hidden();
+		$.post(ajaxurl, {
+			action: 'hidden-columns',
+			hidden: hidden,
+			screenoptionnonce: $('#screenoptionnonce').val(),
+			page: pagenow
+		});
+	},
+	checked : function(column) {
+		$('.column-' + column).removeClass( 'hidden' );
+		this.colSpanChange(+1);
+	},
+	unchecked : function(column) {
+		$('.column-' + column).addClass( 'hidden' );
+		this.colSpanChange(-1);
+	},
+	hidden : function() {
+		return $( '.manage-column[id]' ).filter( ':hidden' ).map(function() {
+			return this.id;
+		}).get().join( ',' );
+	},
+	useCheckboxesForHidden : function() {
+		this.hidden = function(){
+			return $('.hide-column-tog').not(':checked').map(function() {
+				var id = this.id;
+				return id.substring( id, id.length - 5 );
+			}).get().join(',');
+		};
+	},
+	colSpanChange : function(diff) {
+		var $t = $('table').find('.colspanchange'), n;
+		if ( !$t.length )
+			return;
+		n = parseInt( $t.attr('colspan'), 10 ) + diff;
+		$t.attr('colspan', n.toString());
+	}
+};
+$document.ready(function(){columns.init();});
+validateForm = function( form ) {
+	return !$( form )
+		.find( '.form-required' )
+		.filter( function() { return $( ':input:visible', this ).val() === ''; } )
+		.addClass( 'form-invalid' )
+		.find( ':input:visible' )
+		.change( function() { $( this ).closest( '.form-invalid' ).removeClass( 'form-invalid' ); } )
+		.length;
+};
+showNotice = {
+	warn : function() {
+		var msg = commonL10n.warnDelete || '';
+		if ( confirm(msg) ) {
+			return true;
+		}
+		return false;
+	},
+	note : function(text) {
+		alert(text);
+	}
+};
+screenMeta = {
+	element: null, 
+	toggles: null, 
+	page:    null, 
+	init: function() {
+		this.element = $('#screen-meta');
+		this.toggles = $( '#screen-meta-links' ).find( '.show-settings' );
+		this.page    = $('#wpcontent');
+		this.toggles.click( this.toggleEvent );
+	},
+	toggleEvent: function() {
+		var panel = $( '#' + $( this ).attr( 'aria-controls' ) );
+		if ( !panel.length )
+			return;
+		if ( panel.is(':visible') )
+			screenMeta.close( panel, $(this) );
+		else
+			screenMeta.open( panel, $(this) );
+	},
+	open: function( panel, button ) {
+		$( '#screen-meta-links' ).find( '.screen-meta-toggle' ).not( button.parent() ).css( 'visibility', 'hidden' );
+		panel.parent().show();
+		panel.slideDown( 'fast', function() {
+			panel.focus();
+			button.addClass( 'screen-meta-active' ).attr( 'aria-expanded', true );
+		});
+		$document.trigger( 'screen:options:open' );
+	},
+	close: function( panel, button ) {
+		panel.slideUp( 'fast', function() {
+			button.removeClass( 'screen-meta-active' ).attr( 'aria-expanded', false );
+			$('.screen-meta-toggle').css('visibility', '');
+			panel.parent().hide();
+		});
+		$document.trigger( 'screen:options:close' );
+	}
+};
+$('.contextual-help-tabs').delegate('a', 'click', function(e) {
+	var link = $(this),
+		panel;
+	e.preventDefault();
+	if ( link.is('.active a') )
+		return false;
+	$('.contextual-help-tabs .active').removeClass('active');
+	link.parent('li').addClass('active');
+	panel = $( link.attr('href') );
+	$('.help-tab-content').not( panel ).removeClass('active').hide();
+	panel.addClass('active').show();
+});
+var permalinkStructureFocused = false,
+    $permalinkStructure       = $( '#permalink_structure' ),
+    $permalinkStructureInputs = $( '.permalink-structure input:radio' ),
+    $permalinkCustomSelection = $( '#custom_selection' ),
+    $availableStructureTags   = $( '.form-table.permalink-structure .available-structure-tags button' );
+$permalinkStructureInputs.on( 'change', function() {
+	if ( 'custom' === this.value ) {
+		return;
+	}
+	$permalinkStructure.val( this.value );
+	$availableStructureTags.each( function() {
+		changeStructureTagButtonState( $( this ) );
+	} );
+} );
+$permalinkStructure.on( 'click input', function() {
+	$permalinkCustomSelection.prop( 'checked', true );
+} );
+$permalinkStructure.on( 'focus', function( event ) {
+	permalinkStructureFocused = true;
+	$( this ).off( event );
+} );
+function changeStructureTagButtonState( button ) {
+	if ( -1 !== $permalinkStructure.val().indexOf( button.text().trim() ) ) {
+		button.attr( 'data-label', button.attr( 'aria-label' ) );
+		button.attr( 'aria-label', button.attr( 'data-used' ) );
+		button.attr( 'aria-pressed', true );
+		button.addClass( 'active' );
+	} else if ( button.attr( 'data-label' ) ) {
+		button.attr( 'aria-label', button.attr( 'data-label' ) );
+		button.attr( 'aria-pressed', false );
+		button.removeClass( 'active' );
+	}
+}
+$availableStructureTags.each( function() {
+	changeStructureTagButtonState( $( this ) );
+} );
+$permalinkStructure.on( 'change', function() {
+	$availableStructureTags.each( function() {
+		changeStructureTagButtonState( $( this ) );
+	} );
+} );
+$availableStructureTags.on( 'click', function() {
+	var permalinkStructureValue = $permalinkStructure.val(),
+	    selectionStart          = $permalinkStructure[ 0 ].selectionStart,
+	    selectionEnd            = $permalinkStructure[ 0 ].selectionEnd,
+	    textToAppend            = $( this ).text().trim(),
+	    textToAnnounce          = $( this ).attr( 'data-added' ),
+	    newSelectionStart;
+	if ( -1 !== permalinkStructureValue.indexOf( textToAppend ) ) {
+		permalinkStructureValue = permalinkStructureValue.replace( textToAppend + '/', '' );
+		$permalinkStructure.val( '/' === permalinkStructureValue ? '' : permalinkStructureValue );
+		$( '#custom_selection_updated' ).text( textToAnnounce );
+		changeStructureTagButtonState( $( this ) );
+		return;
+	}
+	if ( ! permalinkStructureFocused && 0 === selectionStart && 0 === selectionEnd ) {
+		selectionStart = selectionEnd = permalinkStructureValue.length;
+	}
+	$permalinkCustomSelection.prop( 'checked', true );
+	if ( '/' !== permalinkStructureValue.substr( 0, selectionStart ).substr( -1 ) ) {
+		textToAppend = '/' + textToAppend;
+	}
+	if ( '/' !== permalinkStructureValue.substr( selectionEnd, 1 ) ) {
+		textToAppend = textToAppend + '/';
+	}
+	$permalinkStructure.val( permalinkStructureValue.substr( 0, selectionStart ) + textToAppend + permalinkStructureValue.substr( selectionEnd ) );
+	$( '#custom_selection_updated' ).text( textToAnnounce );
+	changeStructureTagButtonState( $( this ) );
+	if ( permalinkStructureFocused && $permalinkStructure[0].setSelectionRange ) {
+		newSelectionStart = ( permalinkStructureValue.substr( 0, selectionStart ) + textToAppend ).length;
+		$permalinkStructure[0].setSelectionRange( newSelectionStart, newSelectionStart );
+		$permalinkStructure.focus();
+	}
+} );
+$document.ready( function() {
+	var checks, first, last, checked, sliced, mobileEvent, transitionTimeout, focusedRowActions,
+		lastClicked = false,
+		pageInput = $('input.current-page'),
+		currentPage = pageInput.val(),
+		isIOS = /iPhone|iPad|iPod/.test( navigator.userAgent ),
+		isAndroid = navigator.userAgent.indexOf( 'Android' ) !== -1,
+		isIE8 = $( document.documentElement ).hasClass( 'ie8' ),
+		$adminMenuWrap = $( '#adminmenuwrap' ),
+		$wpwrap = $( '#wpwrap' ),
+		$adminmenu = $( '#adminmenu' ),
+		$overlay = $( '#wp-responsive-overlay' ),
+		$toolbar = $( '#wp-toolbar' ),
+		$toolbarPopups = $toolbar.find( 'a[aria-haspopup="true"]' ),
+		$sortables = $('.meta-box-sortables'),
+		wpResponsiveActive = false,
+		$adminbar = $( '#wpadminbar' ),
+		lastScrollPosition = 0,
+		pinnedMenuTop = false,
+		pinnedMenuBottom = false,
+		menuTop = 0,
+		menuState,
+		menuIsPinned = false,
+		height = {
+			window: $window.height(),
+			wpwrap: $wpwrap.height(),
+			adminbar: $adminbar.height(),
+			menu: $adminMenuWrap.height()
+		},
+		$headerEnd = $( '.wp-header-end' );
+	$adminmenu.on('click.wp-submenu-head', '.wp-submenu-head', function(e){
+		$(e.target).parent().siblings('a').get(0).click();
+	});
+	$( '#collapse-button' ).on( 'click.collapse-menu', function() {
+		var viewportWidth = getViewportWidth() || 961;
+		$('#adminmenu div.wp-submenu').css('margin-top', '');
+		if ( viewportWidth < 960 ) {
+			if ( $body.hasClass('auto-fold') ) {
+				$body.removeClass('auto-fold').removeClass('folded');
+				setUserSetting('unfold', 1);
+				setUserSetting('mfold', 'o');
+				menuState = 'open';
+			} else {
+				$body.addClass('auto-fold');
+				setUserSetting('unfold', 0);
+				menuState = 'folded';
+			}
+		} else {
+			if ( $body.hasClass('folded') ) {
+				$body.removeClass('folded');
+				setUserSetting('mfold', 'o');
+				menuState = 'open';
+			} else {
+				$body.addClass('folded');
+				setUserSetting('mfold', 'f');
+				menuState = 'folded';
+			}
+		}
+		$document.trigger( 'wp-collapse-menu', { state: menuState } );
+	});
+	function currentMenuItemHasPopup() {
+		var $current = $( 'a.wp-has-current-submenu' );
+		if ( 'folded' === menuState ) {
+			$current.attr( 'aria-haspopup', 'true' );
+		} else {
+			$current.attr( 'aria-haspopup', 'false' );
+		}
+	}
+	$document.on( 'wp-menu-state-set wp-collapse-menu wp-responsive-activate wp-responsive-deactivate', currentMenuItemHasPopup );
+	function adjustSubmenu( $menuItem ) {
+		var bottomOffset, pageHeight, adjustment, theFold, menutop, wintop, maxtop,
+			$submenu = $menuItem.find( '.wp-submenu' );
+		menutop = $menuItem.offset().top;
+		wintop = $window.scrollTop();
+		maxtop = menutop - wintop - 30; 
+		bottomOffset = menutop + $submenu.height() + 1; 
+		pageHeight = $wpwrap.height(); 
+		adjustment = 60 + bottomOffset - pageHeight;
+		theFold = $window.height() + wintop - 50; 
+		if ( theFold < ( bottomOffset - adjustment ) ) {
+			adjustment = bottomOffset - theFold;
+		}
+		if ( adjustment > maxtop ) {
+			adjustment = maxtop;
+		}
+		if ( adjustment > 1 ) {
+			$submenu.css( 'margin-top', '-' + adjustment + 'px' );
+		} else {
+			$submenu.css( 'margin-top', '' );
+		}
+	}
+	if ( 'ontouchstart' in window || /IEMobile\/[1-9]/.test(navigator.userAgent) ) { 
+		mobileEvent = isIOS ? 'touchstart' : 'click';
+		$body.on( mobileEvent+'.wp-mobile-hover', function(e) {
+			if ( $adminmenu.data('wp-responsive') ) {
+				return;
+			}
+			if ( ! $( e.target ).closest( '#adminmenu' ).length ) {
+				$adminmenu.find( 'li.opensub' ).removeClass( 'opensub' );
+			}
+		});
+		$adminmenu.find( 'a.wp-has-submenu' ).on( mobileEvent + '.wp-mobile-hover', function( event ) {
+			var $menuItem = $(this).parent();
+			if ( $adminmenu.data( 'wp-responsive' ) ) {
+				return;
+			}
+			if ( ! $menuItem.hasClass( 'opensub' ) && ( ! $menuItem.hasClass( 'wp-menu-open' ) || $menuItem.width() < 40 ) ) {
+				event.preventDefault();
+				adjustSubmenu( $menuItem );
+				$adminmenu.find( 'li.opensub' ).removeClass( 'opensub' );
+				$menuItem.addClass('opensub');
+			}
+		});
+	}
+	if ( ! isIOS && ! isAndroid ) {
+		$adminmenu.find( 'li.wp-has-submenu' ).hoverIntent({
+			over: function() {
+				var $menuItem = $( this ),
+					$submenu = $menuItem.find( '.wp-submenu' ),
+					top = parseInt( $submenu.css( 'top' ), 10 );
+				if ( isNaN( top ) || top > -5 ) { 
+					return;
+				}
+				if ( $adminmenu.data( 'wp-responsive' ) ) {
+					return;
+				}
+				adjustSubmenu( $menuItem );
+				$adminmenu.find( 'li.opensub' ).removeClass( 'opensub' );
+				$menuItem.addClass( 'opensub' );
+			},
+			out: function(){
+				if ( $adminmenu.data( 'wp-responsive' ) ) {
+					return;
+				}
+				$( this ).removeClass( 'opensub' ).find( '.wp-submenu' ).css( 'margin-top', '' );
+			},
+			timeout: 200,
+			sensitivity: 7,
+			interval: 90
+		});
+		$adminmenu.on( 'focus.adminmenu', '.wp-submenu a', function( event ) {
+			if ( $adminmenu.data( 'wp-responsive' ) ) {
+				return;
+			}
+			$( event.target ).closest( 'li.menu-top' ).addClass( 'opensub' );
+		}).on( 'blur.adminmenu', '.wp-submenu a', function( event ) {
+			if ( $adminmenu.data( 'wp-responsive' ) ) {
+				return;
+			}
+			$( event.target ).closest( 'li.menu-top' ).removeClass( 'opensub' );
+		}).find( 'li.wp-has-submenu.wp-not-current-submenu' ).on( 'focusin.adminmenu', function() {
+			adjustSubmenu( $( this ) );
+		});
+	}
+	if ( ! $headerEnd.length ) {
+		$headerEnd = $( '.wrap h1, .wrap h2' ).first();
+	}
+	$( 'div.updated, div.error, div.notice' ).not( '.inline, .below-h2' ).insertAfter( $headerEnd );
+	function makeNoticesDismissible() {
+		$( '.notice.is-dismissible' ).each( function() {
+			var $el = $( this ),
+				$button = $( '<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>' ),
+				btnText = commonL10n.dismiss || '';
+			$button.find( '.screen-reader-text' ).text( btnText );
+			$button.on( 'click.wp-dismiss-notice', function( event ) {
+				event.preventDefault();
+				$el.fadeTo( 100, 0, function() {
+					$el.slideUp( 100, function() {
+						$el.remove();
+					});
+				});
+			});
+			$el.append( $button );
+		});
+	}
+	$document.on( 'wp-updates-notice-added wp-plugin-install-error wp-plugin-update-error wp-plugin-delete-error wp-theme-install-error wp-theme-delete-error', makeNoticesDismissible );
+	screenMeta.init();
+	$body.on( 'click', 'tbody > tr > .check-column :checkbox', function( event ) {
+		if ( 'undefined' == event.shiftKey ) { return true; }
+		if ( event.shiftKey ) {
+			if ( !lastClicked ) { return true; }
+			checks = $( lastClicked ).closest( 'form' ).find( ':checkbox' ).filter( ':visible:enabled' );
+			first = checks.index( lastClicked );
+			last = checks.index( this );
+			checked = $(this).prop('checked');
+			if ( 0 < first && 0 < last && first != last ) {
+				sliced = ( last > first ) ? checks.slice( first, last ) : checks.slice( last, first );
+				sliced.prop( 'checked', function() {
+					if ( $(this).closest('tr').is(':visible') )
+						return checked;
+					return false;
+				});
+			}
+		}
+		lastClicked = this;
+		var unchecked = $(this).closest('tbody').find(':checkbox').filter(':visible:enabled').not(':checked');
+		$(this).closest('table').children('thead, tfoot').find(':checkbox').prop('checked', function() {
+			return ( 0 === unchecked.length );
+		});
+		return true;
+	});
+	$body.on( 'click.wp-toggle-checkboxes', 'thead .check-column :checkbox, tfoot .check-column :checkbox', function( event ) {
+		var $this = $(this),
+			$table = $this.closest( 'table' ),
+			controlChecked = $this.prop('checked'),
+			toggle = event.shiftKey || $this.data('wp-toggle');
+		$table.children( 'tbody' ).filter(':visible')
+			.children().children('.check-column').find(':checkbox')
+			.prop('checked', function() {
+				if ( $(this).is(':hidden,:disabled') ) {
+					return false;
+				}
+				if ( toggle ) {
+					return ! $(this).prop( 'checked' );
+				} else if ( controlChecked ) {
+					return true;
+				}
+				return false;
+			});
+		$table.children('thead,  tfoot').filter(':visible')
+			.children().children('.check-column').find(':checkbox')
+			.prop('checked', function() {
+				if ( toggle ) {
+					return false;
+				} else if ( controlChecked ) {
+					return true;
+				}
+				return false;
+			});
+	});
+	$( '#wpbody-content' ).on({
+		focusin: function() {
+			clearTimeout( transitionTimeout );
+			focusedRowActions = $( this ).find( '.row-actions' );
+			$( '.row-actions' ).not( this ).removeClass( 'visible' );
+			focusedRowActions.addClass( 'visible' );
+		},
+		focusout: function() {
+			transitionTimeout = setTimeout( function() {
+				focusedRowActions.removeClass( 'visible' );
+			}, 30 );
+		}
+	}, '.has-row-actions' );
+	$( 'tbody' ).on( 'click', '.toggle-row', function() {
+		$( this ).closest( 'tr' ).toggleClass( 'is-expanded' );
+	});
+	$('#default-password-nag-no').click( function() {
+		setUserSetting('default_password_nag', 'hide');
+		$('div.default-password-nag').hide();
+		return false;
+	});
+	$('#newcontent').bind('keydown.wpevent_InsertTab', function(e) {
+		var el = e.target, selStart, selEnd, val, scroll, sel;
+		if ( e.keyCode == 27 ) { 
+			e.preventDefault();
+			$(el).data('tab-out', true);
+			return;
+		}
+		if ( e.keyCode != 9 || e.ctrlKey || e.altKey || e.shiftKey ) 
+			return;
+		if ( $(el).data('tab-out') ) {
+			$(el).data('tab-out', false);
+			return;
+		}
+		selStart = el.selectionStart;
+		selEnd = el.selectionEnd;
+		val = el.value;
+		if ( document.selection ) {
+			el.focus();
+			sel = document.selection.createRange();
+			sel.text = '\t';
+		} else if ( selStart >= 0 ) {
+			scroll = this.scrollTop;
+			el.value = val.substring(0, selStart).concat('\t', val.substring(selEnd) );
+			el.selectionStart = el.selectionEnd = selStart + 1;
+			this.scrollTop = scroll;
+		}
+		if ( e.stopPropagation )
+			e.stopPropagation();
+		if ( e.preventDefault )
+			e.preventDefault();
+	});
+	if ( pageInput.length ) {
+		pageInput.closest('form').submit( function() {
+			if ( $('select[name="action"]').val() == -1 && $('select[name="action2"]').val() == -1 && pageInput.val() == currentPage )
+				pageInput.val('1');
+		});
+	}
+	$('.search-box input[type="search"], .search-box input[type="submit"]').mousedown(function () {
+		$('select[name^="action"]').val('-1');
+	});
+	$('#contextual-help-link, #show-settings-link').on( 'focus.scroll-into-view', function(e){
+		if ( e.target.scrollIntoView )
+			e.target.scrollIntoView(false);
+	});
+	(function(){
+		var button, input, form = $('form.wp-upload-form');
+		if ( ! form.length )
+			return;
+		button = form.find('input[type="submit"]');
+		input = form.find('input[type="file"]');
+		function toggleUploadButton() {
+			button.prop('disabled', '' === input.map( function() {
+				return $(this).val();
+			}).get().join(''));
+		}
+		toggleUploadButton();
+		input.on('change', toggleUploadButton);
+	})();
+	function pinMenu( event ) {
+		var windowPos = $window.scrollTop(),
+			resizing = ! event || event.type !== 'scroll';
+		if ( isIOS || isIE8 || $adminmenu.data( 'wp-responsive' ) ) {
+			return;
+		}
+		if ( height.menu + height.adminbar < height.window ||
+			height.menu + height.adminbar + 20 > height.wpwrap ) {
+			unpinMenu();
+			return;
+		}
+		menuIsPinned = true;
+		if ( height.menu + height.adminbar > height.window ) {
+			if ( windowPos < 0 ) {
+				if ( ! pinnedMenuTop ) {
+					pinnedMenuTop = true;
+					pinnedMenuBottom = false;
+					$adminMenuWrap.css({
+						position: 'fixed',
+						top: '',
+						bottom: ''
+					});
+				}
+				return;
+			} else if ( windowPos + height.window > $document.height() - 1 ) {
+				if ( ! pinnedMenuBottom ) {
+					pinnedMenuBottom = true;
+					pinnedMenuTop = false;
+					$adminMenuWrap.css({
+						position: 'fixed',
+						top: '',
+						bottom: 0
+					});
+				}
+				return;
+			}
+			if ( windowPos > lastScrollPosition ) {
+				if ( pinnedMenuTop ) {
+					pinnedMenuTop = false;
+					menuTop = $adminMenuWrap.offset().top - height.adminbar - ( windowPos - lastScrollPosition );
+					if ( menuTop + height.menu + height.adminbar < windowPos + height.window ) {
+						menuTop = windowPos + height.window - height.menu - height.adminbar;
+					}
+					$adminMenuWrap.css({
+						position: 'absolute',
+						top: menuTop,
+						bottom: ''
+					});
+				} else if ( ! pinnedMenuBottom && $adminMenuWrap.offset().top + height.menu < windowPos + height.window ) {
+					pinnedMenuBottom = true;
+					$adminMenuWrap.css({
+						position: 'fixed',
+						top: '',
+						bottom: 0
+					});
+				}
+			} else if ( windowPos < lastScrollPosition ) {
+				if ( pinnedMenuBottom ) {
+					pinnedMenuBottom = false;
+					menuTop = $adminMenuWrap.offset().top - height.adminbar + ( lastScrollPosition - windowPos );
+					if ( menuTop + height.menu > windowPos + height.window ) {
+						menuTop = windowPos;
+					}
+					$adminMenuWrap.css({
+						position: 'absolute',
+						top: menuTop,
+						bottom: ''
+					});
+				} else if ( ! pinnedMenuTop && $adminMenuWrap.offset().top >= windowPos + height.adminbar ) {
+					pinnedMenuTop = true;
+					$adminMenuWrap.css({
+						position: 'fixed',
+						top: '',
+						bottom: ''
+					});
+				}
+			} else if ( resizing ) {
+				pinnedMenuTop = pinnedMenuBottom = false;
+				menuTop = windowPos + height.window - height.menu - height.adminbar - 1;
+				if ( menuTop > 0 ) {
+					$adminMenuWrap.css({
+						position: 'absolute',
+						top: menuTop,
+						bottom: ''
+					});
+				} else {
+					unpinMenu();
+				}
+			}
+		}
+		lastScrollPosition = windowPos;
+	}
+	function resetHeights() {
+		height = {
+			window: $window.height(),
+			wpwrap: $wpwrap.height(),
+			adminbar: $adminbar.height(),
+			menu: $adminMenuWrap.height()
+		};
+	}
+	function unpinMenu() {
+		if ( isIOS || ! menuIsPinned ) {
+			return;
+		}
+		pinnedMenuTop = pinnedMenuBottom = menuIsPinned = false;
+		$adminMenuWrap.css({
+			position: '',
+			top: '',
+			bottom: ''
+		});
+	}
+	function setPinMenu() {
+		resetHeights();
+		if ( $adminmenu.data('wp-responsive') ) {
+			$body.removeClass( 'sticky-menu' );
+			unpinMenu();
+		} else if ( height.menu + height.adminbar > height.window ) {
+			pinMenu();
+			$body.removeClass( 'sticky-menu' );
+		} else {
+			$body.addClass( 'sticky-menu' );
+			unpinMenu();
+		}
+	}
+	if ( ! isIOS ) {
+		$window.on( 'scroll.pin-menu', pinMenu );
+		$document.on( 'tinymce-editor-init.pin-menu', function( event, editor ) {
+			editor.on( 'wp-autoresize', resetHeights );
+		});
+	}
+	window.wpResponsive = {
+		init: function() {
+			var self = this;
+			$document.on( 'wp-responsive-activate.wp-responsive', function() {
+				self.activate();
+			}).on( 'wp-responsive-deactivate.wp-responsive', function() {
+				self.deactivate();
+			});
+			$( '#wp-admin-bar-menu-toggle a' ).attr( 'aria-expanded', 'false' );
+			$( '#wp-admin-bar-menu-toggle' ).on( 'click.wp-responsive', function( event ) {
+				event.preventDefault();
+				$adminbar.find( '.hover' ).removeClass( 'hover' );
+				$wpwrap.toggleClass( 'wp-responsive-open' );
+				if ( $wpwrap.hasClass( 'wp-responsive-open' ) ) {
+					$(this).find('a').attr( 'aria-expanded', 'true' );
+					$( '#adminmenu a:first' ).focus();
+				} else {
+					$(this).find('a').attr( 'aria-expanded', 'false' );
+				}
+			} );
+			$adminmenu.on( 'click.wp-responsive', 'li.wp-has-submenu > a', function( event ) {
+				if ( ! $adminmenu.data('wp-responsive') ) {
+					return;
+				}
+				$( this ).parent( 'li' ).toggleClass( 'selected' );
+				event.preventDefault();
+			});
+			self.trigger();
+			$document.on( 'wp-window-resized.wp-responsive', $.proxy( this.trigger, this ) );
+			$window.on( 'load.wp-responsive', function() {
+				var width = navigator.userAgent.indexOf('AppleWebKit/') > -1 ? $window.width() : window.innerWidth;
+				if ( width <= 782 ) {
+					self.disableSortables();
+				}
+			});
+		},
+		activate: function() {
+			setPinMenu();
+			if ( ! $body.hasClass( 'auto-fold' ) ) {
+				$body.addClass( 'auto-fold' );
+			}
+			$adminmenu.data( 'wp-responsive', 1 );
+			this.disableSortables();
+		},
+		deactivate: function() {
+			setPinMenu();
+			$adminmenu.removeData('wp-responsive');
+			this.enableSortables();
+		},
+		trigger: function() {
+			var viewportWidth = getViewportWidth();
+			if ( ! viewportWidth ) {
+				return;
+			}
+			if ( viewportWidth <= 782 ) {
+				if ( ! wpResponsiveActive ) {
+					$document.trigger( 'wp-responsive-activate' );
+					wpResponsiveActive = true;
+				}
+			} else {
+				if ( wpResponsiveActive ) {
+					$document.trigger( 'wp-responsive-deactivate' );
+					wpResponsiveActive = false;
+				}
+			}
+			if ( viewportWidth <= 480 ) {
+				this.enableOverlay();
+			} else {
+				this.disableOverlay();
+			}
+		},
+		enableOverlay: function() {
+			if ( $overlay.length === 0 ) {
+				$overlay = $( '<div id="wp-responsive-overlay"></div>' )
+					.insertAfter( '#wpcontent' )
+					.hide()
+					.on( 'click.wp-responsive', function() {
+						$toolbar.find( '.menupop.hover' ).removeClass( 'hover' );
+						$( this ).hide();
+					});
+			}
+			$toolbarPopups.on( 'click.wp-responsive', function() {
+				$overlay.show();
+			});
+		},
+		disableOverlay: function() {
+			$toolbarPopups.off( 'click.wp-responsive' );
+			$overlay.hide();
+		},
+		disableSortables: function() {
+			if ( $sortables.length ) {
+				try {
+					$sortables.sortable('disable');
+				} catch(e) {}
+			}
+		},
+		enableSortables: function() {
+			if ( $sortables.length ) {
+				try {
+					$sortables.sortable('enable');
+				} catch(e) {}
+			}
+		}
+	};
+	function aria_button_if_js() {
+		$( '.aria-button-if-js' ).attr( 'role', 'button' );
+	}
+	$( document ).ajaxComplete( function() {
+		aria_button_if_js();
+	});
+	function getViewportWidth() {
+		var viewportWidth = false;
+		if ( window.innerWidth ) {
+			viewportWidth = Math.max( window.innerWidth, document.documentElement.clientWidth );
+		}
+		return viewportWidth;
+	}
+	function setMenuState() {
+		var viewportWidth = getViewportWidth() || 961;
+		if ( viewportWidth <= 782  ) {
+			menuState = 'responsive';
+		} else if ( $body.hasClass( 'folded' ) || ( $body.hasClass( 'auto-fold' ) && viewportWidth <= 960 && viewportWidth > 782 ) ) {
+			menuState = 'folded';
+		} else {
+			menuState = 'open';
+		}
+		$document.trigger( 'wp-menu-state-set', { state: menuState } );
+	}
+	$document.on( 'wp-window-resized.set-menu-state', setMenuState );
+	$document.on( 'wp-menu-state-set wp-collapse-menu', function( event, eventData ) {
+		var $collapseButton = $( '#collapse-button' ),
+			ariaExpanded = 'true',
+			ariaLabelText = commonL10n.collapseMenu;
+		if ( 'folded' === eventData.state ) {
+			ariaExpanded = 'false';
+			ariaLabelText = commonL10n.expandMenu;
+		}
+		$collapseButton.attr({
+			'aria-expanded': ariaExpanded,
+			'aria-label': ariaLabelText
+		});
+	});
+	window.wpResponsive.init();
+	setPinMenu();
+	setMenuState();
+	currentMenuItemHasPopup();
+	makeNoticesDismissible();
+	aria_button_if_js();
+	$document.on( 'wp-pin-menu wp-window-resized.pin-menu postboxes-columnchange.pin-menu postbox-toggled.pin-menu wp-collapse-menu.pin-menu wp-scroll-start.pin-menu', setPinMenu );
+	$( '.wp-initial-focus' ).focus();
+	$body.on( 'click', '.js-update-details-toggle', function() {
+		var $updateNotice = $( this ).closest( '.js-update-details' ),
+			$progressDiv = $( '#' + $updateNotice.data( 'update-details' ) );
+		if ( ! $progressDiv.hasClass( 'update-details-moved' ) ) {
+			$progressDiv.insertAfter( $updateNotice ).addClass( 'update-details-moved' );
+		}
+		$progressDiv.toggle();
+		$( this ).attr( 'aria-expanded', $progressDiv.is( ':visible' ) );
+	});
+});
+( function() {
+	var timeout;
+	function triggerEvent() {
+		$document.trigger( 'wp-window-resized' );
+	}
+	function fireOnce() {
+		window.clearTimeout( timeout );
+		timeout = window.setTimeout( triggerEvent, 200 );
+	}
+	$window.on( 'resize.wp-fire-once', fireOnce );
+}());
+(function(){
+	if ( '-ms-user-select' in document.documentElement.style && navigator.userAgent.match(/IEMobile\/10\.0/) ) {
+		var msViewportStyle = document.createElement( 'style' );
+		msViewportStyle.appendChild(
+			document.createTextNode( '@-ms-viewport{width:auto!important}' )
+		);
+		document.getElementsByTagName( 'head' )[0].appendChild( msViewportStyle );
+	}
+})();
+}( jQuery, window ));

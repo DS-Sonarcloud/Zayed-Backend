@@ -1,0 +1,7 @@
+zu_super_admin_dashboard.dashboard:
+  path: '/admin/content/super-admin-dashboard'
+  defaults:
+    _controller: '\Drupal\zu_super_admin_dashboard\Controller\SuperAdminDashboardController::dashboard'
+    _title: 'Super Admin Dashboard'
+  requirements:
+    _role: 'super_admin'

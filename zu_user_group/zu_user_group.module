@@ -1,0 +1,310 @@
+<?php
+
+/**
+ * @file
+ * Contains zu_user_group.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\user\Entity\Role;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_entity_view().
+ */
+function zu_user_group_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode)
+{
+  if ($entity->getEntityTypeId() !== 'user_group') {
+    return;
+  }
+
+  if ($view_mode !== 'full' && $view_mode !== 'default') {
+    return;
+  }
+
+  $build['#attached']['library'][] = 'zu_user_group/user-group-view';
+  $variables = [];
+  $variables['target_all_public_users'] = FALSE;
+  if ($entity->hasField('target_all_public_users') && !$entity->get('target_all_public_users')->isEmpty()) {
+    $variables['target_all_public_users'] = (bool) $entity->get('target_all_public_users')->value;
+  }
+
+  $variables['target_roles'] = [];
+  if ($entity->hasField('target_roles')) {
+    foreach ($entity->get('target_roles')->getValue() as $item) {
+      $rid = $item['target_id'];
+      if ($rid) {
+        $role = Role::load($rid);
+        $variables['target_roles'][] = [
+          'label' => $role ? $role->label() : $rid,
+        ];
+      }
+    }
+  }
+
+  $variables['public_segments'] = [];
+  if (!$variables['target_all_public_users']) {
+    $allowed_values = $entity->getFieldDefinition('target_public_segments')->getSetting('allowed_values');
+    foreach ($entity->get('target_public_segments')->getValue() as $item) {
+      $variables['public_segments'][] = $allowed_values[$item['value']] ?? $item['value'];
+    }
+
+    $variables['event_types'] = [];
+    foreach ($entity->get('target_event_types')->getValue() as $item) {
+      $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($item['target_id']);
+      if ($term) {
+        $variables['event_types'][] = $term->label();
+      }
+    }
+  }
+
+  $variables['target_webforms'] = [];
+  if ($entity->hasField('target_webforms')) {
+    foreach ($entity->get('target_webforms')->getValue() as $item) {
+      $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($item['target_id']);
+      if ($webform) {
+        $variables['target_webforms'][] = [
+          'label' => $webform->label(),
+          'id' => $webform->id(),
+          'link' => $webform->toLink()->toString(),
+        ];
+      }
+    }
+  }
+
+  $variables['author'] = NULL;
+  if ($entity->hasField('uid') && !$entity->get('uid')->isEmpty()) {
+    $author = $entity->get('uid')->entity;
+    if ($author) {
+      $variables['author'] = [
+        'name' => $author->getDisplayName(),
+        'email' => $author->getEmail(),
+        'link' => $author->toLink()->toString(),
+      ];
+    }
+  }
+
+  $variables['campaigns'] = [];
+  $nids = \Drupal::entityQuery('node')
+    ->condition('type', 'campaign')
+    ->condition('field_user_group_entity', $entity->id())
+    ->accessCheck(FALSE)
+    ->execute();
+
+  if (!empty($nids)) {
+    $nodes = Node::loadMultiple($nids);
+    foreach ($nodes as $node) {
+      $variables['campaigns'][] = [
+        'link' => $node->toLink(),
+        'status' => $node->isPublished() ? 'active' : 'draft',
+        'status_label' => $node->isPublished() ? t('Active') : t('Draft'),
+      ];
+    }
+  }
+
+  unset($build['name']);
+  unset($build['target_roles']);
+  unset($build['target_public_segments']);
+  unset($build['target_event_types']);
+  unset($build['target_all_public_users']);
+  unset($build['target_webforms']);
+  unset($build['uid']);
+
+  $build['user_group_info'] = [
+    '#theme' => 'user_group_view',
+    '#variables' => $variables,
+    '#weight' => 10,
+  ];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function zu_user_group_theme($existing, $type, $theme, $path)
+{
+  return [
+    'user_group_view' => [
+      'variables' => ['variables' => []],
+      'template' => 'user-group-view',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function zu_user_group_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  if ($form_id !== 'user_group_add_form' && $form_id !== 'user_group_edit_form') {
+    return;
+  }
+
+  if (isset($form['target_webforms']['widget']['#options'])) {
+    $account = \Drupal::currentUser();
+    $uid = $account->id();
+    $storage = \Drupal::entityTypeManager()->getStorage('webform');
+    $allowed_webform_ids = [];
+    $user_depts = [];
+
+    // Get users departments
+    if (!$account->hasPermission('bypass content owner restrictions')) {
+      if (function_exists('_zu_content_access_get_user_departments')) {
+        $user_depts = _zu_content_access_get_user_departments($account);
+      }
+    }
+
+    // Get all webforms with events category
+    $query = $storage->getQuery()->accessCheck(FALSE);
+    $result = $query->execute();
+
+    if (!empty($result)) {
+      $webforms = $storage->loadMultiple($result);
+      foreach ($webforms as $webform) {
+        // Filter by category
+        $categories = [];
+        if ($cat = $webform->get('category')) {
+          $categories[] = $cat;
+        }
+        if ($cats = $webform->get('categories')) {
+          $categories = array_merge($categories, (array) $cats);
+        }
+
+        $is_event_category = FALSE;
+        foreach ($categories as $category) {
+          $normalized = strtolower(trim($category));
+          if ($normalized === 'events' || $normalized === 'event') {
+            $is_event_category = TRUE;
+            break;
+          }
+        }
+
+        if (!$is_event_category) {
+          continue;
+        }
+
+        if ($account->hasPermission('bypass content owner restrictions')) {
+          $allowed_webform_ids[] = $webform->id();
+        } elseif ($webform->getOwnerId() == $uid) {
+          $allowed_webform_ids[] = $webform->id();
+        } elseif (!empty($user_depts) && function_exists('_zu_content_access_get_webform_departments_published_only')) {
+          $has_any_dept_permission =
+            $account->hasPermission('view any department user group') ||
+            $account->hasPermission('edit any department user group') ||
+            $account->hasPermission('delete any department user group') ||
+            $account->hasPermission('view any department webform');
+
+          if ($has_any_dept_permission) {
+            $webform_depts = _zu_content_access_get_webform_departments_published_only($webform->id());
+            if (!empty($webform_depts) && !empty(array_intersect($user_depts, $webform_depts))) {
+              $allowed_webform_ids[] = $webform->id();
+            }
+          }
+        }
+      }
+    }
+
+    // Filter the options to only show allowed webforms.
+    $original_options = $form['target_webforms']['widget']['#options'];
+    $filtered_options = [];
+
+    if (isset($original_options['_none'])) {
+      $filtered_options['_none'] = $original_options['_none'];
+    }
+
+    // Filter webforms based on allowed IDs.
+    foreach ($original_options as $key => $label) {
+      if ($key === '_none') {
+        continue;
+      }
+
+      if (in_array($key, $allowed_webform_ids)) {
+        $filtered_options[$key] = $label;
+      }
+    }
+
+    // Update the options.
+    $form['target_webforms']['widget']['#options'] = $filtered_options;
+
+    if (empty($filtered_options) || (count($filtered_options) === 1 && isset($filtered_options['_none']))) {
+      $form['target_webforms']['widget']['#description'] = t('No webforms available. Only webforms categorized as "events" or "event" from your department/ownership are shown.');
+    }
+
+    $form['#validate'][] = '_zu_user_group_webform_access_validate';
+    $form_state->set('allowed_webform_ids', $allowed_webform_ids);
+
+    if (isset($form['uid']) && !$account->hasPermission('bypass content owner restrictions')) {
+      $form['uid']['#access'] = FALSE;
+    }
+
+    // Add validation for 'email' field in webforms.
+    $form['#validate'][] = '_zu_user_group_webform_email_validate';
+  }
+}
+
+/**
+ * Custom validation callback to ensure only accessible webforms are selected.
+ */
+function _zu_user_group_webform_access_validate($form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
+  $account = \Drupal::currentUser();
+
+  if ($account->hasPermission('bypass content owner restrictions')) {
+    return;
+  }
+
+  $allowed_webform_ids = $form_state->get('allowed_webform_ids');
+  $target_webforms = $form_state->getValue('target_webforms');
+
+  if (empty($target_webforms)) {
+    return;
+  }
+
+  foreach ($target_webforms as $item) {
+    $webform_id = is_array($item) ? ($item['target_id'] ?? NULL) : $item;
+
+    if ($webform_id && !in_array($webform_id, $allowed_webform_ids)) {
+      $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
+      $form_state->setErrorByName('target_webforms', t('You do not have permission to select the webform: @label', [
+        '@label' => $webform ? $webform->label() : $webform_id,
+      ]));
+    }
+  }
+}
+
+/**
+ * Custom validation callback to ensure selected webforms have an 'email' field.
+ */
+function _zu_user_group_webform_email_validate($form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
+  $target_webforms = $form_state->getValue('target_webforms');
+
+  if (empty($target_webforms)) {
+    return;
+  }
+
+  foreach ($target_webforms as $item) {
+    $webform_id = is_array($item) ? ($item['target_id'] ?? NULL) : $item;
+
+    if ($webform_id) {
+      $webform = \Drupal::entityTypeManager()->getStorage('webform')->load($webform_id);
+      if ($webform) {
+        $elements = $webform->getElementsDecodedAndFlattened();
+        $has_email = FALSE;
+
+        foreach ($elements as $key => $element) {
+          if ((isset($element['#type']) && $element['#type'] === 'email') || $key === 'email') {
+            $has_email = TRUE;
+            break;
+          }
+        }
+
+        if (!$has_email) {
+          $form_state->setErrorByName('target_webforms', t('The selected webform "@label" is missing an "email" field. This field is required for user grouping.', [
+            '@label' => $webform->label(),
+          ]));
+        }
+      }
+    }
+  }
+}

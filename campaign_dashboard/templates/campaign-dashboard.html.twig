@@ -1,0 +1,33 @@
+<div class="dashboard">
+  <h2>Dashboard</h2>
+
+  <div class="kpis">
+    <div class="kpi">Total Campaigns: {{ data.campaign_count }}</div>
+    <div class="kpi">Templates: {{ data.template_count }}</div>
+    <div class="kpi">New Users: {{ data.new_users }}</div>
+  </div>
+
+  <h3>Jobs Running / Aborted / Successful</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Template</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for job in data.jobs %}
+      <tr>
+        <td>{{ job.date }}</td>
+        <td>{{ job.template }}</td>
+        <td>{{ job.category }}</td>
+        <td>{{ job.status }}</td>
+        <td>{{ job.action }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

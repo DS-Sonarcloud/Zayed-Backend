@@ -1,0 +1,6 @@
+services:
+  campaign_email_queue.commands:
+    class: \Drupal\campaign_email_queue\Commands\CampaignEmailQueueCommands
+    arguments: ["@campaign_email_queue.queue"]
+    tags:
+      - { name: drush.command }

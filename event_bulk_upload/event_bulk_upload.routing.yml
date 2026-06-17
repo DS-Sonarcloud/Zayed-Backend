@@ -1,0 +1,39 @@
+event_bulk_upload.form:
+  path: "/admin/content/event-bulk-upload"
+  defaults:
+    _form: '\Drupal\event_bulk_upload\Form\EventBulkUploadForm'
+    _title: "Event Bulk Upload"
+  requirements:
+    _permission: "upload event csv"
+
+event_bulk_upload.result:
+  path: "/admin/content/event-bulk-upload/result"
+  defaults:
+    _controller: '\Drupal\event_bulk_upload\Controller\EventBulkUploadController::result'
+    _title: "Event Upload Result"
+  requirements:
+    _permission: "upload event csv"
+
+event_bulk_upload.settings:
+  path: "/admin/config/event-bulk-upload/settings"
+  defaults:
+    _form: '\Drupal\event_bulk_upload\Form\EventBulkUploadSettingsForm'
+    _title: "Event Bulk Upload Settings"
+  requirements:
+    _permission: "administer site configuration"
+
+event_bulk_upload.mapping:
+  path: "/admin/content/event-bulk-upload/mapping"
+  defaults:
+    _form: '\Drupal\event_bulk_upload\Form\EventBulkFieldMappingForm'
+    _title: "Map CSV Fields"
+  requirements:
+    _permission: "upload event csv"
+
+event_bulk_upload.api_mapping:
+  path: "/admin/content/event-bulk-upload/api-mapping"
+  defaults:
+    _form: '\Drupal\event_bulk_upload\Form\EventBulkAPIFieldMappingForm'
+    _title: "Map API Fields"
+  requirements:
+    _permission: "upload event csv"

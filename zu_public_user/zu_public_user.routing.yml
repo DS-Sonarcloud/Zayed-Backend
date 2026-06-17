@@ -1,0 +1,9 @@
+zu_public_user.admin_list:
+  path: '/admin/people/public-users'
+  defaults:
+    _form: '\Drupal\zu_public_user\Form\PublicUserList'
+    _title: 'Public Users'
+  requirements:
+    _permission: 'administer users'
+
+

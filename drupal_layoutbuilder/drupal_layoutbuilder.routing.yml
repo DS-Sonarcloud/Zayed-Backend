@@ -1,0 +1,121 @@
+drupal_layoutbuilder.settings:
+  path: '/admin/config/services/drupal-layoutbuilder/settings'
+  defaults:
+    _form: 'Drupal\drupal_layoutbuilder\Form\DrupalLayoutbuilderSettingsForm'
+    _title: 'Layout builder (Elementor) settings'
+  requirements:
+    _permission: 'administer student verification'
+
+drupal_layoutbuilder.editor:
+  path: '/node/{node}/drupal-layoutbuilder'
+  defaults: { _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::editor' }
+  methods:  [GET]
+  requirements:
+    _format: 'html'
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: 'FALSE'
+
+drupal_layoutbuilder.update:
+  path: 'drupal-layoutbuilder/update'
+  defaults: { _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::update' }
+  methods:  [POST, GET]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+drupal_layoutbuilder.autosave:
+  path: '/drupal-layoutbuilder/autosave'
+  defaults: { _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::autosave' }
+  methods:  [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+drupal_layoutbuilder.upload:
+  path: '/drupal-layoutbuilder/upload'
+  defaults: { _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::upload' }
+  methods:  [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+drupal_layoutbuilder.delete_upload:
+  path: '/drupal-layoutbuilder/delete_upload/{fid}'
+  defaults: { _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::delete_upload' }
+  methods:  [DELETE]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token: FALSE
+
+drupal_layoutbuilder.fields_ajax:
+  path: '/drupal-layoutbuilder/fields/{content_type}'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::getFields'
+    _title: 'Layout builder fields'
+  requirements:
+    _permission: 'access content'
+
+drupal_layoutbuilder.drupal_block_data:
+  path: '/drupal-layoutbuilder/drupal-block-data/{content_type}'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::data'
+    _format: 'json'
+  requirements:
+    _permission: 'access content'
+
+drupal_layoutbuilder.webform_fields_json:
+  path: '/drupal-layoutbuilder/webform-fields-json/{webform_id}'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\DrupalLayoutbuilderController::getWebformFields'
+  requirements:
+    _permission: 'access content'
+
+drupal_layoutbuilder.webform_ajax_conditions:
+  path: '/drupal-layoutbuilder/webform-ajax-conditions/{webform_id}'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\WebformAjaxController::getAjaxConditions'
+    _title: 'Get Webform AJAX Conditions'
+  requirements:
+    _permission: 'access content'
+
+drupal_layoutbuilder.file_browser:
+  path: '/drupal-layoutbuilder/file-browser'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\FileBrowserController::popup'
+    _title: 'File Browser'
+  requirements:
+    _permission: 'access content'
+
+drupal_layoutbuilder.file_upload:
+  path: '/drupal-layoutbuilder/file-upload'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\FileBrowserController::upload'
+  requirements:
+    _permission: 'upload files'
+  options:
+    _csrf_token: FALSE
+    _auth: ['basic_auth', 'cookie']
+
+drupal_layoutbuilder.multifile_upload:
+  path: '/drupal-layoutbuilder/multifile-upload'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\FileBrowserGalleryController::upload'
+  requirements:
+    _permission: 'upload files'
+  options:
+    _csrf_token: FALSE
+    _auth: ['basic_auth', 'cookie']
+
+
+drupal_layoutbuilder.gallery_browser:
+  path: '/drupal-layoutbuilder/gallery-browser'
+  defaults:
+    _controller: '\Drupal\drupal_layoutbuilder\Controller\FileBrowserGalleryController::popup'
+    _title: 'Gallery Browser'
+  requirements:
+    _permission: 'access content'

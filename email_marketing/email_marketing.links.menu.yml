@@ -1,0 +1,35 @@
+email_marketing.form:
+  title: "Email Marketing"
+  description: "Send an email using a site block."
+  route_name: email_marketing.form
+  parent: system.admin_config_system
+  weight: 100
+
+# email_marketing.sent_list:
+#   title: "Sent Emails"
+#   description: "View list of sent email campaigns."
+#   route_name: email_marketing.sent_list
+#   parent: system.admin_content
+#   weight: 100
+
+# email_marketing.campaigns:
+#   title: 'Email Campaigns'
+#   description: 'Manage email campaigns and resend.'
+#   route_name: email_marketing.campaigns
+#   parent: system.admin_content
+#   weight: 99
+
+email_marketing.settings:
+  title: 'Frontend Base URL'
+  description: 'Configure frontend base URL and email marketing options.'
+  route_name: email_marketing.settings
+  parent: system.admin_config_services
+  weight: 50
+
+email_marketing.dashboard:
+  title: 'Email Dashboard'
+  route_name: view.email_templates.page_1
+  parent: system.admin_content
+  description: 'Manage Email Templates'
+  menu_name: admin
+  weight: 100

@@ -1,0 +1,7 @@
+campaign_dashboard.dashboard:
+  path: '/admin/campaign-dashboard'
+  defaults:
+    _controller: '\Drupal\campaign_dashboard\Controller\DashboardController::dashboard'
+    _title: 'Campaign Dashboard'
+  requirements:
+    _permission: 'access content'

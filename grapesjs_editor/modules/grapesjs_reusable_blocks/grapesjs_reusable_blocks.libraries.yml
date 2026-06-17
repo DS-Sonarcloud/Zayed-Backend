@@ -1,0 +1,4 @@
+drupal-reusable-blocks:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-reusable-blocks/drupal-reusable-blocks.js: {}

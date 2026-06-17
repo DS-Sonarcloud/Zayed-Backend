@@ -1,0 +1,13 @@
+bulk_personalization_actions:
+  version: 1.0
+  js:
+    js/bulk-personalization-actions.js: {}
+  css:
+    theme:
+      css/bulk-personalization-modal.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.ajax
+    - core/drupal.dialog.ajax

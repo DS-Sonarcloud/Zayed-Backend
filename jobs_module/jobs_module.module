@@ -1,0 +1,332 @@
+<?php
+
+use Drupal\views\ViewExecutable;
+use Drupal\webform\WebformSubmissionInterface;
+use Drupal\views\Plugin\views\join\Standard;
+
+/**
+ * Implements hook_mail().
+ */
+function jobs_module_mail($key, &$message, $params)
+{
+  switch ($key) {
+    case 'application_received_applicant':
+    case 'application_received_admin':
+    case 'application_status_update':
+    case 'application_updated_user':
+    case 'application_updated_admin':
+    case 'job_update_notification':
+    case 'job_deleted_notification':
+
+      $message['subject'] = $params['subject'] ?? '(No subject)';
+      $message['body'][] = $params['body'] ?? '(No body)';
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+
+      break;
+  }
+}
+function jobs_module_page_attachments(array &$attachments) {
+  $current_route = \Drupal::routeMatch()->getRouteName();
+
+  // Load CSS only on your job pages
+  if (str_starts_with($current_route, 'jobs_module.')) {
+    $attachments['#attached']['library'][] = 'jobs_module/job_styles';
+  }
+}
+
+
+/**
+ * Helper: send mail via mail manager.
+ */
+function jobs_module_send_mail($key, $to, array $params = [])
+{
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'jobs_module';
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  return $mailManager->mail($module, $key, $to, $langcode, $params);
+}
+
+
+/**
+ * Implements hook_views_data_alter().
+ */
+// function jobs_module_views_post_render(ViewExecutable $view, &$output, $cache)
+// {
+//   // dd("asdsa");
+//   if ($view->id() === 'jobs_listing' && $view->current_display === 'page_1') {
+
+//     // Make sure rows exist.
+//     if (!empty($output['#rows'])) {
+
+//       // Add header for new column.
+//       $output['#header'][] = 'Applications';
+
+//       // Loop through rendered rows.
+//       foreach ($output['#rows'] as &$row) {
+//         $row['views-field-title'] = [
+//         '#type' => 'markup',
+//         '#markup' => "Asdasd",
+//       ];
+//         $row["#title"] = 'sdsad';
+//       }
+//     }
+//   }
+// }
+
+
+/**
+ * Implements hook_views_data_alter().
+ */
+// function jobs_module_views_query_alter(&$view, &$query)
+// {
+
+//   if ($view->id() === 'jobs_listing' && $view->current_display === 'page_1') {
+
+//     // Main table alias
+//     $node_alias = $query->ensureTable('node_field_data');
+
+//     // Create join object
+//     $join = new Standard([], 'standard', []);
+//     $join->leftTable = $node_alias;
+//     $join->leftField = 'nid';
+//     $join->table = 'job_application';
+//     $join->field = 'job_id';
+//     $join->type = 'LEFT';
+//     $join->extra = [];
+
+//     $job_app_alias = $query->addRelationship('job_application', $join, $node_alias);
+
+//     // Add COUNT(job_application.id)
+//     $query->addField(NULL, "COUNT($job_app_alias.id)", 'application_count');
+
+//     // GROUP BY is required because of COUNT()
+//     $query->addGroupBy("$node_alias.nid");
+
+//     $query->query();
+
+//     // dd($query->query()->__toString());
+//   }
+// }
+
+// function jobs_module_preprocess_views_view(array &$variables) {
+//   $view = $variables['view'];
+
+//   if ($view->id() === 'jobs_listing' && $view->current_display === 'page_1') {
+
+//     foreach ($view->result as $index => $row) {
+
+//       $nid = $row->nid;
+
+//       // Count applicants.
+//       $count = \Drupal::database()
+//         ->select('job_application', 'ja')
+//         ->condition('job_id', $nid)
+//         ->countQuery()
+//         ->execute()
+//         ->fetchField();
+
+//       // Add token variables for the "Nothing" field.
+//       $view->result[$index]->applicant_button =
+//         "<a href='/job/$nid/applicants' class='btn btn-primary'>Applicants ($count)</a>";
+
+//       $view->result[$index]->applicant_count = $count;
+
+//       // dd($view->result[$index]);
+//     }
+//   }
+// }
+
+function jobs_module_views_pre_render(\Drupal\views\ViewExecutable $view)
+{
+  if ($view->id() === 'jobs_listing' && $view->current_display === 'page_1') {
+    foreach ($view->result as $index => $row) {
+      if (!empty($row->nid)) {
+        $nid = $row->nid;
+        $count = \Drupal::database()
+          ->select('job_application', 'ja')
+          ->condition('job_id', $nid)
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+
+        $view->result[$index]->applicant_button =
+          "<a href='/job/$nid/applicants' class='btn btn-primary'>Applicants ($count)</a>";
+        $view->result[$index]->applicant_count = $count;
+      }
+    }
+  }
+}
+
+function jobs_module_entity_update(Drupal\Core\Entity\EntityInterface $entity)
+{
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'jobs') {
+    return;
+  }
+
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = $entity;
+  $original = $node->original;
+
+  if (!$original) {
+    return;
+  }
+
+  $changed_fields = [];
+  $track_fields = [
+    'title',
+    'body',
+    'field_job_department',
+    'field_job_type',
+    'field_job_status',
+    'field_salary',
+    'field_job_location',
+    'field_requirements',
+    'field_yes_no',
+  ];
+
+  foreach ($track_fields as $field) {
+    if (!$node->hasField($field)) {
+      continue;
+    }
+
+    $old_value = jobs_module_format_field($original, $field);
+    $new_value = jobs_module_format_field($node, $field);
+
+    if ($old_value !== $new_value) {
+      $changed_fields[$field] = [
+        'label' => $node->getFieldDefinition($field)->getLabel(),
+        'old' => $old_value,
+        'new' => $new_value,
+      ];
+    }
+  }
+
+  // If nothing changed → nothing to send.
+  if (empty($changed_fields)) {
+    return;
+  }
+
+  _jobs_module_notify_applicants($node, $changed_fields);
+}
+
+/**
+ * Send email notifications to all applicants of a job.
+ */
+function _jobs_module_notify_applicants(\Drupal\node\Entity\Node $node, array $changed_fields)
+{
+  $records = \Drupal::database()->select('job_application', 'ja')
+    ->fields('ja', ['applicant_name', 'applicant_email', 'public_user_id'])
+    ->condition('job_id', $node->id())
+    ->execute()
+    ->fetchAllAssoc('public_user_id');
+
+  if (!$records) return;
+
+  $job_title = $node->getTitle();
+
+  foreach ($records as $applicant) {
+
+    $vars = [
+      'name' => $applicant->applicant_name,
+      'job_title' => $job_title,
+      'changes' => array_values($changed_fields),  // FIXED: send ARRAY not HTML string
+    ];
+
+    $body = \Drupal::service('twig')->render(
+      'modules/custom/jobs_module/templates/job_updated_mail.html.twig',
+      $vars
+    );
+
+    jobs_module_send_mail('job_update_notification', $applicant->applicant_email, [
+      'subject' => "Update on Job Position: $job_title",
+      'body' => $body,
+    ]);
+  }
+}
+
+
+/**
+ * Format a field value for email comparison.
+ */
+function jobs_module_format_field(\Drupal\node\Entity\Node $node, string $field)
+{
+  if (!$node->hasField($field) || $node->get($field)->isEmpty()) {
+    return '';
+  }
+
+  $item = $node->get($field);
+  $type = $item->getFieldDefinition()->getType();
+
+  switch ($type) {
+
+    case 'text_with_summary':
+    case 'text_long':
+      return mb_strimwidth(trim(strip_tags($item->value)), 0, 120, '...');
+
+    case 'entity_reference':
+      $term = $item->entity;
+      return $term ? $term->label() : '';
+
+    case 'boolean':
+      return $item->value ? 'Yes' : 'No';
+
+    case 'list_string':
+      $allowed = $item->getFieldDefinition()->getSetting('allowed_values');
+      return $allowed[$item->value] ?? $item->value;
+
+    default:
+      return trim($item->getString());
+  }
+}
+
+
+/**
+ * Notify applicants when a job node is deleted.
+ */
+/**
+ * Implements hook_entity_predelete().
+ *
+ * Fires BEFORE a job node is deleted.
+ */
+function jobs_module_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Only act on job nodes.
+  if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'jobs') {
+    return;
+  }
+
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = $entity;
+
+  // Fetch all applicants for this job.
+  $records = \Drupal::database()->select('job_application', 'ja')
+    ->fields('ja', ['applicant_name', 'applicant_email'])
+    ->condition('job_id', $node->id())
+    ->execute()
+    ->fetchAll();
+
+  if (!$records) {
+    return;
+  }
+
+  $job_title = $node->getTitle();
+
+  // Send "job closed" email to each applicant.
+  foreach ($records as $applicant) {
+
+    $vars = [
+      'name' => $applicant->applicant_name,
+      'job_title' => $job_title,
+    ];
+
+    $body = \Drupal::service('twig')->render(
+      'modules/custom/jobs_module/templates/job_deleted_mail.html.twig',
+      $vars
+    );
+
+    jobs_module_send_mail('job_deleted_notification', $applicant->applicant_email, [
+      'subject' => "Hiring Closed – $job_title",
+      'body' => $body,
+    ]);
+  }
+}

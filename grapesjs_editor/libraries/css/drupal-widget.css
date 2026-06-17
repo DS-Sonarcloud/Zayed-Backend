@@ -1,0 +1,322 @@
+/**
+ * @file
+ * Dark theme styles for the GrapesJS Drupal Content Widget plugin
+ */
+
+/* Widget Modal Container */
+.drupal-widget-modal {
+  padding: 20px;
+  background: #2c2e35;
+  color: #e0e0e0;
+  min-width: 500px;
+  max-width: 700px;
+}
+
+.drupal-widget-step {
+  min-height: 300px;
+}
+
+.drupal-widget-step h3 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom: 1px solid #444;
+  padding-bottom: 8px;
+}
+
+.drupal-widget-step h4 {
+  margin: 10px 0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* Form Elements */
+.drupal-widget-form-group {
+  margin-bottom: 15px;
+}
+
+.drupal-widget-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #b0b0b0;
+  font-weight: 400;
+}
+
+.drupal-widget-select,
+.drupal-widget-input {
+  width: 100%;
+  padding: 8px 10px;
+  background: #3a3c42;
+  border: 1px solid #4a4c52;
+  color: #e0e0e0;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.drupal-widget-select:focus,
+.drupal-widget-input:focus {
+  outline: none;
+  border-color: #5a5c62;
+  background: #3a3c42;
+}
+
+/* Select dropdown options */
+.drupal-widget-select option {
+  background: #3a3c42;
+  color: #e0e0e0;
+  padding: 8px;
+}
+
+.drupal-widget-select option:hover,
+.drupal-widget-select option:checked,
+.drupal-widget-select option:focus {
+  background: #4a5568;
+  color: #fff;
+}
+
+/* Node List */
+.drupal-widget-node-list {
+  background: #23252a;
+  border: 1px solid #3a3c42;
+  border-radius: 3px;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.drupal-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.drupal-widget-node-item {
+  padding: 12px;
+  background: #3a3c42;
+  border: 1px solid #4a4c52;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drupal-widget-node-item:hover {
+  background: #4a4c52;
+  border-color: #5a5c62;
+}
+
+.drupal-widget-node-item.selected {
+  background: #4a5568;
+  border-color: #5a6578;
+}
+
+.drupal-widget-node-item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.drupal-widget-node-item small {
+  color: #999;
+  font-size: 11px;
+}
+
+/* Field Selection */
+.drupal-widget-field-list {
+  background: #23252a;
+  border: 1px solid #3a3c42;
+  border-radius: 3px;
+  padding: 10px;
+}
+
+.drupal-widget-field-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drupal-widget-field-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #3a3c42;
+  border: 1px solid #4a4c52;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.drupal-widget-field-checkbox:hover {
+  background: #4a4c52;
+}
+
+.drupal-widget-field-checkbox input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.drupal-widget-field-checkbox span {
+  flex: 1;
+  font-size: 12px;
+  color: #e0e0e0;
+}
+
+.drupal-widget-field-checkbox small {
+  color: #999;
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+/* Selected Fields */
+.drupal-widget-selected-fields {
+  background: #23252a;
+  border: 1px solid #3a3c42;
+  border-radius: 3px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.drupal-widget-selected-list {
+  min-height: 40px;
+}
+
+.drupal-widget-selected-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drupal-widget-selected-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #3a3c42;
+  border-radius: 3px;
+  border: 1px solid #4a4c52;
+  font-size: 12px;
+  color: #e0e0e0;
+}
+
+.drupal-widget-selected-items li span {
+  flex: 1;
+}
+
+.drupal-widget-remove-field {
+  background: transparent;
+  color: #999;
+  border: none;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.drupal-widget-remove-field:hover {
+  color: #fff;
+}
+
+/* Action Buttons */
+.drupal-widget-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #3a3c42;
+}
+
+.drupal-widget-btn {
+  padding: 8px 16px;
+  border: 1px solid #4a4c52;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  background: #3a3c42;
+  color: #e0e0e0;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.drupal-widget-btn:hover:not(:disabled) {
+  background: #4a4c52;
+  border-color: #5a5c62;
+}
+
+.drupal-widget-btn--primary {
+  background: #4a5568;
+  color: #fff;
+  border-color: #4a5568;
+}
+
+.drupal-widget-btn--primary:hover:not(:disabled) {
+  background: #5a6578;
+  border-color: #5a6578;
+}
+
+.drupal-widget-btn--primary:disabled {
+  background: #3a3c42;
+  color: #666;
+  border-color: #3a3c42;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.drupal-widget-btn--secondary {
+  background: #3a3c42;
+  color: #e0e0e0;
+  border-color: #4a4c52;
+}
+
+/* Status Messages */
+.drupal-widget-loading,
+.drupal-widget-empty,
+.drupal-widget-error {
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.drupal-widget-loading {
+  color: #b0b0b0;
+}
+
+.drupal-widget-empty {
+  color: #888;
+  font-style: italic;
+}
+
+.drupal-widget-error {
+  color: #ff6b6b;
+  background: #23252a;
+  border: 1px solid #3a3c42;
+  border-radius: 3px;
+}
+
+/* Widget Placeholder in Editor */
+.grapesjs-widget-placeholder {
+  padding: 20px;
+  border: 2px dashed #ddd;
+  text-align: center;
+  color: #999;
+  background: #fafafa;
+}
+
+.grapesjs-widget-error {
+  padding: 20px;
+  border: 1px solid #f45e43;
+  text-align: center;
+  color: #f45e43;
+  background: #fff5f5;
+}
+
+.label-color{
+  color: #f45e43;
+}

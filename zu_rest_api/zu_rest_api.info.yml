@@ -1,0 +1,5 @@
+name: 'ZU Rest API'
+type: module
+description: 'Zayed University - Custom Rest API Module for Json Export'
+package: Custom
+core_version_requirement: ^10 || ^11

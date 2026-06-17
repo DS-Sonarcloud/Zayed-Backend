@@ -1,0 +1,11 @@
+name: Short Alias
+type: module
+description: A module to provide the ability to easily create and display short urls on an entity
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - redirect
+
+# Information added by Drupal.org packaging script on 2023-11-27
+version: '1.0.x-dev'
+project: 'short_alias'
+datestamp: 1701120307

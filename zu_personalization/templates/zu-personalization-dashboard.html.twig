@@ -1,0 +1,89 @@
+{#
+  Template: zu-personalization-dashboard.html.twig
+  Variables:
+    - stats:       array of {label, value, class}
+    - quick_links: render array of links
+    - personas:    array of {type, count, avg_confidence}
+#}
+<div class="zu-personalization-dashboard" style="max-width:960px;">
+
+  <h1>{{ 'Personalization'|t }}</h1>
+  <p>{{ 'Manage rule-based content personalization — deliver the right content to the right audience at the right time.'|t }}</p>
+
+  {# ── Stats row ── #}
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin:24px 0;">
+    {% for stat in stats %}
+      <div style="flex:1;min-width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:20px;text-align:center;">
+        <div style="font-size:2rem;font-weight:700;color:#185FA5;">{{ stat.value }}</div>
+        <div style="font-size:.85rem;color:#555;margin-top:4px;">{{ stat.label }}</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {# ── Quick links ── #}
+  <div style="margin-bottom:24px;">
+    {% for link in quick_links %}
+      {{ link }}
+      &nbsp;
+    {% endfor %}
+  </div>
+
+  {# ── Rule types guide ── #}
+  <div style="background:#f8f8f8;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:24px;">
+    <h3 style="margin-top:0;">{{ 'Supported Rule Types'|t }}</h3>
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="background:#185FA5;color:#fff;">
+          <th style="padding:8px 12px;text-align:left;">{{ 'Type'|t }}</th>
+          <th style="padding:8px 12px;text-align:left;">{{ 'What it targets'|t }}</th>
+          <th style="padding:8px 12px;text-align:left;">{{ 'FRD Reference'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set types = [
+          {type: 'Role-Based',    desc: 'Student, Faculty, Staff, Admin, Anonymous',     frd: 'Role based Personalization'},
+          {type: 'Device-Based',  desc: 'Mobile, Tablet, Desktop (User-Agent detected)', frd: 'Device based personalization'},
+          {type: 'Geo-Location',  desc: 'Country / City via IP detection',               frd: 'Dynamic Personalization (location)'},
+          {type: 'Language',      desc: 'English or Arabic interface language',           frd: 'Dynamic Personalization (context)'},
+          {type: 'Department',    desc: 'College / Department taxonomy term IDs',         frd: 'Dynamic Personalization (profile)'},
+          {type: 'Content Type',  desc: 'Page, Event, News, Blog, Course, Job...',        frd: 'Editing, personalizing and testing content'},
+        ] %}
+        {% for row in types %}
+          <tr style="border-bottom:1px solid #e0e0e0;">
+            <td style="padding:8px 12px;font-weight:600;">{{ row.type }}</td>
+            <td style="padding:8px 12px;">{{ row.desc }}</td>
+            <td style="padding:8px 12px;font-size:.8rem;color:#666;">{{ row.frd }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# ── Persona breakdown ── #}
+  {% if personas %}
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:20px;">
+      <h3 style="margin-top:0;">{{ 'Inferred User Personas'|t }}</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#0F6E56;color:#fff;">
+            <th style="padding:8px 12px;text-align:left;">{{ 'Persona'|t }}</th>
+            <th style="padding:8px 12px;text-align:right;">{{ 'Users'|t }}</th>
+            <th style="padding:8px 12px;text-align:right;">{{ 'Avg Confidence'|t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in personas %}
+            <tr style="border-bottom:1px solid #e0e0e0;">
+              <td style="padding:8px 12px;text-transform:capitalize;">{{ p.type }}</td>
+              <td style="padding:8px 12px;text-align:right;">{{ p.count }}</td>
+              <td style="padding:8px 12px;text-align:right;">{{ p.avg_confidence }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p><em>{{ 'No persona data yet. Personas are inferred automatically as users perform searches.'|t }}</em></p>
+  {% endif %}
+
+</div>

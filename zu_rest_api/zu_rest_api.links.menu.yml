@@ -1,0 +1,94 @@
+build_site:
+  title: "Deploy Site"
+  parent: system.admin
+  description: "Examples of using the batch API in different ways."
+  route_name: zu_rest_api.events_deploy
+  weight: 100
+  options:
+    attributes:
+      class:
+        - "icon-deploy-site"
+  required_permission: 'access custom deploy button'
+
+build_site.child1:
+  title: "Events Deploy"
+  description: "Create static pages for front site."
+  parent: build_site
+  route_name: zu_rest_api.events_deploy
+  weight: 0
+  required_permission: 'access custom deploy button'
+
+build_site.child3:
+  title: "Blog Deploy"
+  description: "Create static pages for front site."
+  parent: build_site
+  route_name: zu_rest_api.blog_deploy
+  weight: 1
+  required_permission: 'access custom deploy button'
+
+build_site.child5:
+  title: "Redirections Deploy"
+  description: "Manage custom redirect settings."
+  parent: build_site
+  route_name: zu_rest_api.redirect_deploy
+  weight: 4
+  required_permission: 'access custom deploy button'
+
+build_site.child2:
+  title: "News Deploy"
+  description: "Manage custom news settings."
+  parent: build_site
+  route_name: zu_rest_api.news_deploy
+  weight: 2
+  required_permission: 'access custom deploy button'
+
+build_site.child4:
+  title: "Menu Deploy"
+  description: "Manage custom Menu settings."
+  parent: build_site
+  route_name: zu_rest_api.menu_deploy
+  weight: 3
+
+build_site.child7:
+  title: "Job Deploy"
+  description: "Manage custom Menu settings."
+  parent: build_site
+  route_name: zu_rest_api.job_deploy
+  weight: 6
+  
+build_site.child6:
+  title: "Colleges and Faculty Staff Deploy"
+  description: "Manage custom Colleges and Faculty Staff settings."
+  parent: build_site
+  route_name: zu_rest_api.faculty_deploy
+  weight: 5
+  required_permission: 'access custom deploy button'
+
+build_site.child8:
+  title: "Forum Deploy"
+  description: "Manage custom Forum settings."
+  parent: build_site
+  route_name: zu_rest_api.forum_deploy_form
+  weight: 7
+
+build_site.child9:
+  title: "Photo Gallery Deploy"
+  description: "Manage custom Forum settings."
+  parent: build_site
+  route_name: zu_rest_api.photo_gallery_deploy
+  weight: 8
+
+build_site.deployment_log:
+  title: "Deployment Log"
+  description: "View and manage deployment history."
+  parent: build_site
+  route_name: zu_rest_api.deployment_log
+  weight: 99
+  required_permission: 'access zu deploy button'
+
+zu_rest_api.social_media_settings:
+  title: 'Social Media Settings'
+  description: 'Manage social media platforms and icons.'
+  parent: system.admin_config_services
+  route_name: zu_rest_api.social_media_settings
+  weight: 10

@@ -1,0 +1,44 @@
+services:
+  logger.channel.campaign_email_queue:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: ["@logger.factory", "get"]
+    arguments: ["campaign_email_queue"]
+
+  campaign_email_queue.processing_state:
+    class: Drupal\campaign_email_queue\Service\CampaignProcessingState
+    arguments:
+      - "@state"
+
+  campaign_email_queue.queue:
+    class: Drupal\campaign_email_queue\Service\CampaignEmailQueueService
+    arguments:
+      - "@queue"
+      - "@entity_type.manager"
+      - "@plugin.manager.mail"
+      - "@logger.channel.campaign_email_queue"
+      - "@messenger"
+      - "@campaign_email_queue.log"
+      - "@config.factory"
+      - "@campaign_email_queue.processing_state"
+      - "@plugin.manager.queue_worker"
+
+  campaign_email_queue.log:
+    class: Drupal\campaign_email_queue\Service\CampaignEmailLogService
+    arguments:
+      - "@database"
+      - "@logger.channel.campaign_email_queue"
+
+  campaign_email_queue.event_subscriber:
+    class: Drupal\campaign_email_queue\EventSubscriber\CampaignEmailQueueSubscriber
+    arguments:
+      - "@campaign_email_queue.queue"
+      - "@state"
+    tags:
+      - { name: event_subscriber }
+
+  campaign_email_queue.keepalive:
+    class: Drupal\campaign_email_queue\Service\CampaignSendKeepAlive
+    arguments:
+      - "@campaign_email_queue.queue"
+      - "@campaign_email_queue.processing_state"
+      - "@state"

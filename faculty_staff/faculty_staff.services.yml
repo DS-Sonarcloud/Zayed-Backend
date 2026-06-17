@@ -1,0 +1,11 @@
+services:
+  faculty_staff.node_normalizer:
+    class: Drupal\faculty_staff\Normalizer\GeneralNodeNormalizer
+    tags:
+      - { name: normalizer, priority: 100 }
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.repository'
+      - '@entity_field.manager'
+      - '@database'
+      - '@current_user'

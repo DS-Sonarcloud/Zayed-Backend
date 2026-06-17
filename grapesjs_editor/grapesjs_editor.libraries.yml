@@ -1,0 +1,141 @@
+grapesjs:
+  remote: https://github.com/artf/grapesjs
+  version: 0.22.14
+  license:
+    name: BSD 3-clause
+    url: https://github.com/artf/grapesjs/blob/v0.22.14/LICENSE
+    gpl-compatible: true
+  js:
+    https://unpkg.com/grapesjs@0.22.14/dist/grapes.min.js: { type: external }
+    https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js:
+      { type: external }
+  css:
+    base:
+      https://unpkg.com/grapesjs@0.22.14/dist/css/grapes.min.css:
+        { type: external }
+
+newsletter_preset:
+  remote: https://github.com/artf/grapesjs-preset-newsletter
+  version: 1.0.2
+  license:
+    name: BSD 3-clause
+    url: https://github.com/artf/grapesjs-preset-newsletter/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    libraries/js/plugins/grapesjs-preset-newsletter/grapesjs-preset-newsletter.min.js:
+      { minified: true }
+  dependencies:
+    - grapesjs_editor/grapesjs
+
+mjml_preset:
+  remote: https://github.com/GrapesJS/mjml
+  version: 1.0.7
+  license:
+    name: BSD 3-clause
+    url: https://github.com/GrapesJS/mjml/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    https://unpkg.com/grapesjs-mjml@1.0.7/dist/index.js: { type: external, minified: true }
+  dependencies:
+    - grapesjs_editor/grapesjs
+
+editor:
+  version: VERSION
+  css:
+    base:
+      libraries/css/editor.css: {}
+  js:
+    libraries/js/drupal-grapesjs-editor.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.debounce
+    - core/drupal.displace
+    - editor/drupal.editor
+    - grapesjs_editor/grapesjs
+
+drupal-storage:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-storage/drupal-storage.js: {}
+
+drupal-asset:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-asset/drupal-asset.js: {}
+
+drupal-basic-blocks:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-basic-blocks/drupal-basic-blocks.js: {}
+
+drupal-blocks:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-blocks/drupal-blocks.js: {}
+
+drupal-fields:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-fields/drupal-fields.js: {}
+
+drupal-unsubscribe:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-unsubscribe/drupal-unsubscribe.js: {}
+
+preview:
+  version: VERSION
+  css:
+    theme:
+      libraries/css/preview.css: {}
+  js:
+    libraries/js/preview.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.dialog.ajax
+
+grapesjs-preview-button:
+  version: VERSION
+  js:
+    libraries/js/grapesjs-preview-button.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+
+drupal-document:
+  js:
+    libraries/js/plugins/drupal-document/drupal-document.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - grapesjs_editor/editor
+
+drupal-link:
+  version: VERSION
+  js:
+    libraries/js/plugins/drupal-link/drupal-link.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - grapesjs_editor/editor
+
+drupal-widget:
+  version: VERSION
+  css:
+    theme:
+      libraries/css/drupal-widget.css: {}
+  js:
+    libraries/js/plugins/drupal-widget/drupal-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+

@@ -1,0 +1,8 @@
+services:
+  event_calendar.fcm_service:
+    class: Drupal\event_calendar\Service\FcmNotificationService
+    arguments: ['@file_system', '@logger.factory', '@config.factory']
+
+  event_calendar.notification_queue:
+    class: Drupal\event_calendar\Service\EventNotificationQueueService
+    arguments: ['@database', '@logger.factory', '@current_user', '@event_calendar.fcm_service', '@plugin.manager.mail', '@language_manager']

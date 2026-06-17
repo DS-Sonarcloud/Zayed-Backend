@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - zu_rest_api
+id: moderated_publish
+label: 'Publish Events'
+type: node
+plugin: moderated_publish
+configuration: {  }

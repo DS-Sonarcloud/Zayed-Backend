@@ -1,0 +1,8 @@
+name: 'Email Layout'
+type: module
+description: 'Send emails built using Layout Builder'
+core_version_requirement: ^11
+package: Custom
+dependencies:
+  - layout_builder
+  - node

@@ -1,0 +1,6 @@
+name: Event Bulk Upload
+type: module
+description: Allows bulk upload of events using CSV
+core_version_requirement: ^10 || ^11
+package: Custom
+version: 1.0

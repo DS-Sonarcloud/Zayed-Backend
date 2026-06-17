@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ *
+ */
+function event_calendar_schema() {
+  $schema = [];
+
+  /* -------------------------------
+   * Notification Queue Table
+   * ------------------------------- */
+  $schema['event_notification_queue'] = [
+    'description' => 'Queue for individual notification items',
+    'fields' => [
+      'id' => ['type' => 'serial', 'not null' => TRUE],
+      'batch_id' => ['type' => 'int', 'not null' => TRUE],
+      'recipient_type' => ['type' => 'varchar', 'length' => 10, 'not null' => TRUE],
+      'recipient_value' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'event_id' => ['type' => 'int', 'not null' => TRUE],
+      'message' => ['type' => 'text', 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 20, 'default' => 'pending'],
+      'attempts' => ['type' => 'int', 'default' => 0],
+      'error_message' => ['type' => 'text'],
+      'queued_time' => ['type' => 'int', 'not null' => TRUE],
+      'sent_time' => ['type' => 'int'],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'batch_id' => ['batch_id'],
+      'status' => ['status'],
+    ],
+  ];
+
+  /* -------------------------------
+   * Notification Batch Table
+   * ------------------------------- */
+  $schema['event_notification_batch'] = [
+    'description' => 'Batch metadata for notifications',
+    'fields' => [
+      'batch_id' => ['type' => 'serial', 'not null' => TRUE],
+      'event_id' => ['type' => 'int', 'not null' => TRUE],
+      'message' => ['type' => 'text', 'not null' => TRUE],
+      'total_count' => ['type' => 'int', 'default' => 0],
+      'sent_count' => ['type' => 'int', 'default' => 0],
+      'failed_count' => ['type' => 'int', 'default' => 0],
+      'status' => ['type' => 'varchar', 'length' => 20, 'default' => 'queued'],
+      'created_by' => ['type' => 'int', 'not null' => TRUE],
+      'created_time' => ['type' => 'int', 'not null' => TRUE],
+      'started_time' => ['type' => 'int'],
+      'completed_time' => ['type' => 'int'],
+      'lock_time' => ['type' => 'int'],
+    ],
+    'primary key' => ['batch_id'],
+    'indexes' => [
+      'status' => ['status'],
+      'created_by' => ['created_by'],
+    ],
+  ];
+
+  /* -------------------------------
+   * Notification Log Table
+   * ------------------------------- */
+  $schema['event_notification_log'] = [
+    'description' => 'Detailed log for notification events',
+    'fields' => [
+      'id' => ['type' => 'serial', 'not null' => TRUE],
+      'batch_id' => ['type' => 'int', 'not null' => TRUE],
+      'queue_id' => ['type' => 'int'],
+      'action' => ['type' => 'varchar', 'length' => 20, 'not null' => TRUE],
+      'details' => ['type' => 'text'],
+      'timestamp' => ['type' => 'int', 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'batch_id' => ['batch_id'],
+      'queue_id' => ['queue_id'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Fresh install ONLY.
+ */
+function event_calendar_install() {
+  $schema = \Drupal::database()->schema();
+
+  foreach (event_calendar_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+    }
+  }
+}
+
+/**
+ * creates table only if missing.
+ */
+function event_calendar_update_9101() {
+  $schema = \Drupal::database()->schema();
+
+  if (!$schema->tableExists('webform_usage')) {
+    $schema->createTable('webform_usage', [
+      'fields' => [
+        'webform_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'node_id' => ['type' => 'int', 'unsigned' => TRUE],
+        'used' => ['type' => 'int', 'default' => 0],
+        'used_at' => ['type' => 'int', 'unsigned' => TRUE],
+        'updated_at' => ['type' => 'int', 'unsigned' => TRUE],
+        'user_id' => ['type' => 'int', 'unsigned' => TRUE],
+      ],
+      'primary key' => ['webform_id'],
+    ]);
+  }
+}
+
+/**
+ * Add zu_event_registration table.
+ */
+function event_calendar_update_9102(): void {
+  $schema = \Drupal::database()->schema();
+
+  if (!$schema->tableExists('zu_event_registration')) {
+    $schema->createTable('zu_event_registration', [
+      'description' => 'Stores event registrations from both Drupal users and public users.',
+      'fields' => [
+        'id'             => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'event_nid'      => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'uid'            => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'public_user_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'attendee_name'  => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'attendee_email' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'attendee_phone' => ['type' => 'varchar', 'length' => 32,  'default' => ''],
+        'ticket_type'    => ['type' => 'varchar', 'length' => 64,  'not null' => TRUE, 'default' => 'general'],
+        'status'         => ['type' => 'varchar', 'length' => 32,  'not null' => TRUE, 'default' => 'pending'],
+        'attended'       => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+        'token'          => ['type' => 'varchar', 'length' => 64,  'default' => ''],
+        'registered_at'  => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'updated_at'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'token' => ['token'],
+      ],
+      'indexes' => [
+        'event_nid'  => ['event_nid'],
+        'uid'        => ['uid'],
+        'status'     => ['status'],
+        'email'      => [['attendee_email', 64]],
+      ],
+      'foreign keys' => [
+        'event_nid'      => ['table' => 'node_field_data',  'columns' => ['event_nid'      => 'nid']],
+        'uid'            => ['table' => 'users',            'columns' => ['uid'            => 'uid']],
+        'public_user_id' => ['table' => 'zu_public_users', 'columns' => ['public_user_id' => 'id']],
+      ],
+    ]);
+  }
+}

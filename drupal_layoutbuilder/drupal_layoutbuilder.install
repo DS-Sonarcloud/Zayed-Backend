@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall hooks for drupal_layoutbuilder.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function drupal_layoutbuilder_uninstall() {
+  $schema = \Drupal::database()->schema();
+  foreach (['drupal_layoutbuilder_data', 'drupal_layoutbuilder_template'] as $table) {
+    if ($schema->tableExists($table)) {
+      $schema->dropTable($table);
+    }
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function drupal_layoutbuilder_schema() {
+  $schema['drupal_layoutbuilder_data'] = [
+    'description' => 'Serialized layout builder (Elementor) document data per entity.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary key.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The ID of the target entity (e.g. node ID).',
+      ],
+      'data' => [
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'JSON document from the editor.',
+      ],
+      'author' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'The author of the target entity.',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of the last edit.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'uid' => ['uid'],
+    ],
+  ];
+
+  $schema['drupal_layoutbuilder_template'] = [
+    'description' => 'Saved templates for the layout builder library.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary key.',
+      ],
+      'type' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'Template type.',
+      ],
+      'name' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'Template name.',
+      ],
+      'author' => [
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'Author.',
+      ],
+      'data' => [
+        'type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'Template JSON.',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp.',
+      ],
+      'nid' => [
+        'type' => 'int',
+        'length' => 11,
+        'not null' => FALSE,
+        'description' => 'Node ID where the template was created, if applicable.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'type' => ['type'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Migrate from the legacy `elementor` module (tables + config).
+ */
+function drupal_layoutbuilder_update_10001() {
+  $db = \Drupal::database();
+  $schema = $db->schema();
+
+  $pairs = [
+    ['elementor_data', 'drupal_layoutbuilder_data'],
+    ['elementor_template', 'drupal_layoutbuilder_template'],
+  ];
+  foreach ($pairs as [$old, $new]) {
+    if ($schema->tableExists($old) && !$schema->tableExists($new)) {
+      $schema->renameTable($old, $new);
+    }
+  }
+
+  if ($schema->tableExists('drupal_layoutbuilder_template') && !$schema->fieldExists('drupal_layoutbuilder_template', 'nid')) {
+    $schema->addField('drupal_layoutbuilder_template', 'nid', [
+      'type' => 'int',
+      'length' => 11,
+      'not null' => FALSE,
+      'description' => 'Stores nid for node instance where template is created',
+    ]);
+  }
+
+  if ($schema->tableExists('drupal_layoutbuilder_data') && $schema->fieldExists('drupal_layoutbuilder_data', 'data')) {
+    $schema->changeField('drupal_layoutbuilder_data', 'data', 'data', [
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => FALSE,
+      'description' => 'Stores layout builder data in longblob format',
+    ]);
+  }
+
+  $cf = \Drupal::configFactory();
+  // Copy legacy module settings only if the new config object has never been saved.
+  if ($cf->get('drupal_layoutbuilder.settings')->isNew()) {
+    $legacy = $cf->get('elementor.settings');
+    if (!$legacy->isNew()) {
+      $editable = $cf->getEditable('drupal_layoutbuilder.settings');
+      foreach ($legacy->getRawData() as $key => $value) {
+        if ($key === '_core' || $key === 'uuid') {
+          continue;
+        }
+        $editable->set($key, $value);
+      }
+      $editable->save();
+    }
+  }
+}
+
+/**
+ * Remove stale `elementor` extension from active core.extension (rename fallout).
+ */
+function drupal_layoutbuilder_update_10002() {
+  $editable = \Drupal::configFactory()->getEditable('core.extension');
+  $modules = $editable->get('module');
+  if (!is_array($modules) || !isset($modules['elementor'])) {
+    return;
+  }
+  $weight = $modules['elementor'];
+  unset($modules['elementor']);
+  if (!isset($modules['drupal_layoutbuilder'])) {
+    $modules['drupal_layoutbuilder'] = is_int($weight) ? $weight : 0;
+  }
+  $editable->set('module', $modules)->save();
+  // Rebuild extension lists so the admin UI stops resolving the old name.
+  \Drupal::service('extension.list.module')->reset();
+}
+
+/**
+ * Repair node_types when config only contains unchecked checkbox placeholders.
+ */
+function drupal_layoutbuilder_update_10003() {
+  $editable = \Drupal::configFactory()->getEditable('drupal_layoutbuilder.settings');
+  if ($editable->isNew()) {
+    return;
+  }
+  $types = $editable->get('node_types');
+  if (!is_array($types)) {
+    return;
+  }
+  $selected = array_values(array_filter($types, static function ($machine_name) {
+    return is_string($machine_name) && $machine_name !== '' && $machine_name !== '0';
+  }));
+  if ($selected !== []) {
+    return;
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('node_type');
+  $seed = [];
+  foreach (['page', 'article', 'template'] as $id) {
+    if ($storage->load($id)) {
+      $seed[] = $id;
+    }
+  }
+  if ($seed === []) {
+    return;
+  }
+  $editable->set('node_types', $seed)->save();
+}
+
+/**
+ * Ensure layout tables exist (rename legacy or create from hook_schema).
+ *
+ * Sites that had missing system.schema entries could skip 10001; this recovers
+ * a working database without requiring a manual SQL rename.
+ */
+function drupal_layoutbuilder_update_10004() {
+  $db = \Drupal::database();
+  $schema = $db->schema();
+
+  $pairs = [
+    ['elementor_data', 'drupal_layoutbuilder_data'],
+    ['elementor_template', 'drupal_layoutbuilder_template'],
+  ];
+  foreach ($pairs as [$old, $new]) {
+    if ($schema->tableExists($old) && !$schema->tableExists($new)) {
+      $schema->renameTable($old, $new);
+    }
+  }
+
+  $install_schema = drupal_layoutbuilder_schema();
+  foreach (['drupal_layoutbuilder_data', 'drupal_layoutbuilder_template'] as $table) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $install_schema[$table]);
+    }
+  }
+
+  if ($schema->tableExists('drupal_layoutbuilder_data') && $schema->fieldExists('drupal_layoutbuilder_data', 'data')) {
+    $schema->changeField('drupal_layoutbuilder_data', 'data', 'data', [
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => FALSE,
+      'description' => 'Stores layout builder data in longblob format',
+    ]);
+  }
+}

@@ -1,0 +1,10 @@
+event_calendar.settings:
+  type: config_object
+  label: 'Event Calendar Settings'
+  mapping:
+    firebase_json_path:
+      type: string
+      label: 'Firebase JSON Private File Path'
+    firebase_project_id:
+      type: string
+      label: 'Firebase Project URL'

@@ -1,0 +1,5 @@
+student_verification.tab:
+  route_name: student_verification.form
+  title: 'Custom Settings'
+  base_route: entity.webform.canonical
+  weight: 50

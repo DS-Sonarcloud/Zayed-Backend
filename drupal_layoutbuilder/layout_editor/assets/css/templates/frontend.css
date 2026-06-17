@@ -1,0 +1,2746 @@
+.dialog-widget-content {
+  background-color: #fff;
+  position: absolute;
+  border-radius: 3px;
+  box-shadow: 2px 8px 23px 3px rgba(0, 0, 0, 0.2);
+  overflow: hidden; }
+
+.dialog-message {
+  font-size: 12px;
+  line-height: 1.5; }
+
+.dialog-type-lightbox {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  user-select: none; }
+  .dialog-type-lightbox .dialog-widget-content {
+    margin: auto;
+    width: 375px; }
+  .dialog-type-lightbox .dialog-header {
+    padding: 20px 0;
+    font-weight: 500; }
+  .dialog-type-lightbox .dialog-message {
+    padding: 0 20px 20px;
+    min-height: 50px; }
+  .dialog-type-lightbox .dialog-header, .dialog-type-lightbox .dialog-message {
+    text-align: center; }
+  .dialog-type-lightbox .dialog-buttons-wrapper {
+    border-top: 1px solid #e6e9ec;
+    text-align: center; }
+    .dialog-type-lightbox .dialog-buttons-wrapper > button {
+      border: none;
+      background: none;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 13px 0;
+      outline: 0; }
+      .dialog-type-lightbox .dialog-buttons-wrapper > button:first-child {
+        color: #6d7882; }
+      .dialog-type-lightbox .dialog-buttons-wrapper > button.dialog-ok {
+        color: #b01b1b; }
+      .dialog-type-lightbox .dialog-buttons-wrapper > button.dialog-take_over {
+        color: #39b54a; }
+      .dialog-type-lightbox .dialog-buttons-wrapper > button:active {
+        background-color: rgba(230, 233, 236, 0.5); }
+      .dialog-type-lightbox .dialog-buttons-wrapper > button::-moz-focus-inner {
+        border: 0; }
+
+.dialog-close-button {
+  cursor: pointer;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  font-size: 15px; }
+  .dialog-close-button:not(:hover) {
+    opacity: .4; }
+
+.dialog-lightbox-widget .dialog-header,
+.dialog-confirm-widget .dialog-header {
+  font-size: 15px;
+  color: #495157; }
+
+.dialog-lightbox-widget .dialog-buttons-wrapper > button,
+.dialog-confirm-widget .dialog-buttons-wrapper > button {
+  width: 50%; }
+  .dialog-lightbox-widget .dialog-buttons-wrapper > button:first-child,
+  .dialog-confirm-widget .dialog-buttons-wrapper > button:first-child {
+    border-right: 1px solid #e6e9ec; }
+  .dialog-lightbox-widget .dialog-buttons-wrapper > button:hover,
+  .dialog-confirm-widget .dialog-buttons-wrapper > button:hover {
+    background-color: #f4f6f7; }
+
+.dialog-alert-widget .dialog-buttons-wrapper > button {
+  width: 100%; }
+
+@media (max-width: 767px) {
+  .dialog-close-button {
+    top: 15px;
+    right: 15px; }
+  body.admin-bar .dialog-close-button {
+    top: 40px; } }
+
+.drupal_layoutbuilder-aspect-ratio-219 .drupal_layoutbuilder-fit-aspect-ratio {
+  padding-bottom: 42.8571%; }
+
+.drupal_layoutbuilder-aspect-ratio-169 .drupal_layoutbuilder-fit-aspect-ratio {
+  padding-bottom: 56.25%; }
+
+.drupal_layoutbuilder-aspect-ratio-43 .drupal_layoutbuilder-fit-aspect-ratio {
+  padding-bottom: 75%; }
+
+.drupal_layoutbuilder-aspect-ratio-32 .drupal_layoutbuilder-fit-aspect-ratio {
+  padding-bottom: 66.6666%; }
+
+.drupal_layoutbuilder-aspect-ratio-11 .drupal_layoutbuilder-fit-aspect-ratio {
+  padding-bottom: 100%; }
+
+.drupal_layoutbuilder-fit-aspect-ratio {
+  position: relative;
+  height: 0; }
+  .drupal_layoutbuilder-fit-aspect-ratio iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border: 0; }
+
+.drupal_layoutbuilder-hidden {
+  display: none; }
+
+.flatpickr-calendar {
+  width: 280px; }
+  .flatpickr-calendar .flatpickr-current-month span.cur-month {
+    font-weight: 300; }
+  .flatpickr-calendar .dayContainer {
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px; }
+  .flatpickr-calendar .flatpickr-days {
+    width: 280px; }
+  .flatpickr-calendar .flatpickr-day {
+    max-width: 37px;
+    height: 37px;
+    line-height: 37px; }
+
+.elementor {
+  hyphens: manual; }
+  .elementor *, .elementor *:before, .elementor *:after {
+    box-sizing: border-box; }
+  .elementor a {
+    box-shadow: none;
+    text-decoration: none; }
+  .elementor hr {
+    margin: 0;
+    background-color: transparent; }
+  .elementor img {
+    height: auto;
+    max-width: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none; }
+  .elementor .drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-widget-text-editor) figure {
+    margin: 0; }
+  .elementor embed,
+  .elementor iframe,
+  .elementor object,
+  .elementor video {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    line-height: 1;
+    border: none; }
+  .elementor .drupal_layoutbuilder-custom-embed {
+    line-height: 0; }
+  .elementor .drupal_layoutbuilder-background-video-container {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    overflow: hidden;
+    z-index: 0;
+    transition: opacity 1s; }
+    .elementor .drupal_layoutbuilder-background-video-container.drupal_layoutbuilder-loading {
+      opacity: 0; }
+  .elementor .drupal_layoutbuilder-background-video-embed {
+    max-width: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%); }
+  .elementor .drupal_layoutbuilder-background-video {
+    position: absolute;
+    max-width: none;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%); }
+  .elementor .drupal_layoutbuilder-html5-video {
+    object-fit: cover; }
+  .elementor .drupal_layoutbuilder-background-overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute; }
+
+.drupal_layoutbuilder-invisible {
+  visibility: hidden; }
+
+.drupal_layoutbuilder-align-center {
+  text-align: center; }
+  .drupal_layoutbuilder-align-center .drupal_layoutbuilder-button {
+    width: auto; }
+
+.drupal_layoutbuilder-align-right {
+  text-align: right; }
+  .drupal_layoutbuilder-align-right .drupal_layoutbuilder-button {
+    width: auto; }
+
+.drupal_layoutbuilder-align-left {
+  text-align: left; }
+  .drupal_layoutbuilder-align-left .drupal_layoutbuilder-button {
+    width: auto; }
+
+.drupal_layoutbuilder-align-justify .drupal_layoutbuilder-button {
+  width: 100%; }
+
+.drupal_layoutbuilder-custom-embed-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%); }
+  .drupal_layoutbuilder-custom-embed-play i {
+    font-size: 100px;
+    color: #fff;
+    opacity: 0.8;
+    text-shadow: 1px 0 6px rgba(0, 0, 0, 0.3);
+    transition: all .5s; }
+  .drupal_layoutbuilder-custom-embed-play.drupal_layoutbuilder-playing i {
+    font-family: 'FontAwesome';
+    animation: fa-spin 2s infinite linear; }
+    .drupal_layoutbuilder-custom-embed-play.drupal_layoutbuilder-playing i:before {
+      content: "\f1ce"; }
+
+.drupal_layoutbuilder-swiper-button {
+  position: absolute;
+  display: inline-flex;
+  z-index: 1;
+  cursor: pointer;
+  font-size: 25px;
+  color: rgba(238, 238, 238, 0.9);
+  top: 50%;
+  transform: translateY(-50%); }
+  .drupal_layoutbuilder-swiper-button.swiper-button-disabled {
+    opacity: 0.3; }
+
+.drupal_layoutbuilder-tag {
+  display: inline-flex; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-tablet-align-center {
+    text-align: center; }
+    .drupal_layoutbuilder-tablet-align-center .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-tablet-align-right {
+    text-align: right; }
+    .drupal_layoutbuilder-tablet-align-right .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-tablet-align-left {
+    text-align: left; }
+    .drupal_layoutbuilder-tablet-align-left .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-tablet-align-justify .drupal_layoutbuilder-button {
+    width: 100%; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-mobile-align-center {
+    text-align: center; }
+    .drupal_layoutbuilder-mobile-align-center .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-mobile-align-right {
+    text-align: right; }
+    .drupal_layoutbuilder-mobile-align-right .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-mobile-align-left {
+    text-align: left; }
+    .drupal_layoutbuilder-mobile-align-left .drupal_layoutbuilder-button {
+      width: auto; }
+  .drupal_layoutbuilder-mobile-align-justify .drupal_layoutbuilder-button {
+    width: 100%; } }
+
+#wpadminbar #wp-admin-bar-elementor_edit_page > .ab-item::before {
+  content: "\e801";
+  font-family: eicons;
+  top: 3px;
+  font-size: 18px; }
+
+#wpadminbar #wp-admin-bar-elementor_inspector > .ab-item::before {
+  content: "\f348";
+  top: 2px; }
+
+.elementor:after {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0; }
+  @media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_LG_MIN) {
+    .elementor:after {
+      content: 'desktop'; } }
+  @media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+    .elementor:after {
+      content: 'tablet'; } }
+  @media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+    .elementor:after {
+      content: 'mobile'; } }
+
+.drupal_layoutbuilder-section {
+  position: relative; }
+  .drupal_layoutbuilder-section .drupal_layoutbuilder-container {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative; }
+  .drupal_layoutbuilder-section.drupal_layoutbuilder-section-boxed > .drupal_layoutbuilder-container {
+    max-width: 1140px; }
+  .drupal_layoutbuilder-section.drupal_layoutbuilder-section-stretched {
+    position: relative;
+    width: 100%; }
+  .drupal_layoutbuilder-section.drupal_layoutbuilder-section-items-top > .drupal_layoutbuilder-container {
+    align-items: flex-start; }
+  .drupal_layoutbuilder-section.drupal_layoutbuilder-section-items-middle > .drupal_layoutbuilder-container {
+    align-items: center; }
+  .drupal_layoutbuilder-section.drupal_layoutbuilder-section-items-bottom > .drupal_layoutbuilder-container {
+    align-items: flex-end; }
+  @media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+    .drupal_layoutbuilder-section.drupal_layoutbuilder-section-height-full {
+      height: 100vh; }
+      .drupal_layoutbuilder-section.drupal_layoutbuilder-section-height-full > .drupal_layoutbuilder-container {
+        height: 100%; } }
+
+.drupal_layoutbuilder-section-content-top > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-column-wrap {
+  align-items: flex-start; }
+
+.drupal_layoutbuilder-section-content-middle > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-column-wrap {
+  align-items: center; }
+
+.drupal_layoutbuilder-section-content-bottom > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-column-wrap {
+  align-items: flex-end; }
+
+.drupal_layoutbuilder-row {
+  width: 100%;
+  display: flex; }
+  @media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+    .drupal_layoutbuilder-row {
+      flex-wrap: wrap; } }
+
+.drupal_layoutbuilder-column-wrap {
+  width: 100%;
+  position: relative;
+  display: flex; }
+
+.drupal_layoutbuilder-widget-wrap {
+  position: relative;
+  width: 100%; }
+
+.drupal_layoutbuilder-widget {
+  position: relative; }
+  .drupal_layoutbuilder-widget:not(:last-child) {
+    margin-bottom: 20px; }
+
+.drupal_layoutbuilder-column {
+  position: relative;
+  min-height: 1px;
+  display: flex; }
+
+.drupal_layoutbuilder-column-gap-narrow > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-element-populated {
+  padding: 5px; }
+
+.drupal_layoutbuilder-column-gap-default > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-element-populated {
+  padding: 10px; }
+
+.drupal_layoutbuilder-column-gap-extended > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-element-populated {
+  padding: 15px; }
+
+.drupal_layoutbuilder-column-gap-wide > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-element-populated {
+  padding: 20px; }
+
+.drupal_layoutbuilder-column-gap-wider > .drupal_layoutbuilder-row > .drupal_layoutbuilder-column > .drupal_layoutbuilder-element-populated {
+  padding: 30px; }
+
+.drupal_layoutbuilder-inner-section .drupal_layoutbuilder-column-gap-no .drupal_layoutbuilder-element-populated {
+  padding: 0; }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-10, .drupal_layoutbuilder-column[data-col="10"] {
+    width: 10%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-11, .drupal_layoutbuilder-column[data-col="11"] {
+    width: 11.111%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-12, .drupal_layoutbuilder-column[data-col="12"] {
+    width: 12.5%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-14, .drupal_layoutbuilder-column[data-col="14"] {
+    width: 14.285%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-16, .drupal_layoutbuilder-column[data-col="16"] {
+    width: 16.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-20, .drupal_layoutbuilder-column[data-col="20"] {
+    width: 20%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-25, .drupal_layoutbuilder-column[data-col="25"] {
+    width: 25%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-30, .drupal_layoutbuilder-column[data-col="30"] {
+    width: 30%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-33, .drupal_layoutbuilder-column[data-col="33"] {
+    width: 33.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-40, .drupal_layoutbuilder-column[data-col="40"] {
+    width: 40%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-50, .drupal_layoutbuilder-column[data-col="50"] {
+    width: 50%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-60, .drupal_layoutbuilder-column[data-col="60"] {
+    width: 60%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-66, .drupal_layoutbuilder-column[data-col="66"] {
+    width: 66.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-70, .drupal_layoutbuilder-column[data-col="70"] {
+    width: 70%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-75, .drupal_layoutbuilder-column[data-col="75"] {
+    width: 75%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-80, .drupal_layoutbuilder-column[data-col="80"] {
+    width: 80%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-83, .drupal_layoutbuilder-column[data-col="83"] {
+    width: 83.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-90, .drupal_layoutbuilder-column[data-col="90"] {
+    width: 90%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-col-100, .drupal_layoutbuilder-column[data-col="100"] {
+    width: 100%; } }
+
+@media (max-width: 479px) {
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-10 {
+    width: 10%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-11 {
+    width: 11.111%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-12 {
+    width: 12.5%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-14 {
+    width: 14.285%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-16 {
+    width: 16.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-20 {
+    width: 20%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-25 {
+    width: 25%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-30 {
+    width: 30%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-33 {
+    width: 33.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-40 {
+    width: 40%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-50 {
+    width: 50%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-60 {
+    width: 60%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-66 {
+    width: 66.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-70 {
+    width: 70%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-75 {
+    width: 75%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-80 {
+    width: 80%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-83 {
+    width: 83.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-90 {
+    width: 90%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-xs-100 {
+    width: 100%; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-10 {
+    width: 10%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-11 {
+    width: 11.111%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-12 {
+    width: 12.5%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-14 {
+    width: 14.285%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-16 {
+    width: 16.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-20 {
+    width: 20%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-25 {
+    width: 25%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-30 {
+    width: 30%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-33 {
+    width: 33.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-40 {
+    width: 40%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-50 {
+    width: 50%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-60 {
+    width: 60%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-66 {
+    width: 66.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-70 {
+    width: 70%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-75 {
+    width: 75%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-80 {
+    width: 80%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-83 {
+    width: 83.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-90 {
+    width: 90%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-sm-100 {
+    width: 100%; } }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-10 {
+    width: 10%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-11 {
+    width: 11.111%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-12 {
+    width: 12.5%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-14 {
+    width: 14.285%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-16 {
+    width: 16.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-20 {
+    width: 20%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-25 {
+    width: 25%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-30 {
+    width: 30%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-33 {
+    width: 33.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-40 {
+    width: 40%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-50 {
+    width: 50%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-60 {
+    width: 60%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-66 {
+    width: 66.666%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-70 {
+    width: 70%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-75 {
+    width: 75%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-80 {
+    width: 80%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-83 {
+    width: 83.333%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-90 {
+    width: 90%; }
+  .drupal_layoutbuilder-column.drupal_layoutbuilder-md-100 {
+    width: 100%; } }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(1) {
+    order: 10; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(2) {
+    order: 9; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(3) {
+    order: 8; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(4) {
+    order: 7; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(5) {
+    order: 6; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(6) {
+    order: 5; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(7) {
+    order: 4; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(8) {
+    order: 3; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(9) {
+    order: 2; }
+  .drupal_layoutbuilder-reverse-tablet > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(10) {
+    order: 1; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(1) {
+    order: 10; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(2) {
+    order: 9; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(3) {
+    order: 8; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(4) {
+    order: 7; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(5) {
+    order: 6; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(6) {
+    order: 5; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(7) {
+    order: 4; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(8) {
+    order: 3; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(9) {
+    order: 2; }
+  .drupal_layoutbuilder-reverse-mobile > .drupal_layoutbuilder-container > .drupal_layoutbuilder-row > :nth-child(10) {
+    order: 1; }
+  .drupal_layoutbuilder-column {
+    width: 100%; } }
+
+ul.drupal_layoutbuilder-icon-list-items.drupal_layoutbuilder-inline-items {
+  display: flex;
+  flex-wrap: wrap; }
+  ul.drupal_layoutbuilder-icon-list-items.drupal_layoutbuilder-inline-items .drupal_layoutbuilder-inline-item {
+    word-break: break-word; }
+
+.drupal_layoutbuilder-grid .drupal_layoutbuilder-grid-item {
+  word-break: break-word;
+  min-width: 0; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-1 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(1, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-2 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(2, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-3 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(3, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-4 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(4, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-5 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(5, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-6 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(6, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-7 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(7, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-8 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(8, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-9 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(9, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-10 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(10, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-11 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(11, 1fr);
+  display: grid; }
+
+.drupal_layoutbuilder-grid-0 .drupal_layoutbuilder-grid {
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap; }
+
+.drupal_layoutbuilder-grid-12 .drupal_layoutbuilder-grid {
+  grid-template-columns: repeat(12, 1fr);
+  display: grid; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-1 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(1, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-2 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-3 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(3, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-4 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(4, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-5 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(5, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-6 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(6, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-7 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(7, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-8 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(8, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-9 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(9, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-10 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(10, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-11 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(11, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-tablet-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-tablet-12 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(12, 1fr);
+    display: grid; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-1 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(1, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-2 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-3 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(3, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-4 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(4, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-5 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(5, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-6 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(6, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-7 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(7, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-8 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(8, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-9 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(9, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-10 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(10, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-11 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(11, 1fr);
+    display: grid; }
+  .drupal_layoutbuilder-grid-mobile-0 .drupal_layoutbuilder-grid {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap; }
+  .drupal_layoutbuilder-grid-mobile-12 .drupal_layoutbuilder-grid {
+    grid-template-columns: repeat(12, 1fr);
+    display: grid; } }
+
+.drupal_layoutbuilder-screen-only,
+.screen-reader-text,
+.screen-reader-text span,
+.ui-helper-hidden-accessible {
+  position: absolute;
+  top: -10000em;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0; }
+
+.drupal_layoutbuilder-clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+  width: 0;
+  height: 0; }
+
+.drupal_layoutbuilder-form-fields-wrapper {
+  display: flex;
+  flex-wrap: wrap; }
+  .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-above > .drupal_layoutbuilder-field-group > input, .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-above > .drupal_layoutbuilder-field-group > textarea, .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-above > .drupal_layoutbuilder-field-group > .drupal_layoutbuilder-select-wrapper, .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-above > .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-subgroup {
+    flex-basis: 100%;
+    max-width: 100%; }
+  .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-inline > .drupal_layoutbuilder-field-group > input, .drupal_layoutbuilder-form-fields-wrapper.drupal_layoutbuilder-labels-inline > .drupal_layoutbuilder-field-group .drupal_layoutbuilder-select-wrapper {
+    flex-grow: 1; }
+
+.drupal_layoutbuilder-field-group {
+  flex-wrap: wrap;
+  align-items: center; }
+  .drupal_layoutbuilder-field-group.drupal_layoutbuilder-field-type-submit {
+    align-items: flex-end; }
+  .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #818a91;
+    background-color: transparent;
+    color: #373a3c;
+    vertical-align: middle;
+    flex-grow: 1; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual:focus {
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
+      outline: 0; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual::-webkit-input-placeholder {
+      color: inherit;
+      font-family: inherit;
+      opacity: 0.6; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual:-ms-input-placeholder {
+      color: inherit;
+      font-family: inherit;
+      opacity: 0.6; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual::-moz-placeholder {
+      color: inherit;
+      font-family: inherit;
+      opacity: 0.6; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual:-moz-placeholder {
+      color: inherit;
+      font-family: inherit;
+      opacity: 0.6; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-field-textual::placeholder {
+      color: inherit;
+      font-family: inherit;
+      opacity: 0.6; }
+  .drupal_layoutbuilder-field-group .drupal_layoutbuilder-select-wrapper {
+    display: flex;
+    position: relative;
+    width: 100%; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-select-wrapper select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      color: inherit;
+      font-size: inherit;
+      font-family: inherit;
+      font-weight: inherit;
+      font-style: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+      line-height: inherit;
+      flex-basis: 100%;
+      padding-right: 20px; }
+    .drupal_layoutbuilder-field-group .drupal_layoutbuilder-select-wrapper:before {
+      content: '\f0d7';
+      font-family: 'FontAwesome';
+      font-size: 15px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 10px;
+      pointer-events: none; }
+  .drupal_layoutbuilder-field-group.drupal_layoutbuilder-field-type-select-multiple .drupal_layoutbuilder-select-wrapper:before {
+    content: ''; }
+
+.drupal_layoutbuilder-field-subgroup {
+  display: flex;
+  flex-wrap: wrap; }
+  .drupal_layoutbuilder-field-subgroup .drupal_layoutbuilder-field-option label {
+    display: inline-block; }
+  .drupal_layoutbuilder-field-subgroup.drupal_layoutbuilder-subgroup-inline .drupal_layoutbuilder-field-option {
+    padding-right: 10px; }
+  .drupal_layoutbuilder-field-subgroup:not(.drupal_layoutbuilder-subgroup-inline) .drupal_layoutbuilder-field-option {
+    flex-basis: 100%; }
+
+.drupal_layoutbuilder-field-label {
+  cursor: pointer; }
+  .drupal_layoutbuilder-mark-required .drupal_layoutbuilder-field-label:after {
+    content: '*';
+    color: red;
+    padding-left: 0.2em; }
+
+.drupal_layoutbuilder-field-textual {
+  line-height: 1.4; }
+  .drupal_layoutbuilder-field-textual.drupal_layoutbuilder-size-xs {
+    font-size: 13px;
+    min-height: 33px;
+    padding: 4px 12px;
+    border-radius: 2px; }
+  .drupal_layoutbuilder-field-textual.drupal_layoutbuilder-size-sm {
+    font-size: 15px;
+    min-height: 40px;
+    padding: 5px 14px;
+    border-radius: 3px; }
+  .drupal_layoutbuilder-field-textual.drupal_layoutbuilder-size-md {
+    font-size: 16px;
+    min-height: 47px;
+    padding: 6px 16px;
+    border-radius: 4px; }
+  .drupal_layoutbuilder-field-textual.drupal_layoutbuilder-size-lg {
+    font-size: 18px;
+    min-height: 59px;
+    padding: 7px 20px;
+    border-radius: 5px; }
+  .drupal_layoutbuilder-field-textual.drupal_layoutbuilder-size-xl {
+    font-size: 20px;
+    min-height: 72px;
+    padding: 8px 24px;
+    border-radius: 6px; }
+
+.drupal_layoutbuilder-button-align-center .drupal_layoutbuilder-field-type-submit {
+  justify-content: center; }
+
+.drupal_layoutbuilder-button-align-stretch .drupal_layoutbuilder-field-type-submit button {
+  flex-basis: 100%; }
+
+.drupal_layoutbuilder-button-align-start .drupal_layoutbuilder-field-type-submit {
+  justify-content: flex-start; }
+
+.drupal_layoutbuilder-button-align-end .drupal_layoutbuilder-field-type-submit {
+  justify-content: flex-end; }
+
+@media screen and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-tablet-button-align-center .drupal_layoutbuilder-field-type-submit {
+    justify-content: center; }
+  .drupal_layoutbuilder-tablet-button-align-stretch .drupal_layoutbuilder-field-type-submit button {
+    flex-basis: 100%; }
+  .drupal_layoutbuilder-tablet-button-align-start .drupal_layoutbuilder-field-type-submit {
+    justify-content: flex-start; }
+  .drupal_layoutbuilder-tablet-button-align-end .drupal_layoutbuilder-field-type-submit {
+    justify-content: flex-end; } }
+
+@media screen and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-mobile-button-align-center .drupal_layoutbuilder-field-type-submit {
+    justify-content: center; }
+  .drupal_layoutbuilder-mobile-button-align-stretch .drupal_layoutbuilder-field-type-submit button {
+    flex-basis: 100%; }
+  .drupal_layoutbuilder-mobile-button-align-start .drupal_layoutbuilder-field-type-submit {
+    justify-content: flex-start; }
+  .drupal_layoutbuilder-mobile-button-align-end .drupal_layoutbuilder-field-type-submit {
+    justify-content: flex-end; } }
+
+.drupal_layoutbuilder-error .drupal_layoutbuilder-field {
+  border-color: #d9534f; }
+
+.drupal_layoutbuilder-error .help-inline {
+  color: #d9534f;
+  font-size: 0.9em; }
+
+.drupal_layoutbuilder-message {
+  margin: 10px 0;
+  font-size: 1em;
+  line-height: 1; }
+  .drupal_layoutbuilder-message:before {
+    content: "\f00c";
+    display: inline-block;
+    font-family: fontawesome;
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle;
+    margin-right: 5px; }
+  .drupal_layoutbuilder-message.drupal_layoutbuilder-message-danger {
+    color: #d9534f; }
+    .drupal_layoutbuilder-message.drupal_layoutbuilder-message-danger:before {
+      content: "\f00d"; }
+  .drupal_layoutbuilder-message.form-message-success {
+    color: #5cb85c; }
+
+.drupal_layoutbuilder-form .drupal_layoutbuilder-button {
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 0 none; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button > span {
+    display: flex;
+    justify-content: center; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button .drupal_layoutbuilder-align-icon-right {
+    order: 2; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button .drupal_layoutbuilder-align-icon-left {
+    order: 0; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button.drupal_layoutbuilder-size-xs {
+    min-height: 33px; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button.drupal_layoutbuilder-size-sm {
+    min-height: 40px; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button.drupal_layoutbuilder-size-md {
+    min-height: 47px; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button.drupal_layoutbuilder-size-lg {
+    min-height: 59px; }
+  .drupal_layoutbuilder-form .drupal_layoutbuilder-button.drupal_layoutbuilder-size-xl {
+    min-height: 72px; }
+
+.drupal_layoutbuilder-element .drupal_layoutbuilder-widget-container {
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s; }
+
+.drupal_layoutbuilder-accordion {
+  text-align: left; }
+  .drupal_layoutbuilder-accordion .drupal_layoutbuilder-accordion-item {
+    border: 1px solid #D4D4D4; }
+    .drupal_layoutbuilder-accordion .drupal_layoutbuilder-accordion-item + .drupal_layoutbuilder-accordion-item {
+      border-top: none; }
+  .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title {
+    margin: 0;
+    padding: 15px 20px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    outline: none; }
+    .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon {
+      display: inline-block;
+      width: 1.5em; }
+      .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon.drupal_layoutbuilder-accordion-icon-right {
+        float: right;
+        text-align: right; }
+      .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon.drupal_layoutbuilder-accordion-icon-left {
+        float: left;
+        text-align: left; }
+      .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon .drupal_layoutbuilder-accordion-icon-closed {
+        display: block; }
+      .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon .drupal_layoutbuilder-accordion-icon-opened {
+        display: none; }
+    .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title.drupal_layoutbuilder-active .drupal_layoutbuilder-accordion-icon-closed {
+      display: none; }
+    .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title.drupal_layoutbuilder-active .drupal_layoutbuilder-accordion-icon-opened {
+      display: block; }
+  .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-content {
+    display: none;
+    padding: 15px 20px;
+    border-top: 1px solid #D4D4D4; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title {
+    padding: 12px 15px; }
+    .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-accordion-icon {
+      width: 1.2em; }
+  .drupal_layoutbuilder-accordion .drupal_layoutbuilder-tab-content {
+    padding: 7px 15px; } }
+
+.drupal_layoutbuilder-alert {
+  padding: 15px;
+  border-left: 5px solid transparent;
+  position: relative;
+  text-align: left; }
+  .drupal_layoutbuilder-alert .drupal_layoutbuilder-alert-title {
+    display: block;
+    font-weight: bold; }
+  .drupal_layoutbuilder-alert .drupal_layoutbuilder-alert-description {
+    font-size: 13px; }
+  .drupal_layoutbuilder-alert button.drupal_layoutbuilder-alert-dismiss {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 3px;
+    font-size: 20px;
+    line-height: 1;
+    background: transparent;
+    color: inherit;
+    border: none;
+    cursor: pointer; }
+  .drupal_layoutbuilder-alert.drupal_layoutbuilder-alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bcdff1; }
+  .drupal_layoutbuilder-alert.drupal_layoutbuilder-alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #cae6be; }
+  .drupal_layoutbuilder-alert.drupal_layoutbuilder-alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #f9f0c3; }
+  .drupal_layoutbuilder-alert.drupal_layoutbuilder-alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #e8c4c4; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-alert {
+    padding: 10px; }
+    .drupal_layoutbuilder-alert button.drupal_layoutbuilder-alert-dismiss {
+      right: 7px;
+      top: 7px; } }
+
+.drupal_layoutbuilder-button {
+  display: inline-block;
+  line-height: 1;
+  background-color: #818a91;
+  color: #fff;
+  text-align: center;
+  transition: all 0.5s; }
+  .drupal_layoutbuilder-button:hover, .drupal_layoutbuilder-button:focus, .drupal_layoutbuilder-button:visited {
+    color: #fff; }
+  .drupal_layoutbuilder-button.drupal_layoutbuilder-size-xs {
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 2px; }
+  .drupal_layoutbuilder-button.drupal_layoutbuilder-size-sm {
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 3px; }
+  .drupal_layoutbuilder-button.drupal_layoutbuilder-size-md {
+    font-size: 16px;
+    padding: 15px 30px;
+    border-radius: 4px; }
+  .drupal_layoutbuilder-button.drupal_layoutbuilder-size-lg {
+    font-size: 18px;
+    padding: 20px 40px;
+    border-radius: 5px; }
+  .drupal_layoutbuilder-button.drupal_layoutbuilder-size-xl {
+    font-size: 20px;
+    padding: 25px 50px;
+    border-radius: 6px; }
+  .drupal_layoutbuilder-button .drupal_layoutbuilder-align-icon-right {
+    float: right;
+    margin-left: 5px; }
+  .drupal_layoutbuilder-button .drupal_layoutbuilder-align-icon-left {
+    float: left;
+    margin-right: 5px; }
+  .drupal_layoutbuilder-button .drupal_layoutbuilder-button-text {
+    display: inline-block; }
+  .drupal_layoutbuilder-button span {
+    text-decoration: inherit; }
+
+.drupal_layoutbuilder-element.drupal_layoutbuilder-button-info .drupal_layoutbuilder-button {
+  background-color: #5bc0de; }
+
+.drupal_layoutbuilder-element.drupal_layoutbuilder-button-success .drupal_layoutbuilder-button {
+  background-color: #5cb85c; }
+
+.drupal_layoutbuilder-element.drupal_layoutbuilder-button-warning .drupal_layoutbuilder-button {
+  background-color: #f0ad4e; }
+
+.drupal_layoutbuilder-element.drupal_layoutbuilder-button-danger .drupal_layoutbuilder-button {
+  background-color: #d9534f; }
+
+.drupal_layoutbuilder-widget-button .drupal_layoutbuilder-button .drupal_layoutbuilder-button-info {
+  background-color: #5bc0de; }
+
+.drupal_layoutbuilder-widget-button .drupal_layoutbuilder-button .drupal_layoutbuilder-button-success {
+  background-color: #5cb85c; }
+
+.drupal_layoutbuilder-widget-button .drupal_layoutbuilder-button .drupal_layoutbuilder-button-warning {
+  background-color: #f0ad4e; }
+
+.drupal_layoutbuilder-widget-button .drupal_layoutbuilder-button .drupal_layoutbuilder-button-danger {
+  background-color: #d9534f; }
+
+.drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-number-wrapper {
+  display: flex;
+  font-size: 69px;
+  font-weight: 600;
+  color: #222222;
+  line-height: 1; }
+
+.drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-number-prefix, .drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-number-suffix {
+  flex-grow: 1;
+  white-space: pre-wrap; }
+
+.drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-number-prefix {
+  text-align: right; }
+
+.drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-number-suffix {
+  text-align: left; }
+
+.drupal_layoutbuilder-counter .drupal_layoutbuilder-counter-title {
+  text-align: center;
+  font-size: 19px;
+  font-weight: 400;
+  color: #666666;
+  line-height: 2.5; }
+
+.drupal_layoutbuilder-widget-divider .drupal_layoutbuilder-divider {
+  line-height: 0;
+  font-size: 0; }
+
+.drupal_layoutbuilder-widget-divider .drupal_layoutbuilder-divider-separator {
+  display: inline-block; }
+
+.drupal_layoutbuilder-image-gallery .gallery-item {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto; }
+  .drupal_layoutbuilder-image-gallery .gallery-item img {
+    margin: 0 auto; }
+  .drupal_layoutbuilder-image-gallery .gallery-item .gallery-caption {
+    margin: 0; }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+  .drupal_layoutbuilder-image-gallery .gallery-columns-2 .gallery-item {
+    max-width: 50%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-3 .gallery-item {
+    max-width: 33.33%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-4 .gallery-item {
+    max-width: 25%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-5 .gallery-item {
+    max-width: 20%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-6 .gallery-item {
+    max-width: 16.666%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-7 .gallery-item {
+    max-width: 14.28%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-8 .gallery-item {
+    max-width: 12.5%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-9 .gallery-item {
+    max-width: 11.11%; }
+  .drupal_layoutbuilder-image-gallery .gallery-columns-10 .gallery-item {
+    max-width: 10%; } }
+
+@media (min-width: 480px) and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-2 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-3 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-4 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-5 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-6 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-7 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-8 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-9 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-10 .gallery-item {
+    max-width: 50%; } }
+
+@media (max-width: 479px) {
+  .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-2 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-3 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-4 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-5 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-6 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-7 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-8 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-9 .gallery-item, .drupal_layoutbuilder-image-gallery .gallery.gallery-columns-10 .gallery-item {
+    max-width: 100%; } }
+
+.drupal_layoutbuilder-widget-google_maps iframe {
+  height: 300px; }
+
+.drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title {
+  padding: 0;
+  margin: 0;
+  line-height: 1; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title > a {
+    color: inherit;
+    font-size: inherit; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title.drupal_layoutbuilder-size-small {
+    font-size: 15px; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title.drupal_layoutbuilder-size-medium {
+    font-size: 19px; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title.drupal_layoutbuilder-size-large {
+    font-size: 29px; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title.drupal_layoutbuilder-size-xl {
+    font-size: 39px; }
+  .drupal_layoutbuilder-widget-heading .drupal_layoutbuilder-heading-title.drupal_layoutbuilder-size-xxl {
+    font-size: 59px; }
+
+.drupal_layoutbuilder-icon {
+  display: inline-block;
+  line-height: 1;
+  transition: all 0.5s;
+  color: #818a91;
+  font-size: 50px;
+  text-align: center; }
+  .drupal_layoutbuilder-icon:hover {
+    color: #818a91; }
+  .drupal_layoutbuilder-icon i {
+    width: 1em;
+    height: 1em;
+    position: relative;
+    display: block; }
+    .drupal_layoutbuilder-icon i:before {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%); }
+
+.drupal_layoutbuilder-view-stacked .drupal_layoutbuilder-icon {
+  padding: .5em;
+  background-color: #818a91;
+  color: #fff; }
+
+.drupal_layoutbuilder-view-framed .drupal_layoutbuilder-icon {
+  padding: .5em;
+  color: #818a91;
+  border: 3px solid #818a91;
+  background-color: transparent; }
+
+.drupal_layoutbuilder-shape-circle .drupal_layoutbuilder-icon {
+  border-radius: 50%; }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-left .drupal_layoutbuilder-icon-box-wrapper, .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-right .drupal_layoutbuilder-icon-box-wrapper {
+    display: flex; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-left .drupal_layoutbuilder-icon-box-icon, .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-right .drupal_layoutbuilder-icon-box-icon {
+    flex: 0 0 auto; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-right .drupal_layoutbuilder-icon-box-wrapper {
+    text-align: right;
+    flex-direction: row-reverse; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-left .drupal_layoutbuilder-icon-box-wrapper {
+    text-align: left;
+    flex-direction: row; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-position-top .drupal_layoutbuilder-icon-box-img {
+    margin: auto; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-vertical-align-top .drupal_layoutbuilder-icon-box-wrapper {
+    align-items: flex-start; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-vertical-align-middle .drupal_layoutbuilder-icon-box-wrapper {
+    align-items: center; }
+  .drupal_layoutbuilder-widget-icon-box.drupal_layoutbuilder-vertical-align-bottom .drupal_layoutbuilder-icon-box-wrapper {
+    align-items: flex-end; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-widget-icon-box .drupal_layoutbuilder-icon-box-icon {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 15px; } }
+
+.drupal_layoutbuilder-widget-icon-box .drupal_layoutbuilder-icon-box-wrapper {
+  text-align: center; }
+
+.drupal_layoutbuilder-widget-icon-box .drupal_layoutbuilder-icon-box-title a {
+  color: inherit; }
+
+.drupal_layoutbuilder-widget-icon-box .drupal_layoutbuilder-icon-box-description {
+  margin: 0; }
+
+.drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-items.drupal_layoutbuilder-inline-items {
+  margin-right: -8px;
+  margin-left: -8px; }
+  .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-items.drupal_layoutbuilder-inline-items .drupal_layoutbuilder-icon-list-item {
+    margin-right: 8px;
+    margin-left: 8px; }
+    .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-items.drupal_layoutbuilder-inline-items .drupal_layoutbuilder-icon-list-item:after {
+      width: auto;
+      left: auto;
+      right: auto;
+      position: relative;
+      height: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 0;
+      border-bottom: 0;
+      border-right: 0;
+      border-left-width: 1px;
+      border-style: solid;
+      right: -8px; }
+
+.drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-items {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+
+.drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-item {
+  margin: 0;
+  padding: 0;
+  position: relative; }
+  .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-item:after {
+    position: absolute;
+    bottom: 0;
+    width: 100%; }
+  .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-item a {
+    display: flex;
+    align-items: flex-start; }
+  .drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-item a {
+    width: 100%; }
+
+.drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-icon + .drupal_layoutbuilder-icon-list-text {
+  align-self: center;
+  padding-left: 5px; }
+
+.drupal_layoutbuilder-widget .drupal_layoutbuilder-icon-list-icon {
+  text-align: center; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-center .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-align-center .drupal_layoutbuilder-icon-list-item a {
+  justify-content: center; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-center .drupal_layoutbuilder-icon-list-item:after {
+  margin: auto; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-center .drupal_layoutbuilder-inline-items {
+  justify-content: center; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-left .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-align-left .drupal_layoutbuilder-icon-list-item a {
+  justify-content: flex-start;
+  text-align: left; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-left .drupal_layoutbuilder-inline-items {
+  justify-content: flex-start; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-right .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-align-right .drupal_layoutbuilder-icon-list-item a {
+  justify-content: flex-end;
+  text-align: right; }
+
+.drupal_layoutbuilder-widget.drupal_layoutbuilder-align-right .drupal_layoutbuilder-icon-list-items {
+  justify-content: flex-end; }
+
+.drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-align-right) .drupal_layoutbuilder-icon-list-item:after {
+  left: 0; }
+
+.drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-align-left) .drupal_layoutbuilder-icon-list-item:after {
+  right: 0; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-center .drupal_layoutbuilder-icon-list-items {
+    justify-content: center; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-center .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-center .drupal_layoutbuilder-icon-list-item a {
+    justify-content: center; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-center .drupal_layoutbuilder-icon-list-item:after {
+    margin: auto; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-left .drupal_layoutbuilder-icon-list-items {
+    justify-content: flex-start; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-left .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-left .drupal_layoutbuilder-icon-list-item a {
+    justify-content: flex-start;
+    text-align: left; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-right .drupal_layoutbuilder-icon-list-items {
+    justify-content: flex-end; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-right .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-tablet-align-right .drupal_layoutbuilder-icon-list-item a {
+    justify-content: flex-end;
+    text-align: right; }
+  .drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-tablet-align-right) .drupal_layoutbuilder-icon-list-item:after {
+    left: 0; }
+  .drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-tablet-align-left) .drupal_layoutbuilder-icon-list-item:after {
+    right: 0; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-center .drupal_layoutbuilder-icon-list-items {
+    justify-content: center; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-center .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-center .drupal_layoutbuilder-icon-list-item a {
+    justify-content: center; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-center .drupal_layoutbuilder-icon-list-item:after {
+    margin: auto; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-left .drupal_layoutbuilder-icon-list-items {
+    justify-content: flex-start; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-left .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-left .drupal_layoutbuilder-icon-list-item a {
+    justify-content: flex-start;
+    text-align: left; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-right .drupal_layoutbuilder-icon-list-items {
+    justify-content: flex-end; }
+  .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-right .drupal_layoutbuilder-icon-list-item, .drupal_layoutbuilder-widget.drupal_layoutbuilder-mobile-align-right .drupal_layoutbuilder-icon-list-item a {
+    justify-content: flex-end;
+    text-align: right; }
+  .drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-mobile-align-right) .drupal_layoutbuilder-icon-list-item:after {
+    left: 0; }
+  .drupal_layoutbuilder-widget:not(.drupal_layoutbuilder-mobile-align-left) .drupal_layoutbuilder-icon-list-item:after {
+    right: 0; } }
+
+.drupal_layoutbuilder-widget-image {
+  text-align: center; }
+  .drupal_layoutbuilder-widget-image .drupal_layoutbuilder-image > a,
+  .drupal_layoutbuilder-widget-image .drupal_layoutbuilder-image figure > a {
+    display: block; }
+  .drupal_layoutbuilder-widget-image .drupal_layoutbuilder-image img {
+    vertical-align: middle;
+    display: inline-block; }
+  .drupal_layoutbuilder-widget-image .drupal_layoutbuilder-image.drupal_layoutbuilder-image-shape-circle {
+    border-radius: 50%; }
+
+.drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-content {
+  width: 100%; }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-position-left .drupal_layoutbuilder-image-box-wrapper, .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-position-right .drupal_layoutbuilder-image-box-wrapper {
+    display: flex; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-position-right .drupal_layoutbuilder-image-box-wrapper {
+    text-align: right;
+    flex-direction: row-reverse; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-position-left .drupal_layoutbuilder-image-box-wrapper {
+    text-align: left;
+    flex-direction: row; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-position-top .drupal_layoutbuilder-image-box-img {
+    margin: auto; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-vertical-align-top .drupal_layoutbuilder-image-box-wrapper {
+    align-items: flex-start; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-vertical-align-middle .drupal_layoutbuilder-image-box-wrapper {
+    align-items: center; }
+  .drupal_layoutbuilder-widget-image-box.drupal_layoutbuilder-vertical-align-bottom .drupal_layoutbuilder-image-box-wrapper {
+    align-items: flex-end; } }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-img {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 15px; } }
+
+.drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-img {
+  display: inline-block; }
+
+.drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-title a {
+  color: inherit; }
+
+.drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-wrapper {
+  text-align: center; }
+
+.drupal_layoutbuilder-widget-image-box .drupal_layoutbuilder-image-box-description {
+  margin: 0; }
+
+.drupal_layoutbuilder-image-carousel-wrapper .slick-image-stretch .slick-slide .slick-slide-image {
+  width: 100%; }
+
+.drupal_layoutbuilder-image-gallery figure img {
+  display: block; }
+
+.drupal_layoutbuilder-image-gallery figure figcaption {
+  width: 100%; }
+
+.gallery-spacing-custom .drupal_layoutbuilder-image-gallery .gallery-icon {
+  padding: 0; }
+
+.swiper-container .swiper-slide figure {
+  line-height: 0; }
+  .swiper-container .swiper-slide figure img {
+    width: 100%; }
+
+body.drupal_layoutbuilder-page .drupal_layoutbuilder-widget-menu-anchor {
+  margin-bottom: 0; }
+
+.drupal_layoutbuilder-widget-progress {
+  text-align: left; }
+
+.drupal_layoutbuilder-progress-wrapper {
+  position: relative;
+  background-color: #eeeeee;
+  color: #ffffff;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 2px; }
+
+.drupal_layoutbuilder-progress-bar {
+  display: flex;
+  background-color: #818a91;
+  width: 0;
+  font-size: 11px;
+  border-radius: 2px;
+  transition: width 1s ease-in-out; }
+
+.drupal_layoutbuilder-progress-text {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 15px; }
+
+.drupal_layoutbuilder-progress-percentage {
+  padding-right: 15px; }
+
+.drupal_layoutbuilder-widget-progress .drupal_layoutbuilder-progress-wrapper.progress-info .drupal_layoutbuilder-progress-bar {
+  background-color: #5bc0de; }
+
+.drupal_layoutbuilder-widget-progress .drupal_layoutbuilder-progress-wrapper.progress-success .drupal_layoutbuilder-progress-bar {
+  background-color: #5cb85c; }
+
+.drupal_layoutbuilder-widget-progress .drupal_layoutbuilder-progress-wrapper.progress-warning .drupal_layoutbuilder-progress-bar {
+  background-color: #f0ad4e; }
+
+.drupal_layoutbuilder-widget-progress .drupal_layoutbuilder-progress-wrapper.progress-danger .drupal_layoutbuilder-progress-bar {
+  background-color: #d9534f; }
+
+.drupal_layoutbuilder-progress .drupal_layoutbuilder-title {
+  display: block; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-progress-wrapper {
+    height: 25px;
+    line-height: 25px; }
+  .drupal_layoutbuilder-progress-text {
+    padding-left: 10px; } }
+
+.drupal_layoutbuilder-social-icons-wrapper {
+  font-size: 0; }
+
+.drupal_layoutbuilder-social-icon {
+  font-size: 25px;
+  text-align: center;
+  padding: 0.5em;
+  margin-right: 5px;
+  cursor: pointer; }
+  .drupal_layoutbuilder-social-icon i {
+    color: white; }
+  .drupal_layoutbuilder-social-icon:last-child {
+    margin: 0; }
+  .drupal_layoutbuilder-social-icon:hover {
+    opacity: .9;
+    color: white; }
+  .drupal_layoutbuilder-social-icon-android {
+    background-color: #A4C639; }
+  .drupal_layoutbuilder-social-icon-apple {
+    background-color: #999999; }
+  .drupal_layoutbuilder-social-icon-behance {
+    background-color: #1769ff; }
+  .drupal_layoutbuilder-social-icon-bitbucket {
+    background-color: #205081; }
+  .drupal_layoutbuilder-social-icon-codepen {
+    background-color: #000000; }
+  .drupal_layoutbuilder-social-icon-delicious {
+    background-color: #3399ff; }
+  .drupal_layoutbuilder-social-icon-digg {
+    background-color: #005be2; }
+  .drupal_layoutbuilder-social-icon-dribbble {
+    background-color: #ea4c89; }
+  .drupal_layoutbuilder-social-icon-envelope {
+    background-color: #ea4335; }
+  .drupal_layoutbuilder-social-icon-facebook {
+    background-color: #3b5998; }
+  .drupal_layoutbuilder-social-icon-flickr {
+    background-color: #0063dc; }
+  .drupal_layoutbuilder-social-icon-foursquare {
+    background-color: #2d5be3; }
+  .drupal_layoutbuilder-social-icon-github {
+    background-color: #333333; }
+  .drupal_layoutbuilder-social-icon-google-plus {
+    background-color: #dd4b39; }
+  .drupal_layoutbuilder-social-icon-houzz {
+    background-color: #7ac142; }
+  .drupal_layoutbuilder-social-icon-instagram {
+    background-color: #262626; }
+  .drupal_layoutbuilder-social-icon-jsfiddle {
+    background-color: #487AA2; }
+  .drupal_layoutbuilder-social-icon-linkedin {
+    background-color: #0077b5; }
+  .drupal_layoutbuilder-social-icon-medium {
+    background-color: #00ab6b; }
+  .drupal_layoutbuilder-social-icon-meetup {
+    background-color: #ec1c40; }
+  .drupal_layoutbuilder-social-icon-mixcloud {
+    background-color: #273a4b; }
+  .drupal_layoutbuilder-social-icon-odnoklassniki {
+    background-color: #F4731C; }
+  .drupal_layoutbuilder-social-icon-pinterest {
+    background-color: #bd081c; }
+  .drupal_layoutbuilder-social-icon-product-hunt {
+    background-color: #da552f; }
+  .drupal_layoutbuilder-social-icon-reddit {
+    background-color: #ff4500; }
+  .drupal_layoutbuilder-social-icon-rss {
+    background-color: #f26522; }
+  .drupal_layoutbuilder-social-icon-shopping-cart {
+    background-color: #4CAF50; }
+  .drupal_layoutbuilder-social-icon-skype {
+    background-color: #00AFF0; }
+  .drupal_layoutbuilder-social-icon-slideshare {
+    background-color: #0077b5; }
+  .drupal_layoutbuilder-social-icon-snapchat {
+    background-color: #fffc00; }
+  .drupal_layoutbuilder-social-icon-soundcloud {
+    background-color: #ff8800; }
+  .drupal_layoutbuilder-social-icon-spotify {
+    background-color: #2ebd59; }
+  .drupal_layoutbuilder-social-icon-stack-overflow {
+    background-color: #fe7a15; }
+  .drupal_layoutbuilder-social-icon-steam {
+    background-color: #00adee; }
+  .drupal_layoutbuilder-social-icon-stumbleupon {
+    background-color: #EB4924; }
+  .drupal_layoutbuilder-social-icon-telegram {
+    background-color: #2CA5E0; }
+  .drupal_layoutbuilder-social-icon-thumb-tack {
+    background-color: #1aa1d8; }
+  .drupal_layoutbuilder-social-icon-tripadvisor {
+    background-color: #589442; }
+  .drupal_layoutbuilder-social-icon-tumblr {
+    background-color: #35465c; }
+  .drupal_layoutbuilder-social-icon-twitch {
+    background-color: #6441A5; }
+  .drupal_layoutbuilder-social-icon-twitter {
+    background-color: #1DA1F2; }
+  .drupal_layoutbuilder-social-icon-vimeo {
+    background-color: #1ab7ea; }
+  .drupal_layoutbuilder-social-icon-vk {
+    background-color: #45668e; }
+  .drupal_layoutbuilder-social-icon-weibo {
+    background-color: #df2029; }
+  .drupal_layoutbuilder-social-icon-weixin {
+    background-color: #7bb32e; }
+  .drupal_layoutbuilder-social-icon-whatsapp {
+    background-color: #25d366; }
+  .drupal_layoutbuilder-social-icon-wordpress {
+    background-color: #21759b; }
+  .drupal_layoutbuilder-social-icon-xing {
+    background-color: #026466; }
+  .drupal_layoutbuilder-social-icon-yelp {
+    background-color: #af0606; }
+  .drupal_layoutbuilder-social-icon-youtube {
+    background-color: #cd201f; }
+  .drupal_layoutbuilder-social-icon-500px {
+    background-color: #0099e5; }
+
+.drupal_layoutbuilder-shape-rounded .drupal_layoutbuilder-icon.drupal_layoutbuilder-social-icon {
+  border-radius: 10%; }
+
+.drupal_layoutbuilder-shape-circle .drupal_layoutbuilder-icon.drupal_layoutbuilder-social-icon {
+  border-radius: 50%; }
+
+.drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tabs-wrapper {
+  width: 25%;
+  flex-shrink: 0; }
+
+.drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active {
+  border-right-style: none; }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:before, .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:after {
+    height: 999em;
+    width: 0;
+    right: 0;
+    border-right-style: solid; }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:before {
+    top: 0;
+    transform: translateY(-100%); }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:after {
+    top: 100%; }
+
+.drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title {
+  display: table-cell; }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active {
+    border-bottom-style: none; }
+    .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:before, .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:after {
+      bottom: 0;
+      height: 0;
+      width: 999em;
+      border-bottom-style: solid; }
+    .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:before {
+      right: 100%; }
+    .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:after {
+      left: 100%; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-title,
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-title:before,
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-title:after,
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-content,
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tabs-content-wrapper {
+  border: 1px none #D4D4D4; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tabs {
+  text-align: left; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tabs-wrapper {
+  overflow: hidden; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-title {
+  cursor: pointer;
+  outline: none; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-desktop-title {
+  position: relative;
+  padding: 20px 25px;
+  font-weight: bold;
+  line-height: 1;
+  border: solid transparent; }
+  .drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active {
+    border-color: #D4D4D4; }
+    .drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:before, .drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-desktop-title.drupal_layoutbuilder-active:after {
+      display: block;
+      content: '';
+      position: absolute; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-mobile-title {
+  padding: 10px 10px;
+  cursor: pointer; }
+
+.drupal_layoutbuilder-widget-tabs .drupal_layoutbuilder-tab-content {
+  padding: 20px;
+  display: none; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tab-title,
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tab-content {
+    border-style: solid;
+    border-bottom-style: none; }
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tabs-wrapper {
+    display: none; }
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tabs-content-wrapper {
+    border-bottom-style: solid; }
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tab-content {
+    padding: 10px; } }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) {
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tabs {
+    display: flex; }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-vertical .drupal_layoutbuilder-tabs-content-wrapper {
+    flex-grow: 1;
+    border-style: solid;
+    border-left-style: none; }
+  .drupal_layoutbuilder-widget-tabs.drupal_layoutbuilder-tabs-view-horizontal .drupal_layoutbuilder-tab-content {
+    border-style: solid;
+    border-top-style: none; }
+  .drupal_layoutbuilder-tabs .drupal_layoutbuilder-tab-mobile-title {
+    display: none; } }
+
+.drupal_layoutbuilder-testimonial-wrapper {
+  overflow: hidden;
+  text-align: center; }
+  .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-content {
+    font-size: 1.3em;
+    margin-bottom: 20px; }
+  .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-name {
+    line-height: 1.5;
+    color: inherit; }
+  .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-job {
+    font-size: 0.85em;
+    color: inherit; }
+  .drupal_layoutbuilder-testimonial-wrapper.drupal_layoutbuilder-testimonial-text-align-left {
+    text-align: left; }
+  .drupal_layoutbuilder-testimonial-wrapper.drupal_layoutbuilder-testimonial-text-align-right {
+    text-align: right; }
+  .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta {
+    width: 100%;
+    line-height: 1; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta-inner {
+      display: inline-block; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta .drupal_layoutbuilder-testimonial-details,
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta .drupal_layoutbuilder-testimonial-image {
+      display: table-cell;
+      vertical-align: middle; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta .drupal_layoutbuilder-testimonial-image img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      max-width: none; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta.drupal_layoutbuilder-testimonial-image-position-aside .drupal_layoutbuilder-testimonial-image {
+      padding-right: 15px; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta.drupal_layoutbuilder-testimonial-image-position-aside .drupal_layoutbuilder-testimonial-details {
+      text-align: left; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta.drupal_layoutbuilder-testimonial-image-position-top .drupal_layoutbuilder-testimonial-details,
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta.drupal_layoutbuilder-testimonial-image-position-top .drupal_layoutbuilder-testimonial-image {
+      display: block; }
+    .drupal_layoutbuilder-testimonial-wrapper .drupal_layoutbuilder-testimonial-meta.drupal_layoutbuilder-testimonial-image-position-top .drupal_layoutbuilder-testimonial-image {
+      margin-bottom: 20px; }
+
+.drupal_layoutbuilder-widget-text-editor.drupal_layoutbuilder-drop-cap-view-stacked .drupal_layoutbuilder-drop-cap {
+  background-color: #818a91;
+  color: #fff; }
+
+.drupal_layoutbuilder-widget-text-editor.drupal_layoutbuilder-drop-cap-view-framed .drupal_layoutbuilder-drop-cap {
+  color: #818a91;
+  border: 3px solid;
+  background-color: transparent; }
+
+.drupal_layoutbuilder-widget-text-editor:not(.drupal_layoutbuilder-drop-cap-view-default) .drupal_layoutbuilder-drop-cap {
+  margin-top: 8px; }
+  .drupal_layoutbuilder-widget-text-editor:not(.drupal_layoutbuilder-drop-cap-view-default) .drupal_layoutbuilder-drop-cap-letter {
+    width: 1em;
+    height: 1em; }
+
+.drupal_layoutbuilder-widget-text-editor .drupal_layoutbuilder-drop-cap {
+  float: left;
+  text-align: center;
+  line-height: 1;
+  font-size: 50px; }
+  .drupal_layoutbuilder-widget-text-editor .drupal_layoutbuilder-drop-cap-letter {
+    display: inline-block; }
+
+.drupal_layoutbuilder-toggle {
+  text-align: left; }
+  .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title {
+    font-weight: bold;
+    line-height: 1;
+    margin: 0;
+    padding: 15px;
+    border-bottom: 1px solid #D4D4D4;
+    cursor: pointer;
+    outline: none; }
+    .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-toggle-icon {
+      display: inline-block;
+      width: 1em; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-toggle-icon.drupal_layoutbuilder-toggle-icon-right {
+        float: right;
+        text-align: right; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-toggle-icon.drupal_layoutbuilder-toggle-icon-left {
+        float: left;
+        text-align: left; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-toggle-icon .drupal_layoutbuilder-toggle-icon-closed {
+        display: block; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title .drupal_layoutbuilder-toggle-icon .drupal_layoutbuilder-toggle-icon-opened {
+        display: none; }
+    .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title.drupal_layoutbuilder-active {
+      border-bottom: none; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title.drupal_layoutbuilder-active .drupal_layoutbuilder-toggle-icon-closed {
+        display: none; }
+      .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title.drupal_layoutbuilder-active .drupal_layoutbuilder-toggle-icon-opened {
+        display: block; }
+  .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-content {
+    padding: 15px;
+    border-bottom: 1px solid #D4D4D4;
+    display: none; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-title {
+    padding: 12px; }
+  .drupal_layoutbuilder-toggle .drupal_layoutbuilder-tab-content {
+    padding: 12px 10px; } }
+
+.drupal_layoutbuilder-widget-video .drupal_layoutbuilder-widget-container {
+  overflow: hidden; }
+
+.drupal_layoutbuilder-widget-video .drupal_layoutbuilder-open-inline .drupal_layoutbuilder-custom-embed-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: 50%; }
+
+.drupal_layoutbuilder-widget-video .drupal_layoutbuilder-custom-embed-image-overlay {
+  cursor: pointer;
+  text-align: center; }
+  .drupal_layoutbuilder-widget-video .drupal_layoutbuilder-custom-embed-image-overlay:hover .drupal_layoutbuilder-custom-embed-play i {
+    opacity: 1; }
+  .drupal_layoutbuilder-widget-video .drupal_layoutbuilder-custom-embed-image-overlay img {
+    display: block;
+    width: 100%; }
+
+.slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent; }
+
+.slick-list {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0; }
+  .slick-list:focus {
+    outline: none; }
+  .slick-list.dragging {
+    cursor: pointer; }
+
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  transform: translate3d(0, 0, 0); }
+
+.slick-track {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: block; }
+  .slick-track:before, .slick-track:after {
+    content: "";
+    display: table; }
+  .slick-track:after {
+    clear: both; }
+  .slick-loading .slick-track {
+    visibility: hidden; }
+
+.slick-slide {
+  float: left;
+  height: 100%;
+  min-height: 1px;
+  display: none; }
+  .drupal_layoutbuilder-slick-slider[dir="rtl"] .slick-slide {
+    float: right; }
+  .slick-slide img {
+    display: block; }
+  .slick-slide.slick-loading img {
+    display: none; }
+  .slick-slide.dragging img {
+    pointer-events: none; }
+  .slick-initialized .slick-slide {
+    display: block; }
+  .slick-loading .slick-slide {
+    visibility: hidden; }
+  .slick-vertical .slick-slide {
+    display: block;
+    height: auto;
+    border: 1px solid transparent; }
+
+.slick-arrow.slick-hidden {
+  display: none; }
+
+.drupal_layoutbuilder-slick-slider .slick-loading .slick-list {
+  background: #fff; }
+  .drupal_layoutbuilder-slick-slider .slick-loading .slick-list:after {
+    content: '\f1ce';
+    font-family: FontAwesome;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    animation: fa-spin 2s infinite linear;
+    font-size: 25px;
+    color: #a4afb7; }
+
+.drupal_layoutbuilder-slick-slider .slick-prev,
+.drupal_layoutbuilder-slick-slider .slick-next {
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 20px;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  color: transparent;
+  border: none;
+  outline: none;
+  background: transparent; }
+  .drupal_layoutbuilder-slick-slider .slick-prev:hover, .drupal_layoutbuilder-slick-slider .slick-prev:focus,
+  .drupal_layoutbuilder-slick-slider .slick-next:hover,
+  .drupal_layoutbuilder-slick-slider .slick-next:focus {
+    color: transparent;
+    outline: none;
+    background: transparent; }
+    .drupal_layoutbuilder-slick-slider .slick-prev:hover:before, .drupal_layoutbuilder-slick-slider .slick-prev:focus:before,
+    .drupal_layoutbuilder-slick-slider .slick-next:hover:before,
+    .drupal_layoutbuilder-slick-slider .slick-next:focus:before {
+      opacity: 1; }
+  .drupal_layoutbuilder-slick-slider .slick-prev.slick-disabled:before,
+  .drupal_layoutbuilder-slick-slider .slick-next.slick-disabled:before {
+    opacity: .25; }
+  .drupal_layoutbuilder-slick-slider .slick-prev:before,
+  .drupal_layoutbuilder-slick-slider .slick-next:before {
+    font-family: 'FontAwesome';
+    font-size: 35px;
+    line-height: 1;
+    opacity: .75;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; }
+
+.drupal_layoutbuilder-slick-slider .slick-prev {
+  left: -25px; }
+  [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-prev {
+    left: auto;
+    right: -25px; }
+  .drupal_layoutbuilder-slick-slider .slick-prev:before {
+    content: '\f104'; }
+    [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-prev:before {
+      content: '\f105'; }
+
+.drupal_layoutbuilder-slick-slider .slick-next {
+  right: -25px; }
+  [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-next {
+    left: -25px;
+    right: auto; }
+  .drupal_layoutbuilder-slick-slider .slick-next:before {
+    content: '\f105'; }
+    [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-next:before {
+      content: '\f104'; }
+
+.drupal_layoutbuilder-slick-slider .slick-dotted.slick-slider {
+  margin-bottom: 30px; }
+
+.drupal_layoutbuilder-slick-slider ul.slick-dots {
+  position: absolute;
+  bottom: -25px;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+  line-height: 1; }
+  .drupal_layoutbuilder-slick-slider ul.slick-dots li {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer; }
+    .drupal_layoutbuilder-slick-slider ul.slick-dots li button {
+      font-size: 0;
+      line-height: 0;
+      display: block;
+      width: 20px;
+      height: 20px;
+      padding: 5px;
+      cursor: pointer;
+      color: transparent;
+      border: 0;
+      outline: none;
+      background: transparent; }
+      .drupal_layoutbuilder-slick-slider ul.slick-dots li button:hover, .drupal_layoutbuilder-slick-slider ul.slick-dots li button:focus {
+        outline: none; }
+        .drupal_layoutbuilder-slick-slider ul.slick-dots li button:hover:before, .drupal_layoutbuilder-slick-slider ul.slick-dots li button:focus:before {
+          opacity: 1; }
+      .drupal_layoutbuilder-slick-slider ul.slick-dots li button:before {
+        font-family: 'FontAwesome';
+        font-size: 6px;
+        line-height: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        content: '\f111';
+        text-align: center;
+        opacity: .25;
+        color: black;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale; }
+    .drupal_layoutbuilder-slick-slider ul.slick-dots li.slick-active button:before {
+      opacity: .75;
+      color: black; }
+
+.drupal_layoutbuilder-slick-slider .slick-arrows-inside .slick-prev {
+  left: 20px; }
+  [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-arrows-inside .slick-prev {
+    left: auto;
+    right: 20px; }
+
+.drupal_layoutbuilder-slick-slider .slick-arrows-inside .slick-next {
+  right: 20px; }
+  [dir="rtl"] .drupal_layoutbuilder-slick-slider .slick-arrows-inside .slick-next {
+    left: 20px;
+    right: auto; }
+
+.drupal_layoutbuilder-slick-slider .slick-dots-inside .slick-dots {
+  bottom: 5px; }
+
+.drupal_layoutbuilder-slick-slider .slick-dots-inside.slick-dotted.slick-slider {
+  margin-bottom: 0; }
+
+.drupal_layoutbuilder-slick-slider .slick-slider .slick-prev,
+.drupal_layoutbuilder-slick-slider .slick-slider .slick-next {
+  z-index: 1; }
+
+.drupal_layoutbuilder-slick-slider .slick-slide img {
+  margin: auto; }
+
+/**
+ * Swiper 3.4.2
+ * Customized by Elementor team
+ */
+.swiper-container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+  /* Fix of Webkit flickering */
+  z-index: 1; }
+
+.swiper-container-no-flexbox .swiper-slide {
+  float: left; }
+
+.swiper-container-vertical > .swiper-wrapper {
+  flex-direction: column; }
+
+.swiper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box; }
+
+.swiper-container-android .swiper-slide, .swiper-wrapper {
+  transform: translate3d(0px, 0, 0); }
+
+.swiper-container-multirow > .swiper-wrapper {
+  flex-wrap: wrap; }
+
+.swiper-container-free-mode > .swiper-wrapper {
+  transition-timing-function: ease-out;
+  margin: 0 auto; }
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative; }
+
+/* Auto Height */
+.swiper-container-autoheight {
+  height: auto; }
+  .swiper-container-autoheight .swiper-slide {
+    height: auto; }
+  .swiper-container-autoheight .swiper-wrapper {
+    align-items: flex-start;
+    transition-property: transform, height; }
+
+/* a11y */
+.swiper-container .swiper-notification {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1000; }
+
+/* IE10 Windows Phone 8 Fixes */
+.swiper-wp8-horizontal {
+  touch-action: pan-y; }
+
+.swiper-wp8-vertical {
+  touch-action: pan-x; }
+
+/* Arrows */
+.swiper-button-prev, .swiper-button-next {
+  position: absolute;
+  top: 50%;
+  width: 27px;
+  height: 44px;
+  margin-top: -22px;
+  z-index: 10;
+  cursor: pointer;
+  background-size: 27px 44px;
+  background: no-repeat center; }
+
+.swiper-button-prev.swiper-button-disabled, .swiper-button-next.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: auto;
+  pointer-events: none; }
+
+.swiper-button-prev, .swiper-container-rtl .swiper-button-next {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23007aff'%2F%3E%3C%2Fsvg%3E");
+  left: 10px;
+  right: auto; }
+
+.swiper-button-prev.swiper-button-black, .swiper-container-rtl .swiper-button-next.swiper-button-black {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E"); }
+
+.swiper-button-prev.swiper-button-white, .swiper-container-rtl .swiper-button-next.swiper-button-white {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23ffffff'%2F%3E%3C%2Fsvg%3E"); }
+
+.swiper-button-next, .swiper-container-rtl .swiper-button-prev {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23007aff'%2F%3E%3C%2Fsvg%3E");
+  right: 10px;
+  left: auto; }
+
+.swiper-button-next.swiper-button-black, .swiper-container-rtl .swiper-button-prev.swiper-button-black {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E"); }
+
+.swiper-button-next.swiper-button-white, .swiper-container-rtl .swiper-button-prev.swiper-button-white {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2027%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23ffffff'%2F%3E%3C%2Fsvg%3E"); }
+
+/* Pagination Styles */
+.swiper-pagination {
+  position: absolute;
+  text-align: center;
+  transition: 300ms;
+  transform: translate3d(0, 0, 0);
+  z-index: 10; }
+  .swiper-pagination.swiper-pagination-hidden {
+    opacity: 0; }
+
+/* Common Styles */
+.swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
+  bottom: 10px;
+  left: 0;
+  width: 100%; }
+
+/* Bullets */
+.swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0.2; }
+
+.swiper-pagination-fraction {
+  color: #000; }
+
+button.swiper-pagination-bullet {
+  border: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none; }
+
+.swiper-pagination-clickable .swiper-pagination-bullet {
+  cursor: pointer; }
+
+.swiper-pagination-white .swiper-pagination-bullet {
+  background: #fff; }
+
+.swiper-pagination-bullet-active {
+  opacity: 1; }
+
+.swiper-pagination-white .swiper-pagination-bullet-active {
+  background: #fff; }
+
+.swiper-pagination-black .swiper-pagination-bullet-active {
+  background: #000; }
+
+.swiper-container-vertical > .swiper-pagination-bullets {
+  right: 10px;
+  top: 50%;
+  transform: translate3d(0px, -50%, 0); }
+  .swiper-container-vertical > .swiper-pagination-bullets .swiper-pagination-bullet {
+    margin: 5px 0;
+    display: block; }
+
+.swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet {
+  margin: 0 6px; }
+
+/* Progress */
+.swiper-pagination-progress {
+  background: rgba(0, 0, 0, 0.25);
+  position: absolute; }
+  .swiper-pagination-progress .swiper-pagination-progressbar {
+    background: #000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(0);
+    transform-origin: left top; }
+
+.swiper-container-rtl .swiper-pagination-progress .swiper-pagination-progressbar {
+  transform-origin: right top; }
+
+.swiper-container-horizontal > .swiper-pagination-progress {
+  width: 100%;
+  height: 4px;
+  left: 0;
+  top: 0; }
+
+.swiper-container-vertical > .swiper-pagination-progress {
+  width: 4px;
+  height: 100%;
+  left: 0;
+  top: 0; }
+
+.swiper-pagination-progress.swiper-pagination-white {
+  background: rgba(255, 255, 255, 0.5); }
+  .swiper-pagination-progress.swiper-pagination-white .swiper-pagination-progressbar {
+    background: #fff; }
+
+.swiper-pagination-progress.swiper-pagination-black .swiper-pagination-progressbar {
+  background: #000; }
+
+/* 3D Container */
+.swiper-container-3d {
+  perspective: 1200px; }
+  .swiper-container-3d .swiper-wrapper, .swiper-container-3d .swiper-slide, .swiper-container-3d .swiper-slide-shadow-left, .swiper-container-3d .swiper-slide-shadow-right, .swiper-container-3d .swiper-slide-shadow-top, .swiper-container-3d .swiper-slide-shadow-bottom, .swiper-container-3d .swiper-cube-shadow {
+    transform-style: preserve-3d; }
+  .swiper-container-3d .swiper-slide-shadow-left, .swiper-container-3d .swiper-slide-shadow-right, .swiper-container-3d .swiper-slide-shadow-top, .swiper-container-3d .swiper-slide-shadow-bottom {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10; }
+  .swiper-container-3d .swiper-slide-shadow-left {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)); }
+  .swiper-container-3d .swiper-slide-shadow-right {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)); }
+  .swiper-container-3d .swiper-slide-shadow-top {
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)); }
+  .swiper-container-3d .swiper-slide-shadow-bottom {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)); }
+
+/* Coverflow */
+.swiper-container-coverflow .swiper-wrapper, .swiper-container-flip .swiper-wrapper {
+  /* Windows 8 IE 10 fix */
+  -ms-perspective: 1200px; }
+
+/* Cube + Flip */
+.swiper-container-cube, .swiper-container-flip {
+  overflow: visible; }
+
+.swiper-container-cube .swiper-slide, .swiper-container-flip .swiper-slide {
+  pointer-events: none;
+  backface-visibility: hidden;
+  z-index: 1; }
+
+.swiper-container-cube .swiper-slide .swiper-slide, .swiper-container-flip .swiper-slide .swiper-slide {
+  pointer-events: none; }
+
+.swiper-container-cube .swiper-slide-active, .swiper-container-flip .swiper-slide-active, .swiper-container-cube .swiper-slide-active .swiper-slide-active, .swiper-container-flip .swiper-slide-active .swiper-slide-active {
+  pointer-events: auto; }
+
+.swiper-container-cube .swiper-slide-shadow-top, .swiper-container-flip .swiper-slide-shadow-top, .swiper-container-cube .swiper-slide-shadow-bottom, .swiper-container-flip .swiper-slide-shadow-bottom, .swiper-container-cube .swiper-slide-shadow-left, .swiper-container-flip .swiper-slide-shadow-left, .swiper-container-cube .swiper-slide-shadow-right, .swiper-container-flip .swiper-slide-shadow-right {
+  z-index: 0;
+  backface-visibility: hidden; }
+
+/* Cube */
+.swiper-container-cube .swiper-slide {
+  visibility: hidden;
+  transform-origin: 0 0;
+  width: 100%;
+  height: 100%; }
+
+.swiper-container-cube.swiper-container-rtl .swiper-slide {
+  transform-origin: 100% 0; }
+
+.swiper-container-cube .swiper-slide-active, .swiper-container-cube .swiper-slide-next, .swiper-container-cube .swiper-slide-prev, .swiper-container-cube .swiper-slide-next + .swiper-slide {
+  pointer-events: auto;
+  visibility: visible; }
+
+.swiper-container-cube .swiper-cube-shadow {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.6;
+  -webkit-filter: blur(50px);
+  filter: blur(50px);
+  z-index: 0; }
+
+/* Fade */
+.swiper-container-fade.swiper-container-free-mode .swiper-slide {
+  transition-timing-function: ease-out; }
+
+.swiper-container-fade .swiper-slide {
+  pointer-events: none;
+  transition-property: opacity; }
+  .swiper-container-fade .swiper-slide .swiper-slide {
+    pointer-events: none; }
+
+.swiper-container-fade .swiper-slide-active {
+  pointer-events: auto; }
+  .swiper-container-fade .swiper-slide-active .swiper-slide-active {
+    pointer-events: auto; }
+
+.swiper-zoom-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; }
+  .swiper-zoom-container > img, .swiper-zoom-container > svg, .swiper-zoom-container > canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; }
+
+/* Scrollbar */
+.swiper-scrollbar {
+  border-radius: 10px;
+  position: relative;
+  -ms-touch-action: none;
+  background: rgba(0, 0, 0, 0.1); }
+
+.swiper-container-horizontal > .swiper-scrollbar {
+  position: absolute;
+  left: 1%;
+  bottom: 3px;
+  z-index: 50;
+  height: 5px;
+  width: 98%; }
+
+.swiper-container-vertical > .swiper-scrollbar {
+  position: absolute;
+  right: 3px;
+  top: 1%;
+  z-index: 50;
+  width: 5px;
+  height: 98%; }
+
+.swiper-scrollbar-drag {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  left: 0;
+  top: 0; }
+
+.swiper-scrollbar-cursor-drag {
+  cursor: move; }
+
+/* Preloader */
+.swiper-lazy-preloader {
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -21px;
+  margin-top: -21px;
+  z-index: 10;
+  transform-origin: 50%;
+  animation: swiper-preloader-spin 1s steps(12, end) infinite; }
+  .swiper-lazy-preloader:after {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%20120%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline%20id%3D'l'%20x1%3D'60'%20x2%3D'60'%20y1%3D'7'%20y2%3D'27'%20stroke%3D'%236c6c6c'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(30%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(60%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(90%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(120%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(150%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.37'%20transform%3D'rotate(180%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.46'%20transform%3D'rotate(210%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.56'%20transform%3D'rotate(240%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.66'%20transform%3D'rotate(270%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.75'%20transform%3D'rotate(300%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.85'%20transform%3D'rotate(330%2060%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat 50%; }
+
+.swiper-lazy-preloader-white:after {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%20120%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline%20id%3D'l'%20x1%3D'60'%20x2%3D'60'%20y1%3D'7'%20y2%3D'27'%20stroke%3D'%23fff'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(30%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(60%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(90%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(120%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.27'%20transform%3D'rotate(150%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.37'%20transform%3D'rotate(180%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.46'%20transform%3D'rotate(210%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.56'%20transform%3D'rotate(240%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.66'%20transform%3D'rotate(270%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.75'%20transform%3D'rotate(300%2060%2C60)'%2F%3E%3Cuse%20xlink%3Ahref%3D'%23l'%20opacity%3D'.85'%20transform%3D'rotate(330%2060%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); }
+
+@keyframes swiper-preloader-spin {
+  100% {
+    transform: rotate(360deg); } }
+
+.drupal_layoutbuilder-lightbox .dialog-header {
+  display: none; }
+
+.drupal_layoutbuilder-lightbox .dialog-widget-content {
+  background: none;
+  box-shadow: none;
+  width: 100%;
+  height: 100%; }
+
+.drupal_layoutbuilder-lightbox .dialog-message {
+  animation-duration: .4s; }
+  .drupal_layoutbuilder-lightbox .dialog-message:not(.drupal_layoutbuilder-fit-aspect-ratio) {
+    height: 100%; }
+
+.drupal_layoutbuilder-lightbox .dialog-lightbox-close-button {
+  cursor: pointer;
+  position: absolute;
+  font-size: 25px;
+  padding: 5px;
+  z-index: 2;
+  line-height: 1; }
+  @media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+    .drupal_layoutbuilder-lightbox .dialog-lightbox-close-button {
+      padding: 0; } }
+
+.drupal_layoutbuilder-lightbox .dialog-lightbox-close-button,
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button {
+  color: rgba(238, 238, 238, 0.9);
+  transition: all 0.5s;
+  opacity: 1; }
+  .drupal_layoutbuilder-lightbox .dialog-lightbox-close-button:hover,
+  .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button:hover {
+    color: #ffffff; }
+
+.drupal_layoutbuilder-lightbox .swiper-container {
+  height: 100%; }
+
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-lightbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 70px 80px;
+  box-sizing: border-box;
+  height: 100%;
+  margin: auto; }
+  @media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+    .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-lightbox-item {
+      padding: 40px; } }
+
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-lightbox-image {
+  max-height: 100%; }
+
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%); }
+  @media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_LG_MIN) {
+    .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-video-container {
+      width: 75%; } }
+  @media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+    .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-video-container {
+      width: 100%; } }
+
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button-prev {
+  left: 35px; }
+
+.drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button-next {
+  right: 35px; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button-prev {
+    left: 10px; }
+  .drupal_layoutbuilder-lightbox .drupal_layoutbuilder-swiper-button-next {
+    right: 10px; } }
+
+.animated {
+  animation-duration: 1.25s; }
+  .animated.animated-slow {
+    animation-duration: 2s; }
+  .animated.animated-fast {
+    animation-duration: .75s; }
+
+.animated.infinite {
+  animation-iteration-count: infinite; }
+
+/*
+.animated.hinge {
+	animation-duration: 2s;
+}
+
+
+.animated.flipOutX,
+.animated.flipOutY,
+.animated.bounceIn,
+.animated.bounceOut {
+	animation-duration: .75s;
+}
+*/
+.drupal_layoutbuilder-shape {
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  line-height: 0;
+  direction: ltr; }
+  .drupal_layoutbuilder-shape-top {
+    top: -1px; }
+  .drupal_layoutbuilder-shape-bottom {
+    bottom: -1px; }
+  .drupal_layoutbuilder-shape[data-negative="false"].drupal_layoutbuilder-shape-bottom {
+    transform: rotate(180deg); }
+  .drupal_layoutbuilder-shape[data-negative="true"].drupal_layoutbuilder-shape-top {
+    transform: rotate(180deg); }
+  .drupal_layoutbuilder-shape svg {
+    display: block;
+    width: calc(100% + 1.3px);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%); }
+  .drupal_layoutbuilder-shape .drupal_layoutbuilder-shape-fill {
+    fill: #fff;
+    transform-origin: center;
+    transform: rotateY(0deg); }
+
+#wp-admin-bar-elementor_edit_page .ab-submenu .ab-item {
+  display: flex;
+  width: 200px; }
+
+#wp-admin-bar-elementor_edit_page .drupal_layoutbuilder-edit-link-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; }
+
+#wp-admin-bar-elementor_edit_page .drupal_layoutbuilder-edit-link-type {
+  background: #55595c;
+  font-size: 11px;
+  line-height: 9px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 3px; }
+
+.page-template-elementor_canvas.drupal_layoutbuilder-page:before {
+  display: none; }
+
+.drupal_layoutbuilder-post__thumbnail__link {
+  transition: none; }
+
+#left-area ul.drupal_layoutbuilder-icon-list-items,
+.elementor .drupal_layoutbuilder-element ul.drupal_layoutbuilder-icon-list-items,
+#elementor .drupal_layoutbuilder-element ul.drupal_layoutbuilder-icon-list-items {
+  padding: 0; }
+
+@media (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_SM_MAX) {
+  .elementor .drupal_layoutbuilder-hidden-phone {
+    display: none; } }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MIN) and (max-width: DRUPAL_LAYOUTBUILDER_SCREEN_MD_MAX) {
+  .elementor .drupal_layoutbuilder-hidden-tablet {
+    display: none; } }
+
+@media (min-width: DRUPAL_LAYOUTBUILDER_SCREEN_LG_MIN) {
+  .elementor .drupal_layoutbuilder-hidden-desktop {
+    display: none; } }

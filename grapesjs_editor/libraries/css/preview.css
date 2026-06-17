@@ -1,0 +1,18 @@
+.screenshot-preview {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.screenshot-preview:hover {
+  transform: scale(1.05);
+}
+
+.gjs-screenshot-modal-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.gjs-screenshot-modal-content img {
+  max-width: 100%;
+  height: auto;
+}

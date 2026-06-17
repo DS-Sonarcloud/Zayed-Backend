@@ -1,0 +1,7 @@
+zu_public_user.admin_menu_link:
+  title: 'Public Users'
+  description: 'Manage public users created via API.'
+  route_name: zu_public_user.admin_list
+  parent: system.admin
+  weight: 100
+  menu_name: admin

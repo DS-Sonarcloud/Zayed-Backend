@@ -1,0 +1,39 @@
+entity.permission_group.collection:
+  path: '/admin/config/people/permission-groups'
+  defaults:
+    _entity_list: 'permission_group'
+    _title: 'Permission Groups'
+  requirements:
+    _permission: 'administer permission groups'
+
+entity.permission_group.add_form:
+  path: '/admin/config/people/permission-groups/add'
+  defaults:
+    _entity_form: 'permission_group.add'
+    _title: 'Add Permission Group'
+  requirements:
+    _permission: 'administer permission groups'
+
+entity.permission_group.edit_form:
+  path: '/admin/config/people/permission-groups/{permission_group}/edit'
+  defaults:
+    _entity_form: 'permission_group.edit'
+    _title: 'Edit Permission Group'
+  requirements:
+    _permission: 'administer permission groups'
+
+entity.permission_group.delete_form:
+  path: '/admin/config/people/permission-groups/{permission_group}/delete'
+  defaults:
+    _entity_form: 'permission_group.delete'
+    _title: 'Delete Permission Group'
+  requirements:
+    _permission: 'administer permission groups'
+
+zu_permission_matrix.role_assignment:
+  path: '/admin/config/people/permission-groups/assign'
+  defaults:
+    _form: '\Drupal\zu_permission_matrix\Form\RoleAssignmentForm'
+    _title: 'Assign Groups to Roles'
+  requirements:
+    _permission: 'administer permission groups'

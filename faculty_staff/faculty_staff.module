@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
+/**
+ * Implements hook_node_view().
+ */
+function faculty_staff_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'faculty_staff') {
+    // Entity PDF provides a route for downloading.
+    $url = Url::fromRoute('entity_pdf.view', [
+      'entity_type' => 'node',
+      'entity' => $entity->id(),
+      'view_mode' => 'pdf',
+    ]);
+
+    $link = Link::fromTextAndUrl(t('Download as PDF'), $url)->toRenderable();
+    $link['#attributes'] = ['class' => ['button', 'button--primary']];
+
+    $build['faculty_pdf_link'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['faculty-pdf-download']],
+      'link' => $link,
+      '#weight' => 100,
+    ];
+  }
+}

@@ -1,0 +1,19 @@
+<?php
+use function Drupal\Core\Extension\drupal_get_path;
+
+/**
+ * Implements hook_theme().
+ */
+function custom_elastic_search_theme($existing, $type, $theme, $path) {
+  return [
+    'elastic_advanced_search' => [
+      'variables' => [
+        'results' => NULL,
+        'query' => NULL,
+        'embedded' => FALSE,
+      ],
+      'template' => 'elastic-advanced-search',
+      'path' => 'modules/custom/custom_elastic_search/templates',
+    ],
+  ];
+}

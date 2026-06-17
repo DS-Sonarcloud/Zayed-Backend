@@ -1,0 +1,465 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function campaign_email_queue_schema() {
+  $schema = [];
+
+  $schema['campaign_email_log'] = [
+    'description' => 'Stores detailed log of each email sent in a campaign',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique email log ID.',
+      ],
+      'campaign_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The campaign node ID.',
+      ],
+      'run_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+        'description' => 'The run sequence number (1 for first run, increments on re-run).',
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Recipient email address.',
+      ],
+      'status' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'pending',
+        'description' => 'Status: pending, sent, failed, error',
+      ],
+      'error_message' => [
+        'type' => 'text',
+        'size' => 'normal',
+        'description' => 'Error message if sending failed.',
+      ],
+      'attempts' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of sending attempts.',
+      ],
+      'queued_time' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp when email was queued.',
+      ],
+      'sent_time' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Unix timestamp when email was successfully sent.',
+      ],
+      'processing_time' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Time taken to process email in milliseconds.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'campaign_id' => ['campaign_id'],
+      'run_id' => ['run_id'],
+      'status' => ['status'],
+      'email' => ['email'],
+      'campaign_run_status' => ['campaign_id', 'run_id', 'status'],
+    ],
+  ];
+
+  $schema['campaign_statistics'] = [
+    'description' => 'Stores aggregated statistics for each campaign',
+    'fields' => [
+      'campaign_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The campaign node ID.',
+      ],
+      'run_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+        'description' => 'The run sequence number.',
+      ],
+      'total_emails' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total number of emails in campaign.',
+      ],
+      'sent_count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of emails successfully sent.',
+      ],
+      'failed_count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of emails that failed.',
+      ],
+      'pending_count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of emails pending.',
+      ],
+      'error_count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of emails with errors.',
+      ],
+      'started_time' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Unix timestamp when campaign started processing.',
+      ],
+      'completed_time' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Unix timestamp when campaign completed.',
+      ],
+      'last_updated' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of last statistics update.',
+      ],
+      'avg_processing_time' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => 'Average processing time per email in milliseconds.',
+      ],
+    ],
+    'primary key' => ['campaign_id', 'run_id'],
+  ];
+
+  $schema['campaign_rerun_log'] = [
+    'description' => 'Stores log of campaign re-run events',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique re-run log ID.',
+      ],
+      'campaign_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The campaign node ID.',
+      ],
+      'user_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID who triggered the re-run.',
+      ],
+      'rerun_time' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp when re-run was triggered.',
+      ],
+      'run_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+        'description' => 'The run sequence number generated.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'campaign_id' => ['campaign_id'],
+      'user_id' => ['user_id'],
+      'campaign_user' => ['campaign_id', 'user_id'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function campaign_email_queue_install() {
+  \Drupal::messenger()->addMessage(t('Campaign Email Queue module has been installed. Database tables created successfully.'));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function campaign_email_queue_uninstall() {
+  $database = \Drupal::database();
+
+  $query = $database->select('node_field_data', 'n')
+    ->fields('n', ['nid'])
+    ->condition('type', 'campaign');
+  $campaign_ids = $query->execute()->fetchCol();
+
+  $queue_factory = \Drupal::service('queue');
+  foreach ($campaign_ids as $campaign_id) {
+    $queue_name = "campaign_email_queue_{$campaign_id}";
+    $queue = $queue_factory->get($queue_name);
+    $queue->deleteQueue();
+  }
+
+  \Drupal::messenger()->addMessage(t('Campaign Email Queue module has been uninstalled. All queues and data have been removed.'));
+}
+
+
+function campaign_email_queue_update_10002() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $field_config_storage = $entity_type_manager->getStorage('field_config');
+
+  $fields = ['body', 'field_json'];
+
+  foreach ($fields as $field_name) {
+    /** @var \Drupal\field\FieldConfigInterface $field_config */
+    $field_config = $field_config_storage->load("node.email_template.$field_name");
+    if ($field_config && !$field_config->isTranslatable()) {
+      $field_config->setTranslatable(TRUE);
+      $field_config->save();
+    }
+  }
+}
+
+/**
+ * Automatically remove field_campaign_language as it is now deprecated.
+ */
+function campaign_email_queue_update_10003() {
+  $field_name = 'field_campaign_language';
+  $entity_type = 'node';
+
+  $field_storage = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config')
+    ->load("$entity_type.$field_name");
+
+  if ($field_storage) {
+    $field_storage->delete();
+    \Drupal::logger('campaign_email_queue')->notice('Automatically removed deprecated field @field.', ['@field' => $field_name]);
+  }
+}
+
+/**
+ * Background sending and bulk-campaign settings.
+ */
+function campaign_email_queue_update_10004(): void {
+  $editable = \Drupal::configFactory()->getEditable('campaign_email_queue.settings');
+  if ($editable->isNew()) {
+    $editable->setData([
+      'cron_batch_size' => 500,
+      'cron_max_batches_per_campaign' => 0,
+      'cron_background_seconds' => 55,
+      'enqueue_chunk_size' => 1000,
+      'log_insert_chunk_size' => 500,
+      'claim_chunk_size' => 50,
+      'max_send_attempts' => 2,
+      'shutdown_drain_seconds' => 30,
+      'dashboard_poll_interval_ms' => 2000,
+      'auto_start_on_save' => FALSE,
+    ])->save(TRUE);
+    return;
+  }
+
+  $defaults = [
+    'cron_batch_size' => 500,
+    'cron_max_batches_per_campaign' => 0,
+    'cron_background_seconds' => 55,
+    'enqueue_chunk_size' => 1000,
+    'log_insert_chunk_size' => 500,
+    'claim_chunk_size' => 50,
+    'max_send_attempts' => 2,
+    'shutdown_drain_seconds' => 30,
+    'dashboard_poll_interval_ms' => 2000,
+    'auto_start_on_save' => FALSE,
+  ];
+  $changed = FALSE;
+  foreach ($defaults as $key => $value) {
+    if ($editable->get($key) === NULL) {
+      $editable->set($key, $value);
+      $changed = TRUE;
+    }
+  }
+  if ($changed) {
+    $editable->save(TRUE);
+  }
+}
+
+/**
+ * Ensure settings exist after module rewrites (schema may already be > 10004).
+ */
+function campaign_email_queue_update_10010(): void {
+  campaign_email_queue_update_10004();
+}
+
+/**
+ * Keep-alive settings for clients without terminal/Drush access.
+ */
+function campaign_email_queue_update_10011(): void {
+  $editable = \Drupal::configFactory()->getEditable('campaign_email_queue.settings');
+  if ($editable->isNew()) {
+    return;
+  }
+  $defaults = [
+    'keepalive_drain_seconds' => 12,
+    'keepalive_min_interval' => 25,
+    'admin_keepalive_interval_ms' => 45000,
+  ];
+  $changed = FALSE;
+  foreach ($defaults as $key => $value) {
+    if ($editable->get($key) === NULL) {
+      $editable->set($key, $value);
+      $changed = TRUE;
+    }
+  }
+  if ($changed) {
+    $editable->save(TRUE);
+  }
+}
+
+/**
+ * Relocate or drop invalid rows in legacy queue "campaign_email_queue".
+ */
+function campaign_email_queue_update_10012(): void {
+  $db = \Drupal::database();
+  if (!$db->schema()->tableExists('queue')) {
+    return;
+  }
+
+  $queue_service = \Drupal::service('campaign_email_queue.queue');
+  $processing_state = \Drupal::service('campaign_email_queue.processing_state');
+  $moved = 0;
+  $started = 0;
+  $removed = 0;
+
+  $result = $db->select('queue', 'q')
+    ->fields('q', ['item_id', 'data'])
+    ->condition('name', 'campaign_email_queue')
+    ->execute();
+
+  foreach ($result as $row) {
+    $data = @unserialize($row->data, ['allowed_classes' => FALSE]);
+    if (!is_array($data)) {
+      $db->delete('queue')->condition('item_id', $row->item_id)->execute();
+      $removed++;
+      continue;
+    }
+
+    $campaign_id = (int) ($data['campaign_id'] ?? 0);
+    $email = isset($data['email']) ? trim((string) $data['email']) : '';
+
+    if ($campaign_id <= 0) {
+      $db->delete('queue')->condition('item_id', $row->item_id)->execute();
+      $removed++;
+      continue;
+    }
+
+    if ($email !== '') {
+      $queue_service->enqueueLegacyItem($campaign_id, $data);
+      $db->delete('queue')->condition('item_id', $row->item_id)->execute();
+      $moved++;
+      if (!$processing_state->isActive($campaign_id)) {
+        $processing_state->mark($campaign_id);
+        $queue_service->startBackgroundSending($campaign_id);
+        $started++;
+      }
+      continue;
+    }
+
+    $db->delete('queue')->condition('item_id', $row->item_id)->execute();
+    $processing_state->mark($campaign_id);
+    $queue_service->startBackgroundSending($campaign_id);
+    $started++;
+  }
+
+  \Drupal::logger('campaign_email_queue')->notice('Legacy queue migration: @moved emails moved, @started campaigns started, @removed invalid items removed.', [
+    '@moved' => $moved,
+    '@started' => $started,
+    '@removed' => $removed,
+  ]);
+}
+
+/**
+ * Remove empty statistics rows that hid real run data on the dashboard.
+ */
+function campaign_email_queue_update_10013(): void {
+  $db = \Drupal::database();
+  if (!$db->schema()->tableExists('campaign_statistics')) {
+    return;
+  }
+
+  $db->delete('campaign_statistics')
+    ->condition('total_emails', 0)
+    ->condition('sent_count', 0)
+    ->condition('failed_count', 0)
+    ->condition('pending_count', 0)
+    ->condition('error_count', 0)
+    ->execute();
+
+  $queue_service = \Drupal::service('campaign_email_queue.queue');
+  $log_service = \Drupal::service('campaign_email_queue.log');
+
+  $queue_names = $db->select('queue', 'q')
+    ->fields('q', ['name'])
+    ->condition('name', 'campaign_email_queue_%', 'LIKE')
+    ->distinct()
+    ->execute();
+
+  $seen = [];
+  foreach ($queue_names as $row) {
+    if (!preg_match('/^campaign_email_queue_(\d+)$/', $row->name, $matches)) {
+      continue;
+    }
+    $campaign_id = (int) $matches[1];
+    if (isset($seen[$campaign_id])) {
+      continue;
+    }
+    $seen[$campaign_id] = TRUE;
+    $run_id = $log_service->peekQueueRunId($campaign_id);
+    if ($run_id <= 0) {
+      continue;
+    }
+    $emails = $queue_service->getQueuedRecipientEmails($campaign_id);
+    if ($emails !== []) {
+      $log_service->initializeEmailLogsBulk($campaign_id, $emails, $run_id);
+      $log_service->updateCampaignStatistics($campaign_id, $run_id);
+    }
+  }
+}
+
+/**
+ * Live dashboard poll + incremental log flush settings.
+ */
+function campaign_email_queue_update_10014(): void {
+  $editable = \Drupal::configFactory()->getEditable('campaign_email_queue.settings');
+  if ($editable->isNew()) {
+    return;
+  }
+  $defaults = [
+    'poll_drain_min_interval' => 3,
+    'live_log_flush_size' => 5,
+  ];
+  $changed = FALSE;
+  foreach ($defaults as $key => $value) {
+    if ($editable->get($key) === NULL) {
+      $editable->set($key, $value);
+      $changed = TRUE;
+    }
+  }
+  if ($changed) {
+    $editable->save(TRUE);
+  }
+}

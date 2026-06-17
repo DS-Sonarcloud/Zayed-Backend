@@ -1,0 +1,432 @@
+<?php
+
+use Drupal\file\Entity\File;
+use Drupal\user\Entity\User;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_mail().
+ */
+function email_marketing_mail($key, &$message, $params)
+{
+  switch ($key) {
+    case 'campaign':
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+      $message['subject'] = $params['subject'] ?? 'Newsletter';
+      $message['body'][] = $params['body'] ?? '';
+      break;
+
+    case 'test_email':
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+      $message['subject'] = $params['subject'] ?? 'Newsletter';
+      $message['body'][] = $params['message'] ?? '';
+      break;
+
+    case 'user_groups_email':
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+      $message['subject'] = $params['subject'] ?? 'Newsletter';
+      $message['body'][] = $params['message'] ?? '';
+      \Drupal::logger('bodyyyyyyyy')->debug('<pre>@data</pre>', [
+        '@data' => print_r($message, TRUE),
+      ]);
+      break;
+
+    case 'user_group_email':
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['message'];
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+      break;
+  }
+}
+/**
+ * Implements hook_theme().
+ */
+function email_marketing_theme()
+{
+  return [
+    'email_marketing_node' => [
+      'variables' => [
+        'subject' => NULL,
+        'content' => NULL,
+      ],
+      'template' => 'email-marketing-node',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_marketing_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+
+  if (isset($form['field_user_members'])) {
+    $form['csv_file'] = [
+      '#type' => 'file',
+      '#title' => t('Upload CSV File'),
+      '#description' => t('Only CSV files are allowed.'),
+      '#weight' => 7
+    ];
+
+    $form['preview'] = [
+      '#type' => 'submit',
+      '#value' => t('Preview'),
+      '#submit' => ['previewCsv'],
+      '#limit_validation_errors' => [],
+      '#weight' => 8
+    ];
+  }
+}
+
+/**
+ * Custom submit handler for preview button.
+ */
+function previewCsv(array &$form, FormStateInterface $form_state)
+{
+  if (!empty($_FILES['files']['tmp_name']['csv_file'])) {
+    $tmp_file = $_FILES['files']['tmp_name']['csv_file'];
+    $file_name = $_FILES['files']['name']['csv_file'];
+
+    if (strtolower(pathinfo($file_name, PATHINFO_EXTENSION)) !== 'csv') {
+      // $this->messenger()->addError('Only CSV files are allowed.');
+      return;
+    }
+
+    // Read CSV
+    if (($handle = fopen($tmp_file, 'r')) !== FALSE) {
+      $emails = [];
+      while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        $emails[] = $data[0];
+      }
+      fclose($handle);
+
+      if (!empty($emails)) {
+        // $this->messenger()->addMessage('<strong>CSV Preview:</strong>', ['html' => TRUE]);
+        foreach ($emails as $email) {
+          // Check if user exists.
+          $existing = user_load_by_mail($email);
+
+          if (!$existing) {
+            $user = User::create([
+              'name' => $email,
+              'mail' => $email,
+              'status' => 1,
+              'roles' => ['manual_added_student'],
+            ]);
+            $user->enforceIsNew();
+            $user->save();
+          }
+        }
+        $form_state->set('csv_emails', $emails);
+        $form_state->setRebuild(TRUE);
+      } else {
+        // $this->messenger()->addMessage('No data found in CSV.');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function email_marketing_entity_presave(EntityInterface $entity)
+{
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'campaign') {
+    $campaign_id = $entity->id();
+    if (!$entity->get('field_email_template')->isEmpty()) {
+      $target_id = $entity->get('field_email_template')->target_id;
+
+      if ($target_id) {
+        $template = Node::load($target_id);
+        if ($template) {
+          $existing = $template->get('field_campaign')->getValue();
+          $existing_ids = array_column($existing, 'target_id');
+
+          if (!in_array($campaign_id, $existing_ids)) {
+            $existing[] = ['target_id' => $campaign_id];
+            $template->set('field_campaign', $existing);
+            $template->save();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function email_marketing_form_node_email_template_edit_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  //_email_marketing_add_test_email_form($form, $form_state);
+}
+
+// /**
+//  * Helper to add test email form elements.
+//  */
+// function _email_marketing_add_test_email_form(&$form, FormStateInterface $form_state)
+// {
+//   $node = $form_state->getFormObject()->getEntity();
+
+//   $form['test_email_details'] = [
+//     '#type' => 'details',
+//     '#title' => t('Send TEST Email'),
+//     '#open' => FALSE,
+//     '#weight' => 100,
+//   ];
+
+//   $form['test_email_details']['test_email_address'] = [
+//     '#type' => 'email',
+//     '#title' => t('Recipient Email Address'),
+//     '#description' => t('Enter an email address to send a test email.'),
+//     '#default_value' => \Drupal::currentUser()->getEmail(),
+//   ];
+
+//   $form['test_email_details']['test_email_status'] = [
+//     '#type' => 'container',
+//     '#attributes' => ['id' => 'test-email-status-wrapper'],
+//     '#markup' => '',
+//   ];
+
+//   $form['test_email_details']['actions']['send_test_email'] = [
+//     '#type' => 'submit',
+//     '#value' => t('Send TEST Email'),
+//     '#submit' => ['email_marketing_send_test_email_submit'],
+//     '#limit_validation_errors' => [['test_email_address']],
+//     '#ajax' => [
+//       'callback' => 'email_marketing_send_test_email_ajax_callback',
+//       'wrapper' => 'test-email-status-wrapper',
+//     ],
+//   ];
+
+//   // if ($node->id()) {
+//   //   $form['actions']['send_to_custom_users'] = [
+//   //     '#markup' => '<a href="/admin/config/email-marketing/user-groups/' . $node->id() . '" target="_blank" class="button button--primary">Send to Custom Users</a>',
+//   //     '#prefix' => '<div class="view-user-group">',
+//   //     '#suffix' => '</div>',
+//   //     '#weight' => 16,
+//   //   ];
+//   // }
+// }
+
+/**
+ * Custom submit handler to send emails.
+ */
+function email_marketing_send_test_email_submit(array &$form, FormStateInterface $form_state) {}
+
+/**
+ * AJAX callback for sending test email.
+ */
+function email_marketing_send_test_email_ajax_callback(array &$form, FormStateInterface $form_state)
+{
+  $response = ['#type' => 'container', '#attributes' => ['id' => 'test-email-status-wrapper']];
+
+  $email = $form_state->getValue('test_email_address');
+  if (empty($email) || !\Drupal::service('email.validator')->isValid($email)) {
+    $response['#markup'] = '<div class="messages messages--error">' . t('Invalid email address.') . '</div>';
+    return $response;
+  }
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  $subject = $node->getTitle() ?: t('Test Email');
+
+  $body = '';
+  if ($node->hasField('field_template_image') && !$node->get('field_template_image')->isEmpty()) {
+    /** @var \Drupal\file\FileInterface $file */
+    $file = $node->get('field_template_image')->entity;
+    $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+    
+    $body = '<div style="background-color: #f4f4f4; padding: 40px 0; text-align: center; font-family: Arial, sans-serif;">';
+    $body .= '<div style="max-width: 100%; margin: 0 auto; background-color: #ffffff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
+    $body .= '<img src="' . $image_url . '" alt="' . $node->label() . '" style="width: 100%; max-width: 100%; height: auto; display: block;" />';
+    $body .= '</div></div>';
+  } else {
+    $input = $form_state->getUserInput();
+    $body = isset($input['body'][0]['value']) ? $input['body'][0]['value'] : '';
+    if (empty($body)) {
+      if ($node->hasField('body')) {
+        $body = $node->get('body')->value;
+      }
+    }
+    $body = make_absolute_image_urls($body);
+  }
+
+  // Send email immediately.
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'email_marketing';
+  $key = 'test_email';
+  $params = [
+    'subject' => $subject,
+    'message' => $body,
+  ];
+  $langcode = \Drupal::currentUser()->getPreferredLangcode();
+  $send = TRUE;
+
+  $result = $mailManager->mail($module, $key, $email, $langcode, $params, NULL, $send);
+
+  if ($result['result']) {
+    $response['#markup'] = '<div class="messages messages--status">' . t('Test email sent successfully to %email.', ['%email' => $email]) . '</div>';
+  } else {
+    $response['#markup'] = '<div class="messages messages--error">' . t('Failed to send test email to %email.', ['%email' => $email]) . '</div>';
+  }
+
+  return $response;
+}
+
+/**
+ * Submit handler for sending emails to selected group.
+ */
+function email_marketing_send_to_group_submit(array &$form, FormStateInterface $form_state)
+{
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  $input = $form_state->getUserInput();
+
+  // Selected group entities from node input.
+  $group_ids = $form_state->getValue('field_user_group_entity') ?? [];
+
+  if (empty($group_ids)) {
+    \Drupal::messenger()->addError(t('No groups selected.'));
+    return;
+  }
+
+  // Collect all emails from those User Group entities.
+  $emails = [];
+  foreach ($group_ids as $item) {
+    if (isset($item['target_id']) && $group = \Drupal\zu_user_group\Entity\UserGroup::load($item['target_id'])) {
+      // Internal Users.
+      foreach ($group->get('users')->referencedEntities() as $user) {
+        if ($user instanceof User && $user->isActive() && $user->getEmail()) {
+          $emails[$user->getEmail()] = $user->getEmail();
+        }
+      }
+      // Public Users.
+      foreach ($group->get('public_users')->referencedEntities() as $public_user) {
+        if ($public_user instanceof \Drupal\zu_public_user\Entity\PublicUser && $public_user->getEmail()) {
+          $emails[$public_user->getEmail()] = $public_user->getEmail();
+        }
+      }
+    }
+  }
+
+  if (empty($emails)) {
+    \Drupal::messenger()->addWarning(t('No emails found in the selected groups.'));
+    return;
+  }
+
+  if (empty($users)) {
+    \Drupal::messenger()->addWarning(t('No users found in this group.'));
+    return;
+  }
+
+  // Subject from email template field.
+  $email_node = Node::load($node->id());
+  $subject = $email_node->getTitle();
+
+  // Body from GrapesJS editor field.
+  $input = $form_state->getUserInput();
+  $body = $input['body'][0]['value'];
+  $body = make_absolute_image_urls($body);
+
+
+  // Mail manager service.
+  $mailManager = \Drupal::service('plugin.manager.mail');
+  $module = 'email_marketing';
+  $key = 'user_groups_email';
+  $langcode = \Drupal::currentUser()->getPreferredLangcode();
+
+  foreach ($emails as $email) {
+    $params['subject'] = $subject;
+    $params['message'] = $body;
+
+    $result = $mailManager->mail($module, $key, $email, $langcode, $params);
+    if ($result['result'] !== TRUE) {
+      \Drupal::messenger()->addError(t('Failed to send to %email.', ['%email' => $email]));
+    } else {
+      \Drupal::messenger()->addMessage(t('Email sent to %email.', ['%email' => $email]));
+    }
+  }
+}
+
+/**
+ * Converts relative URLs in email body to absolute URLs.
+ *
+ */
+function make_absolute_image_urls($body)
+{
+  if (empty($body)) {
+    return $body;
+  }
+  $backend_url = \Drupal::request()->getSchemeAndHttpHost();
+  $config = \Drupal::config('email_marketing.settings');
+  $frontend_url = $config->get('frontend_base_url');
+
+  // Convert all relative src and href attributes starting with /
+  $body = preg_replace_callback(
+    '/(\s(?:src|href)=["\'])(\/[^"\']+)(["\'])/i',
+    function ($matches) use ($backend_url, $frontend_url) {
+      $relative_path = $matches[2];
+      if (preg_match('/^https?:\/\//i', $relative_path)) {
+        return $matches[0];
+      }
+      // Use frontend URL for content pages, backend URL for file assets
+      if ($frontend_url && !preg_match('#^/sites/|^/system/files/#', $relative_path)) {
+        return $matches[1] . $frontend_url . $relative_path . $matches[3];
+      }
+      return $matches[1] . $backend_url . $relative_path . $matches[3];
+    },
+    $body
+  );
+
+  // Replace any absolute backend URLs in href with frontend URL 
+  if ($frontend_url && $backend_url) {
+    $body = preg_replace_callback(
+      '/(\s(?:href)=["\'])(' . preg_quote($backend_url, '/') . ')(\/[^"\']+)(["\'])/i',
+      function ($matches) use ($frontend_url, $backend_url) {
+        $path = $matches[3];
+        if (preg_match('#^/sites/|^/system/files/#', $path)) {
+          return $matches[0];
+        }
+        return $matches[1] . $frontend_url . $path . $matches[4];
+      },
+      $body
+    );
+  }
+
+  // Convert relative URLs in CSS background-image: url('/...')
+  $body = preg_replace_callback(
+    '/(url\(["\']?)(\/[^"\')\s]+)(["\']?\))/i',
+    function ($matches) use ($backend_url) {
+      return $matches[1] . $backend_url . $matches[2] . $matches[3];
+    },
+    $body
+  );
+
+  return $body;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function email_marketing_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  if ($form_id === 'taxonomy_term_user_groups_form') {
+    $form['revision']['#access'] = FALSE;
+    $form['revision_information']['#access'] = FALSE;
+    $form['revision_log_message']['#access'] = FALSE;
+    $form['relations']['#access'] = FALSE;
+  } elseif ($form_id === 'node_email_template_form' || $form_id === 'node_email_template_edit_form') {
+    // $form['view_user_groups'] = [
+    //   '#markup' => '<a href="/admin/people/user-group/add" target="_blank" class="button button--primary">View User Groups</a>',
+    //   '#prefix' => '<div class="view-user-group">',
+    //   '#suffix' => '</div>',
+    //   '#weight' => 18,
+    // ];
+  }
+}

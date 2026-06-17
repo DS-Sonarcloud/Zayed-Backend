@@ -1,0 +1,4 @@
+job_styles:
+  css:
+    theme:
+      css/jobs.css: {}

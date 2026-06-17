@@ -1,0 +1,5 @@
+services:
+  zu_public_user.route_subscriber:
+    class: Drupal\zu_public_user\Routing\PublicUserRouteSubscriber
+    tags:
+      - { name: event_subscriber }

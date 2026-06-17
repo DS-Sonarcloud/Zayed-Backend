@@ -1,0 +1,11 @@
+zu_permission_matrix.group_list:
+  route_name: entity.permission_group.collection
+  title: 'Permission Groups'
+  base_route: entity.permission_group.collection
+  weight: 0
+
+zu_permission_matrix.role_assignment:
+  route_name: zu_permission_matrix.role_assignment
+  title: 'Assign to Roles'
+  base_route: entity.permission_group.collection
+  weight: 10

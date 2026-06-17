@@ -1,0 +1,7 @@
+name: 'Jobs Module'
+type: module
+description: 'Custom layout for Job nodes.'
+core_version_requirement: ^10 || ^11
+package: Custom
+dependencies:
+  - drupal:node

@@ -1,0 +1,78 @@
+grapesjs_editor.upload_assets:
+  path: "/grapesjs-editor/assets/upload"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\AssetController::uploadAssets'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+
+grapesjs_editor.get_block:
+  path: "/grapesjs-editor/blocks/block"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\BlockController::block'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+  methods: [GET, POST]
+
+route_callbacks:
+  - '\Drupal\grapesjs_editor\Routing\BlockRoutes::routes'
+
+grapesjs_editor.image_manager:
+  path: "/admin/config/content/grapesjs-images"
+  defaults:
+    _form: 'Drupal\grapesjs_editor\Form\TemplateImageManagerForm'
+    _title: "Email Template Images"
+  requirements:
+    _permission: "grapesjs editor image manager"
+
+grapesjs_editor.node_preview:
+  path: "/email-template/preview/{node_preview}"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\GrapesJSPreviewController::preview'
+  requirements:
+    _permission: "access content"
+
+grapesjs_editor.save_preview:
+  path: "/grapesjs-editor/preview/save"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\GrapesJSPreviewController::savePreview'
+  requirements:
+    _permission: "access content"
+  methods: [POST]
+
+grapesjs_editor.upload_documents:
+  path: "/grapesjs-editor/documents/upload"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\DocumentController::uploadDocuments'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+  methods: [POST]
+
+grapesjs_editor.get_documents:
+  path: "/grapesjs-editor/documents/list"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\DocumentController::getDocuments'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+
+grapesjs_editor.delete_document:
+  path: "/grapesjs-editor/documents/delete/{uuid}"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\DocumentController::deleteDocument'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+  methods: [DELETE, POST]
+
+grapesjs_editor.get_content_type_fields:
+  path: "/grapesjs-editor/widget/content-type-fields"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\BlockController::getContentTypeFields'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+
+grapesjs_editor.get_nodes_by_type:
+  path: "/grapesjs-editor/widget/nodes-by-type"
+  defaults:
+    _controller: 'Drupal\grapesjs_editor\Controller\BlockController::getNodesByType'
+  requirements:
+    _permission: "use text format grapesjs_editor"
+

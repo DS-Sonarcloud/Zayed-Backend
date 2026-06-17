@@ -1,0 +1,10 @@
+administer user groups:
+  title: 'Administer User Groups'
+  description: 'Manage User Group'
+  restrict access: true
+view own user group:
+  title: 'View own user group'
+edit own user group:
+  title: 'Edit own user group'
+delete own user group:
+  title: 'Delete own user group'

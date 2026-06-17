@@ -1,0 +1,8 @@
+services:
+  drupal_layoutbuilder_event_subscriber:
+    class: Drupal\drupal_layoutbuilder\EventSubscriber\DrupalLayoutbuilderSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  drupal_layoutbuilder.drupal_block_service:
+    class: Drupal\drupal_layoutbuilder\DrupalBlockService

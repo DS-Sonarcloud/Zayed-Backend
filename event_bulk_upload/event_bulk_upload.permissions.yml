@@ -1,0 +1,4 @@
+upload event csv:
+  title: 'Upload event CSV'
+  description: 'Allows user to bulk upload events'
+  restrict access: false

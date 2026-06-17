@@ -1,0 +1,3 @@
+title_1,body,field_description,field_registration_url,field_select_webform,field_domain_all_affiliates,field_show_social_media_icon,field_speakers,field_start_date,field_start_time,field_tags,field_venue,field_view_count,
+TESR,<p>This is the event description.</p>,Long formatted description here,https://example.com/register,https://example.com/reg-url,event_registration,0,"facebook,linkedin,email",02-Jan-26,02-01-2026,11:30,"7,12",Main Auditorium,100
+gnyrfb,<p>Another event description.</p>,This is another formatted description,https://example.com/reg2,https://example.com/reg-url2,event_registration,1,"facebook,email",02-Jan-26,02-01-2026,9:00,10,Conference Hall,250

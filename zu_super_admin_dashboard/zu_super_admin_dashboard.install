@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for ZU Super Admin Dashboard.
+ */
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Ensures the Super Admin role exists and has dashboard access.
+ */
+function zu_super_admin_dashboard_update_9001(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $role = $storage->load('super_admin');
+  if (!$role) {
+    $role = $storage->create([
+      'id' => 'super_admin',
+      'label' => 'Super Admin',
+      'weight' => -9,
+    ]);
+  }
+  $permission = 'access zu super admin dashboard';
+  if (!$role->hasPermission($permission)) {
+    $role->grantPermission($permission);
+  }
+  foreach ([
+    'access administration pages',
+    'view the administration theme',
+    'access toolbar',
+    'administer site configuration',
+    'administer themes',
+  ] as $perm) {
+    if (!$role->hasPermission($perm)) {
+      $role->grantPermission($perm);
+    }
+  }
+  $role->save();
+}

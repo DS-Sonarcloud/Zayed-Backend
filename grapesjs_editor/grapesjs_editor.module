@@ -1,0 +1,308 @@
+<?php
+
+/**
+ * @file
+ * Contains grapesjs_editor.module.
+ */
+
+use Drupal\block_content\BlockContentInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_help().
+ */
+function grapesjs_editor_help($route_name, RouteMatchInterface $route_match)
+{
+  switch ($route_name) {
+    case 'help.page.grapesjs_editor':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The GrapesJS Editor module provides a page builder.') . '</p>';
+      return ['#markup' => $output];
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function grapesjs_editor_element_info_alter(array &$info)
+{
+  if (!empty($info['text_format'])) {
+    $info['text_format']['#process'][] = '_grapesjs_editor_text_format_processor';
+  }
+}
+
+/**
+ * Removes GrapesJS format if is disabled for this node type.
+ *
+ * @param array $element
+ *   The render element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ * @param array $complete_form
+ *   The form element.
+ *
+ * @return array
+ *   The altered render element.
+ */
+function _grapesjs_editor_text_format_processor(array $element, FormStateInterface $form_state, array &$complete_form)
+{
+  if (!empty($element['format']) && isset($element['format']['format']['#options']['grapesjs_editor'])) {
+    $grapesjs_editor_allowed = FALSE;
+    /** @var \Drupal\Core\Entity\ContentEntityForm $form */
+    $form = $form_state->getFormObject();
+    if ($form instanceof EntityFormInterface) {
+      $entity = $form->getEntity();
+      $grapesjs_editor_allowed = $entity instanceof NodeInterface || $entity instanceof BlockContentInterface;
+    }
+    if (!$grapesjs_editor_allowed) {
+      unset($element['format']['format']['#options']['grapesjs_editor']);
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function grapesjs_editor_entity_presave(\Drupal\Core\Entity\EntityInterface $entity)
+{
+  if (!$entity instanceof \Drupal\Core\Entity\ContentEntityInterface) {
+    return;
+  }
+
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'email_template') {
+    $request = \Drupal::request();
+    $screenshot_data = $request->request->get('field_template_screenshot_data');
+    if ($screenshot_data) {
+      \Drupal::logger('grapesjs_editor')->notice('Screenshot data received, length: @length', ['@length' => strlen($screenshot_data) ?: 0]);
+
+      if (strpos($screenshot_data, 'data:image/png;base64,') === 0) {
+        $data = str_replace('data:image/png;base64,', '', $screenshot_data);
+        $data = base64_decode($data);
+        if ($data) {
+          $sanitized_label = preg_replace('/[^a-z0-9\-]+/', '_', strtolower($entity->label()));
+          $directory = 'public://template_screenshots';
+          /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+          $file_system = \Drupal::service('file_system');
+          $file_system->prepareDirectory($directory, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY | \Drupal\Core\File\FileSystemInterface::MODIFY_PERMISSIONS);
+
+          /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+          $file_repository = \Drupal::service('file.repository');
+
+          $existing_file = NULL;
+          if ($entity->hasField('field_template_image') && !$entity->get('field_template_image')->isEmpty()) {
+            $existing_file = $entity->get('field_template_image')->entity;
+          }
+
+          if ($existing_file instanceof \Drupal\file\FileInterface) {
+            $file_uri = $existing_file->getFileUri();
+            $file = $file_repository->writeData($data, $file_uri, \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE);
+            \Drupal::logger('grapesjs_editor')->notice('Updated existing screenshot @fid for node @nid', [
+              '@fid' => $file->id(),
+              '@nid' => $entity->id(),
+            ]);
+          } else {
+            $suffix = $entity->isNew() ? 'new' : $entity->id();
+            $filename = $sanitized_label . '-' . $suffix . '.png';
+            $file = $file_repository->writeData($data, $directory . '/' . $filename, \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE);
+            \Drupal::logger('grapesjs_editor')->notice('Created new screenshot for node @nid', ['@nid' => $entity->id() ?: 'new']);
+          }
+
+          if ($file) {
+            $entity->set('field_template_image', [
+              'target_id' => $file->id(),
+              'alt' => $entity->label() . ' Screenshot',
+            ]);
+          } else {
+            \Drupal::logger('grapesjs_editor')->error('Failed to save screenshot file for node @nid', ['@nid' => $entity->id() ?: 'new']);
+          }
+        } else {
+          \Drupal::logger('grapesjs_editor')->error('Failed to base64 decode screenshot data for node @nid', ['@nid' => $entity->id() ?: 'new']);
+        }
+      } else {
+        \Drupal::logger('grapesjs_editor')->error('Invalid screenshot data format for node @nid. Expected data:image/png;base64,...', ['@nid' => $entity->id() ?: 'new']);
+      }
+    } else {
+      \Drupal::logger('grapesjs_editor')->debug('No screenshot data found in request for node @nid', ['@nid' => $entity->id() ?: 'new']);
+    }
+
+    // Save compiled MJML→HTML to field_json (for email sending)
+    $field_json_data = $request->request->all('field_json');
+    $compiled_html = $field_json_data[0]['value'] ?? NULL;
+    if ($compiled_html && is_string($compiled_html) && $entity->hasField('field_json')) {
+      if (preg_match('/<!doctype\s+html|<html[\s>]/i', $compiled_html)) {
+        $entity->set('field_json', $compiled_html);
+        \Drupal::logger('grapesjs_editor')->notice('Saved compiled HTML to field_json for node @nid, length: @len', [
+          '@nid' => $entity->id() ?: 'new',
+          '@len' => strlen($compiled_html),
+        ]);
+      }
+    }
+  }
+
+  foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
+    if (in_array($definition->getType(), ['text_with_summary', 'text_long'])) {
+      $field = $entity->get($field_name);
+      foreach ($field as $item) {
+        if ($item->format === 'grapesjs_editor') {
+          $item->value = _grapesjs_editor_clean_content($item->value);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function grapesjs_editor_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode)
+{
+  foreach (Element::children($build) as $field_name) {
+    if (isset($build[$field_name]['#field_type']) && in_array($build[$field_name]['#field_type'], ['text_with_summary', 'text_long'])) {
+      foreach (Element::children($build[$field_name]) as $delta) {
+        if (isset($build[$field_name][$delta]['#format']) && $build[$field_name][$delta]['#format'] === 'grapesjs_editor') {
+          if (isset($build[$field_name][$delta]['#text'])) {
+            $build[$field_name][$delta]['#text'] = _grapesjs_editor_clean_content($build[$field_name][$delta]['#text']);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to clean GrapesJS content from problematic styles and classes.
+ *
+ * @param string $content
+ *   The HTML content to clean.
+ * @param bool $is_full_document
+ *   Whether the content is a full HTML document.
+ *
+ * @return string
+ *   The cleaned content.
+ */
+function _grapesjs_editor_clean_content($content, $is_full_document = FALSE)
+{
+  if (empty($content)) {
+    return $content;
+  }
+
+  if (!$is_full_document && preg_match('/<!doctype\s+html|<html[\s>]/i', $content)) {
+    $is_full_document = TRUE;
+  }
+
+  $content = preg_replace_callback('/(<style[^>]*>)(.*?)(<\/style>)/is', function ($matches) use ($is_full_document) {
+    if ($is_full_document) {
+      return $matches[0];
+    }
+    $css = $matches[2];
+    $css = preg_replace('/(body|#wrapper|.gjs-wrapper)(\s*\{)/is', '.grapesjs-view-wrapper$2', $css);
+    $css = preg_replace('/(\.grapesjs-view-wrapper\s*\{[^}]*?)(padding-top:\s*79\.25px;?)/is', '$1', $css);
+
+    return $matches[1] . $css . $matches[3];
+  }, $content);
+
+  $classes_to_remove = [
+    'user-logged-in',
+    'path-node',
+    'page-node-type-email-template',
+    'toolbar-horizontal',
+    'toolbar-fixed',
+    'toolbar-tray-open',
+    'toolbar-loading',
+    'toolbar-subview'
+  ];
+
+  foreach ($classes_to_remove as $class) {
+    $content = str_replace(' ' . $class, '', $content);
+    $content = str_replace($class . ' ', '', $content);
+    $content = str_replace('"' . $class . '"', '""', $content);
+  }
+  $content = preg_replace('/toolbar-icon-[\w-]+/', '', $content);
+  $content = preg_replace('/style="[^"]*?(padding-top:\s*79\.25px)[^"]*?"/is', '', $content);
+
+  if (!$is_full_document) {
+    $content = str_replace('<body', '<div', $content);
+    $content = str_replace('</body', '</div', $content);
+  }
+
+  $content = str_replace('class=""', '', $content);
+  $content = str_replace('style=""', '', $content);
+  $content = preg_replace('/\s+>/', '>', $content);
+
+  return $content;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function grapesjs_editor_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  if ($form_id === 'node_email_template_delete_form') {
+    $form['description']['#markup'] .= '<p class="color-error" style="color: #d9534f; font-weight: bold;">' . t('WARNING: The associated screenshot image will also be deleted permanently and cannot be reverted.') . '</p>';
+  }
+
+  // Custom preview for email templates.
+  if ($form_id === 'node_email_template_edit_form') {
+    if (isset($form['actions']['preview'])) {
+      $node = $form_state->getFormObject()->getEntity();
+
+      // Use a link instead of a button to avoid form submission entirely.
+      $form['actions']['preview'] = [
+        '#type' => 'link',
+        '#title' => t('Preview'),
+        '#url' => Url::fromRoute('<current>'),
+        '#attributes' => [
+          'class' => ['button', 'grapesjs-preview-button'],
+          'onclick' => 'return false;',
+          'target' => '_blank',
+        ],
+        '#weight' => 10,
+      ];
+
+      $form['#attached']['library'][] = 'grapesjs_editor/grapesjs-preview-button';
+      $form['#attached']['drupalSettings']['grapesjs_preview'] = [
+        'save_url' => Url::fromRoute('grapesjs_editor.save_preview')->toString(),
+        'preview_url_base' => Url::fromRoute('grapesjs_editor.node_preview', ['node_preview' => 'UUID'])->toString(),
+        'nid' => $node->id(),
+        'preparing_msg' => (string) t('Preparing preview...'),
+        'error_msg' => (string) t('Failed to generate preview. Please try again.'),
+        'popup_msg' => (string) t('Popup blocked! Please allow popups for this site to see the preview.'),
+      ];
+    }
+  }
+}
+
+
+/**
+ * Implements hook_entity_delete().
+ */
+function grapesjs_editor_entity_delete(\Drupal\Core\Entity\EntityInterface $entity)
+{
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'email_template') {
+    if ($entity->hasField('field_template_image') && !$entity->get('field_template_image')->isEmpty()) {
+      $file = $entity->get('field_template_image')->entity;
+      if ($file instanceof \Drupal\file\FileInterface) {
+        try {
+          $file->delete();
+          \Drupal::logger('grapesjs_editor')->notice('Deleted screenshot file @fid for deleted email template @nid', [
+            '@fid' => $file->id(),
+            '@nid' => $entity->id(),
+          ]);
+        } catch (\Exception $e) {
+          \Drupal::logger('grapesjs_editor')->error('Failed to delete screenshot file @fid for deleted email template @nid: @message', [
+            '@fid' => $file->id(),
+            '@nid' => $entity->id(),
+            '@message' => $e->getMessage(),
+          ]);
+        }
+      }
+    }
+  }
+}

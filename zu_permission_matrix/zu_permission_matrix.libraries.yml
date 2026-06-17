@@ -1,0 +1,19 @@
+permission_form:
+  version: 1.x
+  css:
+    theme:
+      css/permission-form.css: {}
+  js:
+    js/permission-form.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+role_matrix:
+  version: 1.x
+  css:
+    theme:
+      css/role-matrix.css: {}
+  dependencies:
+    - core/drupal

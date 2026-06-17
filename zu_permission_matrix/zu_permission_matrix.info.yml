@@ -1,0 +1,7 @@
+name: 'ZU Permission Matrix'
+type: module
+description: 'Create permission groups and assign them to roles. Provides an interactive permission management UI.'
+core_version_requirement: ^10 || ^11
+package: 'ZU Custom'
+dependencies:
+  - drupal:user

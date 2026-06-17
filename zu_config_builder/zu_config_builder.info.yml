@@ -1,0 +1,9 @@
+name: 'ZU Config Builder'
+type: module
+description: 'Drush commands to build or remove all configuration for a content type from config/sync YAML files. Works for any content type — no hardcoding required.'
+package: 'Zayed University'
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:node
+  - drupal:field
+  - drupal:config

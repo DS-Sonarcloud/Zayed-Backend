@@ -1,0 +1,6 @@
+custom_elastic_search.admin_settings:
+  title: 'Elastic Search Settings'
+  description: 'Settings for the Elastic Search module'
+  route_name: custom_elastic_search.settings_form
+  parent: system.admin_config_search
+  weight: 100

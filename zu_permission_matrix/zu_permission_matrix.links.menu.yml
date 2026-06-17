@@ -1,0 +1,15 @@
+zu_permission_matrix.group_list:
+  title: 'Permission Groups'
+  description: 'Manage permission groups and assign them to roles.'
+  route_name: entity.permission_group.collection
+  menu_name: admin
+  parent: entity.user.collection
+  weight: 10
+
+zu_permission_matrix.role_assignment_menu:
+  title: 'Assign Groups to Roles'
+  description: 'Assign permission groups to user roles.'
+  route_name: zu_permission_matrix.role_assignment
+  menu_name: admin
+  parent: entity.user.collection
+  weight: 11

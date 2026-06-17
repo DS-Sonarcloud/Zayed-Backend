@@ -1,0 +1,4 @@
+services:
+  event_bulk_upload.service:
+    class: Drupal\event_bulk_upload\Service\EventBulkUploadService
+    arguments: ['@entity_type.manager', '@datetime.time']

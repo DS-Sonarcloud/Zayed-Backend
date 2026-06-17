@@ -1,0 +1,7 @@
+services:
+  email_layout.sender:
+    class: Drupal\email_layout\Email\EmailLayoutSender
+    arguments:
+      - '@entity_type.manager'
+      - '@renderer'
+      - '@plugin.manager.mail'

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function campaign_dashboard_theme($existing, $type, $theme, $path) {
+  return [
+    'campaign_dashboard' => [
+      'variables' => [
+        'data' => [],
+      ],
+      'template' => 'campaign-dashboard',
+    ],
+  ];
+}

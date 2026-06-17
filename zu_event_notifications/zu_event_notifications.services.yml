@@ -1,0 +1,13 @@
+services:
+  logger.channel.zu_event_notifications:
+    parent: logger.channel_base
+    arguments: ['zu_event_notifications']
+
+  zu_event_notifications.reminder_service:
+    class: Drupal\zu_event_notifications\Service\EventReminderService
+    arguments:
+      - '@entity_type.manager'                 
+      - '@queue'                         
+      - '@logger.factory'                     
+      - '@date.formatter'                    
+      - '@plugin.manager.mail'                

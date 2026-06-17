@@ -1,0 +1,8 @@
+admin_styles:
+  css:
+    theme:
+      css/admin.css: {}
+
+admin_scripts:
+  js:
+    js/ajax.js: {}

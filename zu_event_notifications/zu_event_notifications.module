@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * Implements hook_cron().
+ */
+function zu_event_notifications_cron()
+{
+  \Drupal::service('zu_event_notifications.reminder_service')->queueUpcomingEventEmails();
+}
+
+/**
+ * Implements hook_mail().
+ */
+function zu_event_notifications_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'event_reminder':
+      $message['subject'] = $params['subject'];
+
+      // Render Twig email
+      $build = [
+        '#theme' => 'zu_event_notifications_event_reminder_email',
+        '#username' => $params['username'] ?? 'User',
+        '#event_title' => $params['event_title'] ?? '',
+        '#event_date' => $params['event_date'] ?? '',
+        '#event_link' => $params['event_link'] ?? '',
+        '#subject' => $params['subject'] ?? 'Event Reminder',
+      ];
+
+      $body = \Drupal::service('renderer')->renderPlain($build);
+
+      if (!empty($body)) {
+        $message['body'][] = $body;
+        $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+      } else {
+        \Drupal::logger('zu_event_notifications')->error('Email template rendering failed for event_reminder.');
+      }
+
+      break;
+  }
+}
+/**
+ * Implements hook_theme().
+ */
+function zu_event_notifications_theme($existing, $type, $theme, $path) {
+  $module_path = \Drupal::service('extension.list.module')->getPath('zu_event_notifications');
+
+  return [
+    'zu_event_notifications_event_reminder_email' => [
+      'variables' => [
+        'username' => NULL,
+        'event_title' => NULL,
+        'event_date' => NULL,
+        'event_link' => NULL,
+        'subject' => NULL,
+      ],
+      'template' => 'event-reminder-email',
+      'path' => $module_path . '/templates',
+    ],
+  ];
+}
+
