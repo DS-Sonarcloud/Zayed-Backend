@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the ZU Admin Dashboard.
+ */
+#}
+<div class="zu-admin-shell">
+  {% include '@zu_admin/zu-admin-topbar.html.twig' %}
+
+  <div class="zu-body-wrap">
+    {% include '@zu_admin/zu-admin-sidebar.html.twig' with {
+      sidebar: sidebar,
+      user_info: user_info,
+    } only %}
+    
+    <main class="zu-main-content">
+      <div class="zu-page-header">
+        <h1 class="zu-page-heading">{{ 'Dashboard'|t }}</h1>
+      </div>
+
+      <div class="zu-stats-row">
+        <div class="zu-stat-card">
+          <span class="zu-stat-number">{{ stats.total_users }}</span>
+          <span class="zu-stat-label">{{ 'Total Users'|t }}</span>
+        </div>
+        <div class="zu-stat-card">
+          <span class="zu-stat-number">{{ stats.total_groups }}</span>
+          <span class="zu-stat-label">{{ 'CMS Groups'|t }}</span>
+        </div>
+        <div class="zu-stat-card">
+          <span class="zu-stat-number">{{ stats.notifications }}</span>
+          <span class="zu-stat-label">{{ 'New Notifications'|t }}</span>
+        </div>
+      </div>
+
+      <div class="zu-section-card">
+        <h2 class="zu-card-title">{{ 'Recent Activity'|t }}</h2>
+        {% if recent_activity %}
+          <table class="zu-table">
+            <thead>
+              <tr>
+                <th>{{ 'Event'|t }}</th>
+                <th>{{ 'Message'|t }}</th>
+                <th>{{ 'User'|t }}</th>
+                <th>{{ 'Time'|t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for log in recent_activity %}
+                <tr>
+                  <td><span class="zu-event-badge zu-event-{{ log.event_type }}">{{ log.event_type|replace({'_': ' '})|title }}</span></td>
+                  <td>{{ log.message }}</td>
+                  <td>{{ log.uid }}</td>
+                  <td>{{ log.timestamp|date('Y-m-d H:i') }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="zu-empty">{{ 'No recent activity found.'|t }}</p>
+        {% endif %}
+      </div>
+    </main>
+  </div>
+</div>

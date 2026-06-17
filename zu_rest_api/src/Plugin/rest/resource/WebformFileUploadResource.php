@@ -186,7 +186,7 @@ class WebformFileUploadResource extends ResourceBase {
       ], 500);
     }
 
-    $filename = 'upload_' . time() . '_' . mt_rand(1000, 9999) . '.' . $ext;
+    $filename = 'upload_' . time() . '_' . random_int(1000, 9999) . '.' . $ext;
     $destination = $directory . '/' . $filename;
 
     try {

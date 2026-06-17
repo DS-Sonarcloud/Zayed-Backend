@@ -26,7 +26,7 @@ class EventCreateController extends ControllerBase
     protected FileSystemInterface $fileSystem;
     protected PasswordInterface $password;
 
-    protected string $jwtSecret = Constants::JWT_SECRET;
+    protected string $jwtSecret;
     protected string $jwtAlgo = Constants::JWT_ALGO;
 
     public function __construct(
@@ -39,6 +39,7 @@ class EventCreateController extends ControllerBase
         $this->fileRepository = $fileRepository;
         $this->fileSystem = $fileSystem;
         $this->password = $password;
+        $this->jwtSecret = Constants::jwtSecret();
     }
 
     public static function create(ContainerInterface $container)

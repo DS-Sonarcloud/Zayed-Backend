@@ -12,8 +12,18 @@ class Constants
   // JWT token secret and algorithm.
   // Length for secure random tokens.
   public const JWT_TOKEN_LENGTH = 64;
-  public const JWT_SECRET = 'bec08319b382d7f3e10c2b77b68c17cf69609a942bd602a4cf4549dc55b17523';
   public const JWT_ALGO = 'HS256';
+
+  /**
+   * Returns the JWT signing secret from Drupal config (never hard-coded).
+   *
+   * Override in settings.php via:
+   *   $config['zu_rest_api.settings']['jwt_secret'] = 'your-secret-here';
+   */
+  public static function jwtSecret(): string {
+    return \Drupal::config('zu_rest_api.settings')->get('jwt_secret')
+      ?? \Drupal::state()->get('zu_rest_api.jwt_secret', '');
+  }
 
   public const ERROR = 'error';
   public const SUCCESS = 'success';

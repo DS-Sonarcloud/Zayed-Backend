@@ -1,0 +1,24 @@
+access zu admin dashboard:
+  title: 'Access ZU Admin Dashboard'
+  description: 'Allows users to access the Zayed University admin dashboard.'
+  restrict access: true
+
+manage zu admin users:
+  title: 'Manage ZU Admin Users'
+  description: 'Create, edit and delete users via the ZU Admin interface.'
+  restrict access: true
+
+manage zu admin groups:
+  title: 'Manage ZU Admin Groups'
+  description: 'Create, edit and delete groups via the ZU Admin interface.'
+  restrict access: true
+
+view zu admin workflows:
+  title: 'View ZU Admin Workflows'
+  description: 'View workflows assigned to groups.'
+  restrict access: true
+
+view zu admin audit logs:
+  title: 'View ZU Admin Audit Logs'
+  description: 'View audit logs in the ZU Admin interface.'
+  restrict access: true

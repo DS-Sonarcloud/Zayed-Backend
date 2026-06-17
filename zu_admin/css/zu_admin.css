@@ -1,0 +1,524 @@
+/**
+ * zu_admin.css
+ * Zayed University Admin Dashboard — main styles.
+ * Matches the Figma design: dark top bar, white sidebar, red accent.
+ */
+
+/* ── Reset & variables ─────────────────────────────────────────────────── */
+:root {
+  --zu-red:          #c0392b;
+  --zu-red-dark:     #922b21;
+  --zu-green:        #1abc9c;
+  --zu-green-dark:   #148f77;
+  --zu-topbar-bg:    #3a3a3a;
+  --zu-sidebar-bg:   #ffffff;
+  --zu-sidebar-border: #e8e8e8;
+  --zu-nav-active-bg: #f0f0f0;
+  --zu-body-bg:      #f5f5f5;
+  --zu-card-bg:      #ffffff;
+  --zu-border:       #e0e0e0;
+  --zu-text:         #333333;
+  --zu-text-light:   #666666;
+  --zu-text-muted:   #999999;
+  --zu-badge-bg:     #e67e22;
+  --zu-badge-text:   #ffffff;
+  --zu-font:         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --zu-sidebar-w:    160px;
+  --zu-topbar-h:     36px;
+  --zu-radius:       4px;
+  --zu-shadow:       0 1px 3px rgba(0,0,0,.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── Shell layout ──────────────────────────────────────────────────────── */
+.zu-admin-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: var(--zu-font);
+  font-size: 14px;
+  color: var(--zu-text);
+  background: var(--zu-body-bg);
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────────── */
+.zu-topbar {
+  height: var(--zu-topbar-h);
+  background: var(--zu-topbar-bg);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 13px;
+  letter-spacing: .3px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+/* ── Body wrap ─────────────────────────────────────────────────────────── */
+.zu-body-wrap {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────── */
+.zu-sidebar {
+  width: var(--zu-sidebar-w);
+  background: var(--zu-sidebar-bg);
+  border-right: 1px solid var(--zu-sidebar-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.zu-sidebar-logo {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--zu-sidebar-border);
+  text-align: center;
+}
+
+.zu-logo-img {
+  max-width: 80px;
+  height: auto;
+}
+
+.zu-logo-fallback {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--zu-red);
+}
+
+/* Nav items */
+.zu-sidebar-nav {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.zu-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  color: var(--zu-text);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: background .15s, border-color .15s;
+}
+
+.zu-nav-item:hover {
+  background: var(--zu-nav-active-bg);
+  text-decoration: none;
+}
+
+.zu-nav-item.is-active {
+  background: #f8f8f8;
+  border-left-color: var(--zu-red);
+  font-weight: 600;
+}
+
+.zu-nav-icon {
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  opacity: .7;
+}
+
+.zu-nav-label {
+  flex: 1;
+}
+
+.zu-nav-badge {
+  background: var(--zu-badge-bg);
+  color: var(--zu-badge-text);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Sidebar footer */
+.zu-sidebar-footer {
+  border-top: 1px solid var(--zu-sidebar-border);
+  padding: 12px;
+}
+
+.zu-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.zu-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ddd;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zu-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.zu-avatar-initials {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+}
+
+.zu-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.zu-user-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zu-user-role {
+  display: block;
+  font-size: 11px;
+  color: var(--zu-green);
+}
+
+.zu-sidebar-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.zu-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: var(--zu-text-muted);
+  border-radius: var(--zu-radius);
+  transition: background .15s;
+}
+
+.zu-icon-btn:hover {
+  background: var(--zu-nav-active-bg);
+  color: var(--zu-text);
+}
+
+/* ── Main content area ─────────────────────────────────────────────────── */
+.zu-main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  min-width: 0;
+}
+
+/* ── Breadcrumb ────────────────────────────────────────────────────────── */
+.zu-breadcrumb {
+  font-size: 12px;
+  color: var(--zu-text-muted);
+  margin-bottom: 8px;
+}
+
+.zu-breadcrumb-link {
+  color: var(--zu-text-muted);
+  text-decoration: none;
+}
+
+.zu-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.zu-breadcrumb-sep {
+  margin: 0 4px;
+  color: var(--zu-text-muted);
+}
+
+.zu-breadcrumb-current {
+  color: var(--zu-text-light);
+}
+
+/* ── Page heading ──────────────────────────────────────────────────────── */
+.zu-page-heading,
+.zu-section-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--zu-red);
+  margin: 0 0 16px;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+.zu-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--zu-border);
+  margin-bottom: 20px;
+  gap: 0;
+}
+
+.zu-tab {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--zu-text-light);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+
+.zu-tab:hover {
+  color: var(--zu-text);
+  text-decoration: none;
+}
+
+.zu-tab.is-active {
+  color: var(--zu-red);
+  border-bottom-color: var(--zu-red);
+  font-weight: 600;
+}
+
+/* ── Section cards ─────────────────────────────────────────────────────── */
+.zu-section-card {
+  background: var(--zu-card-bg);
+  border: 1px solid var(--zu-border);
+  border-radius: var(--zu-radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--zu-shadow);
+}
+
+.zu-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--zu-text);
+  margin: 0 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--zu-border);
+}
+
+/* ── Dashboard stats ───────────────────────────────────────────────────── */
+.zu-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.zu-stat-card {
+  background: var(--zu-card-bg);
+  border: 1px solid var(--zu-border);
+  border-radius: var(--zu-radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--zu-shadow);
+}
+
+.zu-stat-number {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--zu-red);
+}
+
+.zu-stat-label {
+  display: block;
+  font-size: 12px;
+  color: var(--zu-text-muted);
+  margin-top: 4px;
+}
+
+/* ── Tables ────────────────────────────────────────────────────────────── */
+.zu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.zu-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  background: #f8f8f8;
+  border-bottom: 2px solid var(--zu-border);
+  color: var(--zu-text-light);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+.zu-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--zu-border);
+  vertical-align: middle;
+}
+
+.zu-table tr:hover td {
+  background: #fafafa;
+}
+
+/* ── Workflows table ───────────────────────────────────────────────────── */
+.zu-workflows-table-wrap {
+  background: var(--zu-card-bg);
+  border: 1px solid var(--zu-border);
+  border-radius: var(--zu-radius);
+  overflow: hidden;
+  box-shadow: var(--zu-shadow);
+}
+
+.zu-workflow-icon {
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.zu-workflow-link {
+  color: var(--zu-red);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.zu-workflow-link:hover {
+  text-decoration: underline;
+}
+
+.zu-owner-icon {
+  margin-right: 6px;
+  font-size: 13px;
+  opacity: .6;
+}
+
+/* ── Event badges ──────────────────────────────────────────────────────── */
+.zu-event-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #eee;
+  color: #555;
+}
+
+.zu-event-user_login    { background: #d5f5e3; color: #1e8449; }
+.zu-event-user_logout   { background: #fdebd0; color: #a04000; }
+.zu-event-user_created  { background: #d6eaf8; color: #154360; }
+.zu-event-user_updated  { background: #e8f8f5; color: #0e6655; }
+.zu-event-user_deleted  { background: #fadbd8; color: #922b21; }
+.zu-event-group_updated { background: #f9ebea; color: #7b241c; }
+
+/* ── Empty states ──────────────────────────────────────────────────────── */
+.zu-empty-state, .zu-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--zu-text-muted);
+  font-size: 13px;
+}
+
+/* ── Placeholder pages ─────────────────────────────────────────────────── */
+.zu-placeholder {
+  background: var(--zu-card-bg);
+  border: 1px solid var(--zu-border);
+  border-radius: var(--zu-radius);
+  padding: 32px;
+  box-shadow: var(--zu-shadow);
+}
+
+/* ── System monitoring metrics ─────────────────────────────────────────── */
+.zu-metrics-list {
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+
+.zu-metric-row {
+  display: flex;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--zu-border);
+  gap: 16px;
+}
+
+.zu-metric-label {
+  font-weight: 600;
+  width: 180px;
+  flex-shrink: 0;
+  color: var(--zu-text-light);
+}
+
+.zu-metric-value {
+  color: var(--zu-text);
+}
+
+/* ── Schema viewer ─────────────────────────────────────────────────────── */
+.zu-table-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+}
+
+.zu-table-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  break-inside: avoid;
+}
+
+.zu-table-icon {
+  font-size: 10px;
+  color: var(--zu-text-muted);
+}
+
+/* ── Drupal page host (claro_admin page--zu-admin) ─────────────────────── */
+body.zu-admin-route .zu-admin-page-host {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body.zu-admin-route .zu-admin-page-host > .help {
+  margin: 0;
+}
+
+body.zu-admin-route .block-page-title-block,
+body.zu-admin-route .content-header {
+  display: none;
+}
+
+.zu-nav-icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root { --zu-sidebar-w: 48px; }
+
+  .zu-nav-label,
+  .zu-nav-badge,
+  .zu-user-info,
+  .zu-sidebar-actions { display: none; }
+
+  .zu-nav-item { justify-content: center; padding: 12px 0; }
+  .zu-nav-icon { margin: 0; }
+  .zu-user-profile { justify-content: center; }
+
+  .zu-main-content { padding: 12px 16px; }
+}

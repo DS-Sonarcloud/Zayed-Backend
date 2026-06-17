@@ -16,8 +16,12 @@ use Firebase\JWT\Key;
 class JwtRequestSubscriber implements EventSubscriberInterface
 {
 
-  private $secret = Constants::JWT_SECRET;
-  private $algo = Constants::JWT_ALGO;
+  private string $secret;
+  private string $algo = Constants::JWT_ALGO;
+
+  public function __construct() {
+    $this->secret = Constants::jwtSecret();
+  }
 
   /**
    *

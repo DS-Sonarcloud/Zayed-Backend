@@ -1,0 +1,519 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for ZU Admin module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Theme hooks that use the ZU Admin shell (sidebar + topbar).
+ *
+ * @return list<string>
+ */
+function zu_admin_shell_theme_hooks(): array {
+  return [
+    'zu_dashboard',
+    'zu_people_list',
+    'zu_workflows_list',
+  ];
+}
+
+/**
+ * Attaches UI library and sidebar data for shell templates.
+ *
+ * @param array<string, mixed> $variables
+ */
+function zu_admin_attach_shell(array &$variables): void {
+  $variables['#attached']['library'][] = 'zu_admin/zu_admin_ui';
+
+  /** @var \Drupal\zu_admin\Service\SidebarService $sidebar */
+  $sidebar = \Drupal::service('zu_admin.sidebar_service');
+  /** @var \Drupal\zu_admin\Service\NotificationService $notifications */
+  $notifications = \Drupal::service('zu_admin.notification_service');
+
+  $unread = $notifications->getUnreadCount();
+  $variables['sidebar'] = $sidebar->buildSidebarItems($unread);
+  $variables['user_info'] = $sidebar->getCurrentUserInfo() + [
+    'unread_count' => $unread,
+  ];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function zu_admin_theme() {
+  return [
+    'zu_dashboard' => [
+      'variables' => [
+        'stats' => [],
+        'recent_activity' => [],
+        'sidebar' => [],
+        'user_info' => [],
+      ],
+    ],
+    'zu_workflows_list' => [
+      'variables' => [
+        'workflows' => [],
+        'group_name' => '',
+        'tabs' => [],
+        'active_tab' => '',
+        'sidebar' => [],
+        'user_info' => [],
+      ],
+    ],
+    'zu_people_list' => [
+      'variables' => [
+        'users' => [],
+        'groups' => [],
+        'tabs' => [],
+        'active_tab' => '',
+        'sidebar' => [],
+        'user_info' => [],
+      ],
+    ],
+    'zu_admin_sidebar' => [
+      'variables' => [
+        'sidebar' => [],
+        'user_info' => [],
+      ],
+    ],
+    'zu_admin_topbar' => [
+      'variables' => [],
+    ],
+    'zu_audit_logs' => [
+      'variables' => [
+        'logs'        => [],
+        'event_types' => [],
+        'total'       => 0,
+        'page'        => 1,
+        'total_pages' => 1,
+        'page_size'   => 50,
+        'filters'     => [],
+        'base_params' => [],
+        'export_url'  => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for shell templates.
+ */
+function zu_admin_preprocess_zu_dashboard(array &$variables): void {
+  zu_admin_attach_shell($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for shell templates.
+ */
+function zu_admin_preprocess_zu_people_list(array &$variables): void {
+  zu_admin_attach_shell($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for shell templates.
+ */
+function zu_admin_preprocess_zu_workflows_list(array &$variables): void {
+  zu_admin_attach_shell($variables);
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function zu_admin_preprocess_page(array &$variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (!$route_name || !str_starts_with($route_name, 'zu_admin.')) {
+    return;
+  }
+
+  $variables['#attached']['library'][] = 'zu_admin/zu_admin_ui';
+  if (!isset($variables['attributes']) || is_array($variables['attributes'])) {
+    $variables['attributes'] = new \Drupal\Core\Template\Attribute($variables['attributes'] ?? []);
+  }
+  $variables['attributes']->addClass('zu-admin-route');
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function zu_admin_theme_suggestions_page_alter(array &$suggestions, array $variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name && str_starts_with($route_name, 'zu_admin.')) {
+    $suggestions[] = 'page__zu_admin';
+  }
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function zu_admin_toolbar() {
+  $items = [];
+  $items['zu_admin'] = [
+    '#cache' => ['contexts' => ['user.permissions']],
+  ];
+
+  if (!\Drupal::currentUser()->hasPermission('access zu admin dashboard')) {
+    return $items;
+  }
+
+  $items['zu_admin'] += [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('ZU Admin'),
+      '#url' => Url::fromRoute('zu_admin.dashboard'),
+      '#attributes' => [
+        'title' => t('ZU Admin Dashboard'),
+        'class' => ['toolbar-icon', 'toolbar-icon-zu-admin'],
+      ],
+    ],
+    '#weight' => 100,
+  ];
+
+  return $items;
+}
+
+/**
+ * Helper to build the people tabs.
+ */
+function _zu_admin_people_tabs($id = NULL, $active = 'list') {
+  $tabs = [
+    'list' => ['title' => 'Users', 'url' => Url::fromRoute('zu_admin.people.list')],
+    'groups' => ['title' => 'Groups', 'url' => Url::fromRoute('zu_admin.ajax.groups')],
+  ];
+
+  return $tabs;
+}
+
+// =============================================================================
+// CENTRALISED AUDIT LOGGING — automatic capture of all site actions
+// =============================================================================
+
+/**
+ * Internal helper — fetch the audit service without throwing if unavailable.
+ */
+function _zu_admin_audit(): ?\Drupal\zu_admin\Service\AuditService {
+  try {
+    return \Drupal::service('zu_admin.audit_service');
+  }
+  catch (\Exception) {
+    return NULL;
+  }
+}
+
+// ── Node events ──────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_node_insert().
+ */
+function zu_admin_node_insert(NodeInterface $node): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('node.create', 'Created @type "@title" (nid:@nid)', [
+    '@type'  => $node->getType(),
+    '@title' => $node->label(),
+    '@nid'   => $node->id(),
+  ]);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function zu_admin_node_update(NodeInterface $node): void {
+  if (!($audit = _zu_admin_audit())) return;
+
+  $original = $node->original ?? NULL;
+  $pub_changed = $original
+    && (bool) $node->isPublished() !== (bool) $original->isPublished();
+
+  if ($pub_changed) {
+    $event = $node->isPublished() ? 'node.publish' : 'node.unpublish';
+    $audit->log($event, '@action @type "@title" (nid:@nid)', [
+      '@action' => $node->isPublished() ? 'Published' : 'Unpublished',
+      '@type'   => $node->getType(),
+      '@title'  => $node->label(),
+      '@nid'    => $node->id(),
+    ]);
+  }
+  else {
+    $audit->log('node.update', 'Updated @type "@title" (nid:@nid)', [
+      '@type'  => $node->getType(),
+      '@title' => $node->label(),
+      '@nid'   => $node->id(),
+    ]);
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function zu_admin_node_delete(NodeInterface $node): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('node.delete', 'Deleted @type "@title" (nid:@nid)', [
+    '@type'  => $node->getType(),
+    '@title' => $node->label(),
+    '@nid'   => $node->id(),
+  ]);
+}
+
+// ── User events ──────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_user_login().
+ */
+function zu_admin_user_login(UserInterface $account): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('user.login', 'User "@name" logged in (uid:@uid)', [
+    '@name' => $account->getDisplayName(),
+    '@uid'  => $account->id(),
+  ], (int) $account->id());
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function zu_admin_user_logout(UserInterface $account): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('user.logout', 'User "@name" logged out (uid:@uid)', [
+    '@name' => $account->getDisplayName(),
+    '@uid'  => $account->id(),
+  ], (int) $account->id());
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function zu_admin_user_insert(UserInterface $account): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('user.create', 'New user account created: "@name" (uid:@uid)', [
+    '@name' => $account->getDisplayName(),
+    '@uid'  => $account->id(),
+  ]);
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function zu_admin_user_update(UserInterface $account): void {
+  if (!($audit = _zu_admin_audit())) return;
+
+  $original = $account->original ?? NULL;
+  if ($original) {
+    $was_blocked = (bool) $original->isBlocked();
+    $is_blocked  = (bool) $account->isBlocked();
+    if ($was_blocked !== $is_blocked) {
+      $event = $is_blocked ? 'user.block' : 'user.unblock';
+      $audit->log($event, '@action user "@name" (uid:@uid)', [
+        '@action' => $is_blocked ? 'Blocked' : 'Unblocked',
+        '@name'   => $account->getDisplayName(),
+        '@uid'    => $account->id(),
+      ]);
+      return;
+    }
+  }
+
+  $audit->log('user.update', 'Updated user "@name" (uid:@uid)', [
+    '@name' => $account->getDisplayName(),
+    '@uid'  => $account->id(),
+  ]);
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function zu_admin_user_delete(UserInterface $account): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('user.delete', 'Deleted user "@name" (uid:@uid)', [
+    '@name' => $account->getDisplayName(),
+    '@uid'  => $account->id(),
+  ]);
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function zu_admin_user_cancel(array $edit, UserInterface $account, string $method): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('user.cancel', 'Account cancellation (@method) for "@name" (uid:@uid)', [
+    '@method' => $method,
+    '@name'   => $account->getDisplayName(),
+    '@uid'    => $account->id(),
+  ]);
+}
+
+// ── Taxonomy events ──────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function zu_admin_taxonomy_term_insert(EntityInterface $term): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('taxonomy.create', 'Created taxonomy term "@name" in @vocab (tid:@tid)', [
+    '@name'  => $term->label(),
+    '@vocab' => $term->bundle(),
+    '@tid'   => $term->id(),
+  ]);
+}
+
+/**
+ * Implements hook_taxonomy_term_update().
+ */
+function zu_admin_taxonomy_term_update(EntityInterface $term): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('taxonomy.update', 'Updated taxonomy term "@name" in @vocab (tid:@tid)', [
+    '@name'  => $term->label(),
+    '@vocab' => $term->bundle(),
+    '@tid'   => $term->id(),
+  ]);
+}
+
+/**
+ * Implements hook_taxonomy_term_delete().
+ */
+function zu_admin_taxonomy_term_delete(EntityInterface $term): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('taxonomy.delete', 'Deleted taxonomy term "@name" from @vocab (tid:@tid)', [
+    '@name'  => $term->label(),
+    '@vocab' => $term->bundle(),
+    '@tid'   => $term->id(),
+  ]);
+}
+
+// ── Media events ─────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_media_insert().
+ */
+function zu_admin_media_insert(EntityInterface $media): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('media.create', 'Uploaded media "@name" (type:@type, mid:@mid)', [
+    '@name' => $media->label(),
+    '@type' => $media->bundle(),
+    '@mid'  => $media->id(),
+  ]);
+}
+
+/**
+ * Implements hook_media_update().
+ */
+function zu_admin_media_update(EntityInterface $media): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('media.update', 'Updated media "@name" (type:@type, mid:@mid)', [
+    '@name' => $media->label(),
+    '@type' => $media->bundle(),
+    '@mid'  => $media->id(),
+  ]);
+}
+
+/**
+ * Implements hook_media_delete().
+ */
+function zu_admin_media_delete(EntityInterface $media): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('media.delete', 'Deleted media "@name" (type:@type, mid:@mid)', [
+    '@name' => $media->label(),
+    '@type' => $media->bundle(),
+    '@mid'  => $media->id(),
+  ]);
+}
+
+// ── Config events ─────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_config_save().
+ *
+ * Records every configuration save except transient/noisy ones.
+ */
+function zu_admin_config_save(\Drupal\Core\Config\Config $config): void {
+  // Skip high-frequency system configs that would flood the log.
+  $skip_prefixes = ['system.cron', 'dblog.', 'update.', 'automated_cron.'];
+  foreach ($skip_prefixes as $prefix) {
+    if (str_starts_with($config->getName(), $prefix)) {
+      return;
+    }
+  }
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('config.save', 'Config saved: @name', ['@name' => $config->getName()]);
+}
+
+/**
+ * Implements hook_config_delete().
+ */
+function zu_admin_config_delete(\Drupal\Core\Config\Config $config): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('config.delete', 'Config deleted: @name', ['@name' => $config->getName()]);
+}
+
+// ── File events ───────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_file_insert().
+ */
+function zu_admin_file_insert(EntityInterface $file): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('file.upload', 'File uploaded: "@filename" (fid:@fid)', [
+    '@filename' => $file->label(),
+    '@fid'      => $file->id(),
+  ]);
+}
+
+/**
+ * Implements hook_file_delete().
+ */
+function zu_admin_file_delete(EntityInterface $file): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('file.delete', 'File deleted: "@filename" (fid:@fid)', [
+    '@filename' => $file->label(),
+    '@fid'      => $file->id(),
+  ]);
+}
+
+// ── Comment events ────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_comment_insert().
+ */
+function zu_admin_comment_insert(EntityInterface $comment): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('comment.create', 'Comment posted on nid:@nid (cid:@cid)', [
+    '@nid' => $comment->get('entity_id')->target_id ?? '?',
+    '@cid' => $comment->id(),
+  ]);
+}
+
+/**
+ * Implements hook_comment_delete().
+ */
+function zu_admin_comment_delete(EntityInterface $comment): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('comment.delete', 'Comment deleted from nid:@nid (cid:@cid)', [
+    '@nid' => $comment->get('entity_id')->target_id ?? '?',
+    '@cid' => $comment->id(),
+  ]);
+}
+
+// ── System events ─────────────────────────────────────────────────────────────
+
+/**
+ * Implements hook_modules_installed().
+ */
+function zu_admin_modules_installed(array $modules): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('system.module_enable', 'Modules enabled: @modules', [
+    '@modules' => implode(', ', $modules),
+  ]);
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function zu_admin_modules_uninstalled(array $modules): void {
+  if (!($audit = _zu_admin_audit())) return;
+  $audit->log('system.module_disable', 'Modules uninstalled: @modules', [
+    '@modules' => implode(', ', $modules),
+  ]);
+}

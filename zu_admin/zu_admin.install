@@ -1,0 +1,270 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ZU Admin module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function zu_admin_schema() {
+  $schema['zu_admin_groups'] = [
+    'description' => 'Stores information about ZU Admin groups.',
+    'fields' => [
+      'gid' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'group_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'starting_page' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+      ],
+      'base_folder' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+      ],
+      'asset_factory_container' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+      ],
+      'css_classes' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+      ],
+      'wysiwyg_options' => [
+        'type' => 'blob',
+        'size' => 'big',
+        'description' => 'Serialized array of WYSIWYG options.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['gid'],
+    'unique keys' => [
+      'group_name' => ['group_name'],
+    ],
+  ];
+
+  $schema['zu_admin_group_users'] = [
+    'description' => 'Maps users to groups.',
+    'fields' => [
+      'gid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['gid', 'uid'],
+    'indexes' => [
+      'uid' => ['uid'],
+    ],
+  ];
+
+  $schema['zu_admin_group_roles'] = [
+    'description' => 'Maps roles to groups.',
+    'fields' => [
+      'gid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'role' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['gid', 'role'],
+  ];
+
+  $schema['zu_admin_audit_log'] = [
+    'description' => 'Stores audit log entries.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'event_type' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'ip_address' => [
+        'type' => 'varchar',
+        'length' => 45,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'event_type' => ['event_type'],
+      'uid' => ['uid'],
+      'timestamp' => ['timestamp'],
+    ],
+  ];
+
+  $schema['zu_admin_notifications'] = [
+    'description' => 'Stores system notifications.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'message' => [
+        'type' => 'text',
+        'not null' => TRUE,
+      ],
+      'link' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+      ],
+      'is_read' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'uid_read' => ['uid', 'is_read'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Add zu_user_activity_log, zu_announcement, zu_sso_session tables.
+ */
+function zu_admin_update_10001(): void {
+  $schema = \Drupal::database()->schema();
+
+  if (!$schema->tableExists('zu_user_activity_log')) {
+    $schema->createTable('zu_user_activity_log', [
+      'description' => 'Granular per-user activity log for analytics and audit.',
+      'fields' => [
+        'id'          => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'uid'         => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'public_uid'  => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'action'      => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'entity_type' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'entity_id'   => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'url'         => ['type' => 'varchar', 'length' => 2048, 'default' => ''],
+        'ip'          => ['type' => 'varchar', 'length' => 45, 'not null' => TRUE, 'default' => ''],
+        'user_agent'  => ['type' => 'varchar', 'length' => 512, 'default' => ''],
+        'site_id'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'created'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'uid'         => ['uid'],
+        'action'      => ['action'],
+        'entity'      => ['entity_type', 'entity_id'],
+        'created'     => ['created'],
+      ],
+    ]);
+  }
+
+  if (!$schema->tableExists('zu_announcement')) {
+    $schema->createTable('zu_announcement', [
+      'description' => 'University-wide and site-specific announcements.',
+      'fields' => [
+        'id'          => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'title'       => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'body'        => ['type' => 'text'],
+        'type'        => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'info'],
+        'audience'    => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'all'],
+        'site_id'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'status'      => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+        'start_date'  => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'end_date'    => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'created_by'  => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'created'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'updated'     => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'site_status' => ['site_id', 'status'],
+        'dates'       => ['start_date', 'end_date'],
+      ],
+    ]);
+  }
+
+  if (!$schema->tableExists('zu_sso_session')) {
+    $schema->createTable('zu_sso_session', [
+      'description' => 'Active Directory / SSO session tracking.',
+      'fields' => [
+        'id'             => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'uid'            => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'session_token'  => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+        'ad_session_id'  => ['type' => 'varchar', 'length' => 255, 'default' => ''],
+        'ip'             => ['type' => 'varchar', 'length' => 45, 'not null' => TRUE, 'default' => ''],
+        'user_agent'     => ['type' => 'varchar', 'length' => 512, 'default' => ''],
+        'expires'        => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'created'        => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'session_token' => ['session_token'],
+      ],
+      'indexes' => [
+        'uid'     => ['uid'],
+        'expires' => ['expires'],
+      ],
+    ]);
+  }
+}

@@ -31,7 +31,7 @@ class UserController extends ControllerBase
   {
     $this->password = $password;
     $this->mailManager = $mail_manager;
-    $this->secret = Constants::JWT_SECRET;
+    $this->secret = Constants::jwtSecret();
     $this->algo = Constants::JWT_ALGO;
   }
 
@@ -249,7 +249,7 @@ class UserController extends ControllerBase
       'user_id' => $user->id(),
       'exp' => time() + Constants::ACCESS_TOKEN_LIFETIME,
     ];
-    $access_token = \Firebase\JWT\JWT::encode($access_payload, Constants::JWT_SECRET, Constants::JWT_ALGO);
+    $access_token = \Firebase\JWT\JWT::encode($access_payload, Constants::jwtSecret(), Constants::JWT_ALGO);
     $refresh_token = bin2hex(random_bytes(32));
 
     \Drupal::database()->insert('zu_refresh_tokens')->fields([

@@ -47,7 +47,7 @@ class PreviewTokenController extends ControllerBase {
       'type' => 'preview',
     ];
 
-    $token = JWT::encode($payload, Constants::JWT_SECRET, Constants::JWT_ALGO);
+    $token = JWT::encode($payload, Constants::jwtSecret(), Constants::JWT_ALGO);
 
     $react_base = \Drupal::config('zu_rest_api.settings')->get('react_base_url') ?? '';
     $preview_url = rtrim($react_base, '/') . "/preview?token={$token}&nid={$nid}";
@@ -70,7 +70,7 @@ class PreviewTokenController extends ControllerBase {
     }
 
     try {
-      $decoded = \Firebase\JWT\JWT::decode($token, new \Firebase\JWT\Key(Constants::JWT_SECRET, Constants::JWT_ALGO));
+      $decoded = \Firebase\JWT\JWT::decode($token, new \Firebase\JWT\Key(Constants::jwtSecret(), Constants::JWT_ALGO));
     }
     catch (\Exception $e) {
       return new JsonResponse(['status' => Constants::ERROR, 'message' => 'Invalid or expired preview token.'], 401);
