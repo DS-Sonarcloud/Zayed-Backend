@@ -1,0 +1,16 @@
+{# AEGov Design System — Range Slider Component #}
+<div class="aegov-form-group">
+  <label for="range-{{ data.name }}" class="aegov-label">
+    {{ data.label }}
+    {% if data.show_value %}<output id="range-{{ data.name }}-output">{{ data.value|default(50) }}</output>{% endif %}
+  </label>
+  <input type="range"
+    id="range-{{ data.name }}"
+    name="{{ data.name }}"
+    class="aegov-range"
+    min="{{ data.min|default(0) }}"
+    max="{{ data.max|default(100) }}"
+    step="{{ data.step|default(1) }}"
+    value="{{ data.value|default(50) }}"
+    {% if data.show_value %}oninput="document.getElementById('range-{{ data.name }}-output').value=this.value"{% endif %}>
+</div>

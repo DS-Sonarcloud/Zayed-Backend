@@ -1,0 +1,15 @@
+{# AEGov Design System — Content Block #}
+{% set bg_map = { 'light': 'background-color:#f8f9fa', 'gold': 'background-color:#fdf8e7', 'dark': 'background-color:#1a1a2e;color:#fff' } %}
+{% set bg_style = bg_map[data.background] ?? '' %}
+<section class="aegov-content"{% if bg_style %} style="{{ bg_style }}"{% endif %}>
+  <div class="aegov-content__container">
+    {% if data.title %}<h2 class="aegov-content__title">{{ data.title }}</h2>{% endif %}
+    {% if data.subtitle %}<p class="aegov-content__subtitle">{{ data.subtitle }}</p>{% endif %}
+    {% if data.image %}
+      <figure class="aegov-content__image">
+        <img src="{{ data.image }}" alt="{{ data.image_alt|default('') }}" loading="lazy">
+      </figure>
+    {% endif %}
+    <div class="aegov-content__body">{{ data.body|raw }}</div>
+  </div>
+</section>

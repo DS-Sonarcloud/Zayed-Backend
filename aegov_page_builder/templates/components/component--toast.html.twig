@@ -1,0 +1,7 @@
+{# AEGov Design System — Toast Component #}
+<div class="aegov-toast-container aegov-toast-container--{{ data.position|default('top-right') }}">
+  <div class="aegov-toast aegov-toast--{{ data.type|default('success') }}" role="alert" data-duration="{{ data.duration|default(3000) }}">
+    <span class="aegov-toast__message">{{ data.message }}</span>
+    <button class="aegov-toast__close" aria-label="{{ 'Close'|t }}">&times;</button>
+  </div>
+</div>

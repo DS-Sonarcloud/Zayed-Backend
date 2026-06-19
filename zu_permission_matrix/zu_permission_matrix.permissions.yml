@@ -1,4 +1,0 @@
-administer permission groups:
-  title: 'Administer permission groups'
-  description: 'Create, edit, delete permission groups and assign them to roles.'
-  restrict access: true

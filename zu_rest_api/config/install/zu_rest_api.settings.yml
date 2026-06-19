@@ -1,4 +1,0 @@
-secure_token: 'ZXcvbnmQWERTY1234567890securetoken'
-# JWT signing secret — override this in settings.php, never commit the real value.
-# $config['zu_rest_api.settings']['jwt_secret'] = 'your-64-char-hex-secret';
-jwt_secret: ''

@@ -1,0 +1,4 @@
+administer aegov page builder:
+  title: 'Administer AEGov Page Builder'
+  description: 'Create, edit, export and delete pages in the AEGov Page Builder.'
+  restrict access: true

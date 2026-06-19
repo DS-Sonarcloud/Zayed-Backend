@@ -1,0 +1,15 @@
+{# AEGov Design System — Page Rating Block #}
+<section class="aegov-page-rating">
+  <div class="aegov-page-rating__container">
+    <p class="aegov-page-rating__question">{{ data.title|default('Was this page helpful?') }}</p>
+    <div class="aegov-page-rating__buttons">
+      <button class="aegov-btn aegov-btn--outline aegov-page-rating__btn" data-value="yes">{{ data.yes_text|default('Yes') }}</button>
+      <button class="aegov-btn aegov-btn--outline aegov-page-rating__btn" data-value="no">{{ data.no_text|default('No') }}</button>
+    </div>
+    <form class="aegov-page-rating__feedback" style="display:none;" onsubmit="return false;">
+      <textarea class="aegov-textarea" placeholder="{{ data.feedback_placeholder|default('Tell us how we can improve...') }}" rows="3"></textarea>
+      <button type="submit" class="aegov-btn aegov-btn--primary">{{ data.submit_text|default('Submit Feedback') }}</button>
+    </form>
+    <p class="aegov-page-rating__thanks" style="display:none;">{{ data.success_message|default('Thank you for your feedback!') }}</p>
+  </div>
+</section>

@@ -1,0 +1,10 @@
+name: 'AEGov Page Builder'
+type: module
+description: 'Visual page builder using the UAE Government Design System components. Exports complete HTML/Twig/CSS/JS pages.'
+package: 'AEGov'
+core_version_requirement: ^11
+dependencies:
+  - drupal:block
+  - drupal:node
+  - drupal:field
+  - drupal:views

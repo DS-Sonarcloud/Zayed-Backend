@@ -1,8 +1,0 @@
-name: 'Public User'
-type: module
-description: 'Provides a public user entity type separate from Drupal core users.'
-core_version_requirement: ^11
-package: Custom
-dependencies:
-  - user
-  - drupal:system

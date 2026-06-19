@@ -1,0 +1,15 @@
+{# AEGov Design System — Date Pattern #}
+{% if data.mode == 'display' %}
+  <time class="aegov-date" datetime="{{ data.value }}">{{ data.value }}</time>
+{% else %}
+  <div class="aegov-form-group">
+    <label for="date-field" class="aegov-label">
+      {{ data.label|default('Date') }}
+      {% if data.required %}<span class="aegov-required" aria-hidden="true">*</span>{% endif %}
+    </label>
+    <input type="date" id="date-field" name="date" class="aegov-input"
+      {% if data.min_date %}min="{{ data.min_date }}"{% endif %}
+      {% if data.max_date %}max="{{ data.max_date }}"{% endif %}
+      {% if data.required %}required{% endif %}>
+  </div>
+{% endif %}

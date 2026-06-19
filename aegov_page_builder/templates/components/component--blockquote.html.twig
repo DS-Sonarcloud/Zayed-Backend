@@ -1,0 +1,11 @@
+{# AEGov Design System — Blockquote Component #}
+<blockquote class="aegov-blockquote">
+  <p class="aegov-blockquote__text">{{ data.quote }}</p>
+  <footer class="aegov-blockquote__attribution">
+    {% if data.author_image %}<img src="{{ data.author_image }}" alt="{{ data.author }}" class="aegov-blockquote__author-img">{% endif %}
+    <div>
+      <cite class="aegov-blockquote__author">{{ data.author }}</cite>
+      {% if data.author_title %}<span class="aegov-blockquote__author-title">{{ data.author_title }}</span>{% endif %}
+    </div>
+  </footer>
+</blockquote>

@@ -1,0 +1,8 @@
+{# AEGov Design System — Toggle Component #}
+<div class="aegov-toggle aegov-toggle--{{ data.size|default('md') }}">
+  <input type="checkbox" id="toggle-{{ data.name }}" name="{{ data.name }}" role="switch"
+    {% if data.checked %}checked{% endif %}
+    {% if data.disabled %}disabled{% endif %}>
+  <label for="toggle-{{ data.name }}">{{ data.label }}</label>
+  {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+</div>

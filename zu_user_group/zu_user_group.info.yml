@@ -1,8 +1,0 @@
-name: 'ZU User Group'
-type: module
-description: 'Provides a custom content entity for managing user groups.'
-package: Custom
-core_version_requirement: ^10 || ^11
-dependencies:
-  - drupal:user
-  - zu_public_user:zu_public_user

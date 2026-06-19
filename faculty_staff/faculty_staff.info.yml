@@ -1,5 +1,0 @@
-name: "Faculty Staff"
-type: module
-description: "Provides faculty staff functionality across the site."
-core_version_requirement: ^10 || ^11
-package: Custom

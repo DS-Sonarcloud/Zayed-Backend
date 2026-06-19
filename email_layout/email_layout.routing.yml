@@ -1,7 +1,0 @@
-email_layout.bulk_form:
-  path: '/admin/email-layout/send'
-  defaults:
-    _form: '\Drupal\email_layout\Form\EmailLayoutBulkSendForm'
-    _title: 'Send Email Template'
-  requirements:
-    _permission: 'administer users'

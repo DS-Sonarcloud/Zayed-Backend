@@ -1,0 +1,14 @@
+{# AEGov Design System — Textarea Component #}
+<div class="aegov-form-group">
+  <label for="textarea-{{ data.name }}" class="aegov-label">{{ data.label }}</label>
+  <textarea
+    id="textarea-{{ data.name }}"
+    name="{{ data.name }}"
+    class="aegov-textarea"
+    rows="{{ data.rows|default(4) }}"
+    placeholder="{{ data.placeholder|default('') }}"
+    {% if data.required %}required{% endif %}
+    {% if data.disabled %}disabled{% endif %}
+    {% if data.max_length %}maxlength="{{ data.max_length }}"{% endif %}></textarea>
+  {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+</div>

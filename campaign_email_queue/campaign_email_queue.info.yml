@@ -1,5 +1,0 @@
-name: "Campaign Email Queue"
-type: module
-description: "Enterprise-grade email marketing platform with queue-based processing, real-time monitoring dashboard, comprehensive analytics, detailed email tracking, REST API endpoints, and batch processing. Track every email sent with status, timing, and error logging."
-core_version_requirement: ^10 || ^11
-package: Custom

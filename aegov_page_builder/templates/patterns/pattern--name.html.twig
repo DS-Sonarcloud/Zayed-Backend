@@ -1,0 +1,46 @@
+{# AEGov Design System — Name Pattern #}
+{% if data.mode == 'display' %}
+  <div class="aegov-name">{{ data.value }}</div>
+{% else %}
+  <fieldset class="aegov-pattern-name">
+    <legend class="aegov-label">{{ data.label|default('Full Name') }}</legend>
+    <div class="aegov-pattern-name__fields">
+      {% if data.show_title %}
+        <div class="aegov-form-group">
+          <label class="aegov-label">{{ 'Title'|t }}</label>
+          <select class="aegov-select" name="name_title">
+            {% for t in ['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Eng.', 'H.E.'] %}
+              <option>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'First Name'|t }}{% if data.required %}<span class="aegov-required">*</span>{% endif %}</label>
+        <input type="text" name="first_name" class="aegov-input" placeholder="{{ 'First name'|t }}"{% if data.required %} required{% endif %}>
+      </div>
+      {% if data.show_middle_name %}
+        <div class="aegov-form-group">
+          <label class="aegov-label">{{ 'Middle Name'|t }}</label>
+          <input type="text" name="middle_name" class="aegov-input" placeholder="{{ 'Middle name'|t }}">
+        </div>
+      {% endif %}
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'Last Name'|t }}{% if data.required %}<span class="aegov-required">*</span>{% endif %}</label>
+        <input type="text" name="last_name" class="aegov-input" placeholder="{{ 'Last name'|t }}"{% if data.required %} required{% endif %}>
+      </div>
+    </div>
+    {% if data.bilingual %}
+      <div class="aegov-name__arabic" dir="rtl">
+        <div class="aegov-form-group">
+          <label class="aegov-label">الاسم الأول</label>
+          <input type="text" name="first_name_ar" class="aegov-input" placeholder="الاسم الأول" lang="ar">
+        </div>
+        <div class="aegov-form-group">
+          <label class="aegov-label">اسم العائلة</label>
+          <input type="text" name="last_name_ar" class="aegov-input" placeholder="اسم العائلة" lang="ar">
+        </div>
+      </div>
+    {% endif %}
+  </fieldset>
+{% endif %}

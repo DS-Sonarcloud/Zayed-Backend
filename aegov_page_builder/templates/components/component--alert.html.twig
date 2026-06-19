@@ -1,0 +1,10 @@
+{# AEGov Design System — Alert Component #}
+{% set icons = { 'info': 'ℹ', 'success': '✓', 'warning': '⚠', 'danger': '✕' } %}
+<div class="aegov-alert aegov-alert--{{ data.type|default('info') }}" role="alert">
+  {% if data.icon %}<span class="aegov-alert__icon" aria-hidden="true">{{ icons[data.type|default('info')] }}</span>{% endif %}
+  <div class="aegov-alert__body">
+    {% if data.title %}<strong class="aegov-alert__title">{{ data.title }}</strong>{% endif %}
+    <p class="aegov-alert__message">{{ data.message }}</p>
+  </div>
+  {% if data.dismissible %}<button class="aegov-alert__dismiss" aria-label="{{ 'Dismiss'|t }}">&times;</button>{% endif %}
+</div>

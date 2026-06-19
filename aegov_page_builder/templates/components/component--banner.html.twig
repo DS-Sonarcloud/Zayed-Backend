@@ -1,0 +1,8 @@
+{# AEGov Design System — Banner Component #}
+<div class="aegov-banner aegov-banner--{{ data.type|default('info') }}" role="banner">
+  <div class="aegov-banner__content">
+    {{ data.message }}
+    {% if data.link_text %}<a href="{{ data.link_url|default('#') }}" class="aegov-banner__link">{{ data.link_text }}</a>{% endif %}
+  </div>
+  {% if data.dismissible %}<button class="aegov-banner__dismiss" aria-label="{{ 'Close'|t }}">&times;</button>{% endif %}
+</div>

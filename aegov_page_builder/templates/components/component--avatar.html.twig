@@ -1,0 +1,9 @@
+{# AEGov Design System — Avatar Component #}
+<div class="aegov-avatar aegov-avatar--{{ data.size|default('md') }}">
+  {% if data.image %}
+    <img src="{{ data.image }}" alt="{{ data.alt|default('') }}">
+  {% else %}
+    <span class="aegov-avatar__initials">{{ data.initials|default('AE') }}</span>
+  {% endif %}
+  {% if data.status %}<span class="aegov-avatar__status aegov-avatar__status--{{ data.status }}"></span>{% endif %}
+</div>

@@ -1,0 +1,11 @@
+{# AEGov Design System — Checkbox Component #}
+<div class="aegov-form-group">
+  <div class="aegov-checkbox">
+    <input type="checkbox" id="checkbox-{{ data.name }}" name="{{ data.name }}"
+      {% if data.checked %}checked{% endif %}
+      {% if data.disabled %}disabled{% endif %}
+      {% if data.required %}required{% endif %}>
+    <label for="checkbox-{{ data.name }}">{{ data.label }}</label>
+  </div>
+  {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+</div>

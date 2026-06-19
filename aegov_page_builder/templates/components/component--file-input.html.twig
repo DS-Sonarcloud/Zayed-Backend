@@ -1,0 +1,12 @@
+{# AEGov Design System — File Input Component #}
+<div class="aegov-form-group">
+  <label for="file-{{ data.name }}" class="aegov-label">{{ data.label }}</label>
+  <input type="file"
+    id="file-{{ data.name }}"
+    name="{{ data.name }}"
+    class="aegov-file-input"
+    {% if data.accept %}accept="{{ data.accept }}"{% endif %}
+    {% if data.multiple %}multiple{% endif %}
+    {% if data.required %}required{% endif %}>
+  {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+</div>

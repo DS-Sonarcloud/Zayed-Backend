@@ -1,0 +1,24 @@
+{# AEGov Design System — Tabs Component #}
+<div class="aegov-tabs aegov-tabs--{{ data.variant|default('default') }}">
+  <div class="aegov-tabs__list" role="tablist">
+    {% for i, tab in data.tabs %}
+      <button class="aegov-tabs__tab{% if tab.active or i == 0 %} aegov-tabs__tab--active{% endif %}"
+        role="tab"
+        aria-selected="{{ (tab.active or i == 0) ? 'true' : 'false' }}"
+        aria-controls="panel-tab-{{ i }}"
+        id="tab-{{ i }}">
+        {{ tab.label }}
+      </button>
+    {% endfor %}
+  </div>
+  <div class="aegov-tabs__panels">
+    {% for i, tab in data.tabs %}
+      <div class="aegov-tabs__panel{% if tab.active or i == 0 %} aegov-tabs__panel--active{% endif %}"
+        role="tabpanel"
+        id="panel-tab-{{ i }}"
+        aria-labelledby="tab-{{ i }}">
+        {{ tab.content }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

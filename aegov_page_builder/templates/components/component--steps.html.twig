@@ -1,0 +1,16 @@
+{# AEGov Design System — Steps Component #}
+<ol class="aegov-steps aegov-steps--{{ data.orientation|default('horizontal') }}">
+  {% for i, step in data.steps %}
+    <li class="aegov-steps__item aegov-steps__item--{{ step.status|default('pending') }}">
+      <div class="aegov-steps__indicator">
+        <span class="aegov-steps__icon">
+          {% if step.status == 'completed' %}&#10003;{% else %}{{ i + 1 }}{% endif %}
+        </span>
+      </div>
+      <div class="aegov-steps__content">
+        <span class="aegov-steps__label">{{ step.label }}</span>
+        {% if step.description %}<span class="aegov-steps__desc">{{ step.description }}</span>{% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ol>

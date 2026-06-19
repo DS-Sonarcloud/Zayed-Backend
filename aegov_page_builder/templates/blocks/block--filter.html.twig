@@ -1,0 +1,28 @@
+{# AEGov Design System — Filter Block #}
+<section class="aegov-filter">
+  <div class="aegov-filter__container">
+    {% if data.title %}<h2 class="aegov-filter__title">{{ data.title }}</h2>{% endif %}
+    <form class="aegov-filter__form" onsubmit="return false;">
+      {% if data.show_search %}
+        <div class="aegov-filter__search">
+          <input type="search" class="aegov-input" placeholder="{{ 'Search...'|t }}" aria-label="{{ 'Search'|t }}">
+        </div>
+      {% endif %}
+      <div class="aegov-filter__groups">
+        {% for group in data.filter_groups %}
+          <div class="aegov-filter__group">
+            <select class="aegov-select" name="{{ group.name }}">
+              <option value="">{{ group.label }}</option>
+              {% set options = group.options|json_decode %}
+              {% for opt in options %}
+                <option value="{{ opt.value }}">{{ opt.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="aegov-btn aegov-btn--primary">{{ 'Apply Filters'|t }}</button>
+      <button type="reset" class="aegov-btn aegov-btn--outline">{{ 'Reset'|t }}</button>
+    </form>
+  </div>
+</section>

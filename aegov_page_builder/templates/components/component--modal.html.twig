@@ -1,0 +1,25 @@
+{# AEGov Design System — Modal Component #}
+<button class="aegov-btn aegov-btn--primary" data-modal-target="{{ data.modal_id|default('modal-1') }}">
+  {{ data.trigger_text|default('Open Modal') }}
+</button>
+<div class="aegov-modal aegov-modal--{{ data.size|default('md') }}"
+  id="{{ data.modal_id|default('modal-1') }}"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="{{ data.modal_id|default('modal-1') }}-title"
+  hidden>
+  <div class="aegov-modal__backdrop aegov-modal__close"></div>
+  <div class="aegov-modal__dialog">
+    <header class="aegov-modal__header">
+      <h2 id="{{ data.modal_id|default('modal-1') }}-title" class="aegov-modal__title">{{ data.title }}</h2>
+      <button class="aegov-modal__close-btn aegov-modal__close" aria-label="{{ 'Close'|t }}">&times;</button>
+    </header>
+    <div class="aegov-modal__body">{{ data.content }}</div>
+    {% if data.footer_actions %}
+      <footer class="aegov-modal__footer">
+        <button class="aegov-btn aegov-btn--primary">{{ data.confirm_text|default('Confirm') }}</button>
+        <button class="aegov-btn aegov-btn--outline aegov-modal__close">{{ data.cancel_text|default('Cancel') }}</button>
+      </footer>
+    {% endif %}
+  </div>
+</div>

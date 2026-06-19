@@ -1,0 +1,10 @@
+{# AEGov Design System — Navigation Component #}
+<nav class="aegov-nav aegov-nav--{{ data.variant|default('horizontal') }}" aria-label="{{ 'Navigation'|t }}">
+  <ul class="aegov-nav__list">
+    {% for item in data.items %}
+      <li class="aegov-nav__item">
+        <a href="{{ item.url|default('/') }}" class="aegov-nav__link"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

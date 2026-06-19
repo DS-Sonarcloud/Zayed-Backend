@@ -1,0 +1,40 @@
+{# AEGov Design System — Address Pattern #}
+{% if data.mode == 'display' %}
+  <address class="aegov-address">
+    {% if data.building %}{{ data.building }}, {% endif %}
+    {% if data.street %}{{ data.street }}, {% endif %}
+    {% if data.area %}{{ data.area }}, {% endif %}
+    {% if data.emirate %}{{ data.emirate }}{% endif %}
+    {% if data.po_box %}<br>P.O. Box {{ data.po_box }}{% endif %}
+  </address>
+{% else %}
+  <fieldset class="aegov-pattern-address">
+    <legend class="aegov-label">{{ data.label|default('Address') }}</legend>
+    <div class="aegov-pattern-address__fields">
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'Emirate'|t }}</label>
+        <select class="aegov-select" name="emirate"{% if data.required %} required{% endif %}>
+          {% for emirate in ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Umm Al Quwain', 'Fujairah', 'Ras Al Khaimah'] %}
+            <option>{{ emirate }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'Area / District'|t }}</label>
+        <input type="text" class="aegov-input" name="area" placeholder="{{ 'Area'|t }}">
+      </div>
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'Street'|t }}</label>
+        <input type="text" class="aegov-input" name="street" placeholder="{{ 'Street name'|t }}">
+      </div>
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'Building'|t }}</label>
+        <input type="text" class="aegov-input" name="building" placeholder="{{ 'Building name/number'|t }}">
+      </div>
+      <div class="aegov-form-group">
+        <label class="aegov-label">{{ 'P.O. Box'|t }}</label>
+        <input type="text" class="aegov-input" name="po_box" placeholder="{{ 'P.O. Box number'|t }}">
+      </div>
+    </div>
+  </fieldset>
+{% endif %}

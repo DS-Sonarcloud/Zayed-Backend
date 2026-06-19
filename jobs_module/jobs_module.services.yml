@@ -1,3 +1,0 @@
-services:
-  jobs_module.access_check:
-    class: Drupal\jobs_module\Access\JobApplicationAccessCheck

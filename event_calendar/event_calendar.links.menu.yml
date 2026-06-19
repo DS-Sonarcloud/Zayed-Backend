@@ -1,6 +1,0 @@
-event_calendar.firebase_settings:
-  title: 'Firebase Settings'
-  description: 'Configure Firebase FCM credentials for Event Calendar.'
-  parent: system.admin_config_system
-  route_name: event_calendar.firebase_settings
-  weight: 100

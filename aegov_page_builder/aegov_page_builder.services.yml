@@ -1,0 +1,6 @@
+services:
+  aegov_page_builder.page_exporter:
+    class: Drupal\aegov_page_builder\Service\PageExporter
+    arguments:
+      - '@file_system'
+      - '@module_handler'

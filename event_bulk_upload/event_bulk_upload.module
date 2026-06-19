@@ -1,9 +1,0 @@
-<?php
-
-/**
- * Implements hook_file_mimetype_mapping_alter().
- */
-function event_bulk_upload_file_mimetype_mapping_alter(&$mapping)
-{
-    $mapping['extensions']['csv'] = 'text/csv';
-}

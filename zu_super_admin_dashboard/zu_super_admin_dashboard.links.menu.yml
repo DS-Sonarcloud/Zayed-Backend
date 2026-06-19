@@ -1,7 +1,0 @@
-zu_super_admin_dashboard.dashboard:
-  title: 'Super Admin Dashboard'
-  route_name: zu_super_admin_dashboard.dashboard
-  parent: system.admin_content
-  description: 'Platform overview, quick links, and super-admin requirements'
-  menu_name: admin
-  weight: 5

@@ -1,0 +1,15 @@
+{# AEGov Design System — Dropdown Component #}
+<div class="aegov-dropdown" data-placement="{{ data.placement|default('bottom') }}">
+  <button class="aegov-btn aegov-btn--outline aegov-dropdown__trigger" aria-haspopup="true" aria-expanded="false">
+    {{ data.trigger_text|default('Options') }}
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+  <ul class="aegov-dropdown__menu" role="menu" hidden>
+    {% for item in data.items %}
+      <li role="none">
+        <a href="{{ item.url|default('#') }}" class="aegov-dropdown__item" role="menuitem">{{ item.label }}</a>
+      </li>
+      {% if item.divider %}<li role="separator" class="aegov-dropdown__divider"></li>{% endif %}
+    {% endfor %}
+  </ul>
+</div>

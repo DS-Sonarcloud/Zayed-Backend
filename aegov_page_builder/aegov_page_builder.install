@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall hooks for AEGov Page Builder.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function aegov_page_builder_install() {
+  // Create exported-pages directory.
+  $dir = DRUPAL_ROOT . '/exported-pages';
+  if (!file_exists($dir)) {
+    mkdir($dir, 0775, TRUE);
+    file_put_contents($dir . '/.htaccess', "Options -Indexes\n");
+  }
+
+  \Drupal::messenger()->addStatus(t('AEGov Page Builder installed. Go to <a href=":url">Admin → AEGov Page Builder</a> to start building pages.', [
+    ':url' => '/admin/aegov-page-builder',
+  ]));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function aegov_page_builder_uninstall() {
+  \Drupal::state()->delete('aegov_page_builder.pages');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function aegov_page_builder_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'runtime') {
+    $css_path = DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('aegov_page_builder') . '/css/aegov.min.css';
+    if (!file_exists($css_path) || filesize($css_path) < 100) {
+      $requirements['aegov_css'] = [
+        'title' => t('AEGov Design System CSS'),
+        'description' => t('The CSS file is missing or empty. Run <code>npm install && npm run build</code> in the module directory, or the module will use the bundled fallback styles.'),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => t('Missing — using fallback styles'),
+      ];
+    }
+    else {
+      $requirements['aegov_css'] = [
+        'title' => t('AEGov Design System CSS'),
+        'value' => t('OK'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+  }
+
+  return $requirements;
+}

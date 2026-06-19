@@ -1,6 +1,0 @@
-services:
-  short_alias.repository:
-    class: Drupal\short_alias\ShortAliasRepository
-    arguments: ['@entity_type.manager', '@database', '@config.factory']
-    tags:
-      - { name: backend_overridable }

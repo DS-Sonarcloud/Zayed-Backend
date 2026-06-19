@@ -1,0 +1,10 @@
+{# AEGov Design System — Popover Component #}
+<div class="aegov-popover-wrapper">
+  <button class="aegov-btn aegov-btn--outline" data-popover-target="popover-{{ data.modal_id|default('1') }}" data-placement="{{ data.placement|default('top') }}">
+    {{ data.trigger_text|default('More info') }}
+  </button>
+  <div id="popover-{{ data.modal_id|default('1') }}" class="aegov-popover" role="tooltip" hidden>
+    {% if data.title %}<div class="aegov-popover__title">{{ data.title }}</div>{% endif %}
+    <div class="aegov-popover__content">{{ data.content }}</div>
+  </div>
+</div>

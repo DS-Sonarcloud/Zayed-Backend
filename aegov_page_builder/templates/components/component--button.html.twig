@@ -1,0 +1,11 @@
+{# AEGov Design System — Button Component #}
+{% set tag = (data.url and data.url != '#' and data.type == 'button') ? 'a' : 'button' %}
+{% if tag == 'a' %}
+<a href="{{ data.url|default('#') }}" class="aegov-btn aegov-btn--{{ data.variant|default('primary') }} aegov-btn--{{ data.size|default('md') }}{% if data.full_width %} aegov-btn--full{% endif %}"{% if data.disabled %} aria-disabled="true"{% endif %}>
+  {{ data.text|default('Button') }}
+</a>
+{% else %}
+<button type="{{ data.type|default('button') }}" class="aegov-btn aegov-btn--{{ data.variant|default('primary') }} aegov-btn--{{ data.size|default('md') }}{% if data.full_width %} aegov-btn--full{% endif %}"{% if data.disabled %} disabled{% endif %}>
+  {{ data.text|default('Button') }}
+</button>
+{% endif %}

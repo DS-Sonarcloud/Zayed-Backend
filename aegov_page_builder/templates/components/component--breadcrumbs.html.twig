@@ -1,0 +1,13 @@
+{# AEGov Design System — Breadcrumbs Component #}
+<nav aria-label="{{ 'Breadcrumb'|t }}">
+  <ol class="aegov-breadcrumbs">
+    {% for item in data.items %}
+      <li class="aegov-breadcrumbs__item">
+        <a href="{{ item.url|default('/') }}">{{ item.label }}</a>
+      </li>
+    {% endfor %}
+    <li class="aegov-breadcrumbs__item aegov-breadcrumbs__item--current" aria-current="page">
+      {{ data.current_page }}
+    </li>
+  </ol>
+</nav>

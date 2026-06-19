@@ -1,0 +1,83 @@
+aegov_page_builder.admin:
+  path: '/admin/aegov-page-builder'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::index'
+    _title: 'AEGov Page Builder'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.create:
+  path: '/admin/aegov-page-builder/create'
+  defaults:
+    _form: '\Drupal\aegov_page_builder\Form\PageBuilderForm'
+    _title: 'Create New Page'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.edit:
+  path: '/admin/aegov-page-builder/edit/{page_id}'
+  defaults:
+    _form: '\Drupal\aegov_page_builder\Form\PageBuilderForm'
+    _title: 'Edit Page'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.export:
+  path: '/admin/aegov-page-builder/export/{page_id}'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::export'
+    _title: 'Export Page'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.delete:
+  path: '/admin/aegov-page-builder/delete/{page_id}'
+  defaults:
+    _form: '\Drupal\aegov_page_builder\Form\DeletePageForm'
+    _title: 'Delete Page'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.preview:
+  path: '/admin/aegov-page-builder/preview/{page_id}'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::preview'
+    _title: 'Preview Page'
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.preview_component:
+  path: '/admin/aegov-page-builder/ajax/preview-component'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::previewComponent'
+    _title: 'Preview Component'
+  methods: [POST]
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.content_type_fields:
+  path: '/admin/aegov-page-builder/ajax/content-type-fields'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::getContentTypeFields'
+    _title: 'Content Type Fields'
+  methods: [GET]
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.nodes:
+  path: '/admin/aegov-page-builder/ajax/nodes'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::getNodes'
+    _title: 'Get Nodes'
+  methods: [GET]
+  requirements:
+    _permission: 'administer aegov page builder'
+
+aegov_page_builder.node_fields:
+  path: '/admin/aegov-page-builder/ajax/node-fields'
+  defaults:
+    _controller: '\Drupal\aegov_page_builder\Controller\PageBuilderController::getNodeFields'
+    _title: 'Get Node Field Values'
+  methods: [GET]
+  requirements:
+    _permission: 'administer aegov page builder'

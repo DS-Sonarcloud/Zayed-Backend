@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * AEGov Page Builder module — UAE Government Design System page builder.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function aegov_page_builder_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name === 'help.page.aegov_page_builder') {
+    return '<p>' . t('Build pages using UAE Government Design System components. Export complete HTML/Twig/CSS/JS packages to <code>web/exported-pages/</code>.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function aegov_page_builder_theme($existing, $type, $theme, $path) {
+  $templates = [];
+
+  // Block templates.
+  $blocks = ['hero', 'header', 'footer', 'content', 'filter', 'login', 'newsletter', 'page_rating', 'team'];
+  foreach ($blocks as $block) {
+    $templates['aegov_block_' . $block] = [
+      'variables' => ['data' => [], 'settings' => []],
+      'template' => 'blocks/block--' . str_replace('_', '-', $block),
+      'path' => $path . '/templates',
+    ];
+  }
+
+  // Component templates.
+  $components = [
+    'accordion', 'alert', 'avatar', 'badge', 'banner', 'blockquote',
+    'breadcrumbs', 'button', 'card', 'checkbox', 'dropdown', 'file_input',
+    'hyperlink', 'input', 'modal', 'navigation', 'pagination', 'popover',
+    'radio', 'range_slider', 'select', 'slider', 'steps', 'tabs',
+    'textarea', 'toast', 'toggle', 'tooltip',
+  ];
+  foreach ($components as $component) {
+    $templates['aegov_component_' . $component] = [
+      'variables' => ['data' => [], 'settings' => []],
+      'template' => 'components/component--' . str_replace('_', '-', $component),
+      'path' => $path . '/templates',
+    ];
+  }
+
+  // Pattern templates.
+  $patterns = ['address', 'contact_number', 'currency_symbol', 'date', 'emirates_id', 'name'];
+  foreach ($patterns as $pattern) {
+    $templates['aegov_pattern_' . $pattern] = [
+      'variables' => ['data' => [], 'settings' => []],
+      'template' => 'patterns/pattern--' . str_replace('_', '-', $pattern),
+      'path' => $path . '/templates',
+    ];
+  }
+
+  // Page builder admin UI template.
+  $templates['aegov_page_builder_admin'] = [
+    'variables' => ['pages' => []],
+    'template' => 'page-builder-admin',
+    'path' => $path . '/templates',
+  ];
+
+  return $templates;
+}

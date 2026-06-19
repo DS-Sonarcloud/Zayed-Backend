@@ -1,0 +1,23 @@
+{# AEGov Design System — Pagination Component #}
+{% set total = data.total_pages|default(10)|number_format(0, '.', '') %}
+{% set current = data.current_page|default(1)|number_format(0, '.', '') %}
+{% set base = data.base_url|default('/page/') %}
+<nav aria-label="{{ 'Pagination'|t }}">
+  <ul class="aegov-pagination">
+    {% if data.show_prev_next %}
+      <li class="aegov-pagination__item">
+        <a href="{{ base }}{{ [current - 1, 1]|max }}" class="aegov-pagination__link{% if current == 1 %} aegov-pagination__link--disabled{% endif %}" aria-label="{{ 'Previous'|t }}">&laquo;</a>
+      </li>
+    {% endif %}
+    {% for i in range([current - 2, 1]|max, [current + 2, total]|min) %}
+      <li class="aegov-pagination__item">
+        <a href="{{ base }}{{ i }}" class="aegov-pagination__link{% if i == current %} aegov-pagination__link--active{% endif %}"{% if i == current %} aria-current="page"{% endif %}>{{ i }}</a>
+      </li>
+    {% endfor %}
+    {% if data.show_prev_next %}
+      <li class="aegov-pagination__item">
+        <a href="{{ base }}{{ [current + 1, total]|min }}" class="aegov-pagination__link{% if current == total %} aegov-pagination__link--disabled{% endif %}" aria-label="{{ 'Next'|t }}">&raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>

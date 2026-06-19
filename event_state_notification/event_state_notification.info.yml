@@ -1,9 +1,0 @@
-name: 'Event State Notification'
-type: module
-description: 'Sends email notifications when event content changes its moderation state.'
-core_version_requirement: ^11
-package: Custom
-dependencies:
-  - content_moderation:content_moderation
-  - node:node
-  - user:user

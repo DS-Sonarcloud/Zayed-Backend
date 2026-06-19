@@ -1,8 +1,0 @@
-name: 'Custom Elastic Search'
-type: module
-description: 'Provides an auto-search box block using Elasticsearch.'
-core_version_requirement: ^11
-package: Custom
-dependencies:
-  - drupal:block
-  - zu_search_core:zu_search_core

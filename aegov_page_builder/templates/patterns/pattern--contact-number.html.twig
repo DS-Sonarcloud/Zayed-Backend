@@ -1,0 +1,15 @@
+{# AEGov Design System — Contact Number Pattern #}
+{% if data.mode == 'display' %}
+  <div class="aegov-contact-number">
+    <a href="tel:{{ data.value|replace({' ': ''}) }}">{{ data.value }}</a>
+  </div>
+{% else %}
+  <div class="aegov-form-group">
+    <label for="phone-field" class="aegov-label">{{ data.label|default('Contact Number') }}</label>
+    <div class="aegov-phone-input">
+      <span class="aegov-phone-input__code">{{ data.country_code|default('+971') }}</span>
+      <input type="tel" id="phone-field" name="phone" class="aegov-input"
+        placeholder="XX XXX XXXX" pattern="[0-9 ]{9,11}">
+    </div>
+  </div>
+{% endif %}

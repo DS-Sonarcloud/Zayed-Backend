@@ -1,0 +1,37 @@
+{#
+ * AEGov Design System — Header Block
+#}
+<header class="aegov-header{% if data.sticky %} aegov-header--sticky{% endif %}" role="banner">
+  <div class="aegov-header__container">
+    <a href="/" class="aegov-header__logo">
+      {% if data.logo_url %}
+        <img src="{{ data.logo_url }}" alt="{{ data.logo_alt|default('UAE Government') }}">
+      {% else %}
+        <span class="aegov-header__logo-text">{{ data.logo_alt|default('UAE Government') }}</span>
+      {% endif %}
+    </a>
+    {% if data.site_name %}<span class="aegov-header__site-name">{{ data.site_name }}</span>{% endif %}
+    <nav class="aegov-header__nav" aria-label="{{ 'Main navigation'|t }}">
+      <ul class="aegov-header__nav-list">
+        {% for item in data.nav_items %}
+          <li>
+            <a href="{{ item.url|default('/') }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="aegov-header__utils">
+      {% if data.show_search %}
+        <button class="aegov-header__search-btn" aria-label="{{ 'Search'|t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+        </button>
+      {% endif %}
+      {% if data.show_language_switcher %}
+        <button class="aegov-header__lang-btn">{{ 'عربي' }}</button>
+      {% endif %}
+    </div>
+    <button class="aegov-header__mobile-toggle" aria-label="{{ 'Toggle menu'|t }}" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>

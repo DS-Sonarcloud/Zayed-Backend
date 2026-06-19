@@ -1,0 +1,12 @@
+aegov_page_builder.admin:
+  title: 'AEGov Page Builder'
+  description: 'Build and export pages using UAE Government Design System'
+  route_name: aegov_page_builder.admin
+  parent: system.admin
+  weight: 50
+
+aegov_page_builder.create:
+  title: 'Create New Page'
+  route_name: aegov_page_builder.create
+  parent: aegov_page_builder.admin
+  weight: 10

@@ -1,8 +1,0 @@
-name: 'ZU Personalization'
-type: module
-description: 'Rule-based content personalization — user personas, dynamic rules, per-node content variants.'
-package: Custom
-core_version_requirement: ^10 || ^11
-dependencies:
-  - drupal:node
-  - drupal:user

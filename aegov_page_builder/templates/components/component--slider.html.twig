@@ -1,0 +1,28 @@
+{# AEGov Design System — Slider/Carousel Component #}
+<div class="aegov-slider" data-autoplay="{{ data.autoplay ? 'true' : 'false' }}" data-interval="{{ data.interval|default(4000) }}">
+  <div class="aegov-slider__track">
+    {% for i, item in data.items %}
+      <div class="aegov-slider__slide{% if i == 0 %} aegov-slider__slide--active{% endif %}">
+        {% if item.image %}<img src="{{ item.image }}" alt="{{ item.title|default('') }}" loading="lazy">{% endif %}
+        {% if item.title %}
+          <div class="aegov-slider__caption">
+            <h3>{{ item.title }}</h3>
+            {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+            {% if item.link_text %}<a href="{{ item.link_url|default('#') }}" class="aegov-btn aegov-btn--primary">{{ item.link_text }}</a>{% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  {% if data.show_controls %}
+    <button class="aegov-slider__prev" aria-label="{{ 'Previous'|t }}">&#8249;</button>
+    <button class="aegov-slider__next" aria-label="{{ 'Next'|t }}">&#8250;</button>
+  {% endif %}
+  {% if data.show_indicators %}
+    <div class="aegov-slider__indicators">
+      {% for i, item in data.items %}
+        <button class="aegov-slider__dot{% if i == 0 %} aegov-slider__dot--active{% endif %}" aria-label="{{ 'Go to slide'|t }} {{ i + 1 }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

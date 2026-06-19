@@ -1,8 +1,0 @@
-access zu deploy button:
-  title: 'Access custom deploy button'
-  description: 'Allow users to see and use the custom admin menu.'
-  
-access zu event and redirect deploy button:
-  title: 'zu event and redirect deploy button'
-  description: 'Allows user to access zu event and redirect deploy button.'
-

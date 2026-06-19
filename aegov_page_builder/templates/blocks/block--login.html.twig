@@ -1,0 +1,14 @@
+{# AEGov Design System — Login Block #}
+<section class="aegov-login">
+  <div class="aegov-login__container">
+    <h2 class="aegov-login__title">{{ data.title|default('Sign In') }}</h2>
+    {% if data.description %}<p class="aegov-login__desc">{{ data.description }}</p>{% endif %}
+    <a href="{{ data.uaepass_url|default('#') }}" class="aegov-btn aegov-btn--uaepass">
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="8" fill="#fff"/><text x="4" y="28" font-size="18" font-weight="bold" fill="#00509d">UAE</text></svg>
+      {{ 'Sign in with UAE Pass'|t }}
+    </a>
+    {% if data.show_register %}
+      <p class="aegov-login__register">{{ "Don't have a UAE Pass?"|t }} <a href="https://www.uaepass.ae" target="_blank" rel="noopener">{{ 'Register now'|t }}</a></p>
+    {% endif %}
+  </div>
+</section>

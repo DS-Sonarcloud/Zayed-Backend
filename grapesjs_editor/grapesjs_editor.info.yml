@@ -1,7 +1,0 @@
-name: GrapesJS Editor
-type: module
-description: The GrapesJS Editor module provides a page builder.
-package: Page builder
-core_version_requirement: ^10 || ^11
-dependencies:
-  - drupal:editor

@@ -1,0 +1,15 @@
+{# AEGov Design System — Card Component #}
+<article class="aegov-card aegov-card--{{ data.variant|default('default') }}">
+  {% if data.image %}
+    <figure class="aegov-card__image">
+      <img src="{{ data.image }}" alt="{{ data.image_alt|default('') }}" loading="lazy">
+    </figure>
+  {% endif %}
+  <div class="aegov-card__body">
+    {% if data.badge %}<span class="aegov-badge aegov-badge--primary">{{ data.badge }}</span>{% endif %}
+    <h3 class="aegov-card__title"><a href="{{ data.link_url|default('#') }}">{{ data.title }}</a></h3>
+    {% if data.date %}<time class="aegov-card__date">{{ data.date }}</time>{% endif %}
+    <p class="aegov-card__desc">{{ data.description }}</p>
+    {% if data.link_text %}<a href="{{ data.link_url|default('#') }}" class="aegov-card__link aegov-hyperlink">{{ data.link_text }} &rarr;</a>{% endif %}
+  </div>
+</article>

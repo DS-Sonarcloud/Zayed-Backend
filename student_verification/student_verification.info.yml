@@ -1,7 +1,0 @@
-name: Student Verification
-type: module
-description: "Upload and validate student data with webform."
-core_version_requirement: ^11
-package: Custom
-dependencies:
-  - webform:webform

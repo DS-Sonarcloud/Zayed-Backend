@@ -1,0 +1,13 @@
+{# AEGov Design System — Select Component #}
+<div class="aegov-form-group">
+  <label for="select-{{ data.name }}" class="aegov-label">{{ data.label }}</label>
+  <select id="select-{{ data.name }}" name="{{ data.name }}" class="aegov-select"
+    {% if data.required %}required{% endif %}
+    {% if data.multiple %}multiple{% endif %}>
+    {% if data.placeholder %}<option value="">{{ data.placeholder }}</option>{% endif %}
+    {% for option in data.options %}
+      <option value="{{ option.value }}">{{ option.label }}</option>
+    {% endfor %}
+  </select>
+  {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+</div>

@@ -1,0 +1,16 @@
+{# AEGov Design System — Newsletter Block #}
+{% set bg_map = { 'dark': 'background-color:#1a1a2e;color:#fff', 'light': 'background-color:#f8f9fa', 'gold': 'background-color:#fdf8e7' } %}
+{% set bg_style = bg_map[data.background] ?? '' %}
+<section class="aegov-newsletter"{% if bg_style %} style="{{ bg_style }}"{% endif %}>
+  <div class="aegov-newsletter__container">
+    <h2 class="aegov-newsletter__title">{{ data.title }}</h2>
+    {% if data.description %}<p class="aegov-newsletter__desc">{{ data.description }}</p>{% endif %}
+    <form class="aegov-newsletter__form" onsubmit="return false;">
+      <div class="aegov-newsletter__input-group">
+        <input type="email" placeholder="{{ data.placeholder|default('Enter your email') }}" class="aegov-input aegov-newsletter__email" required aria-label="{{ data.placeholder|default('Email') }}">
+        <button type="submit" class="aegov-btn aegov-btn--primary">{{ data.button_text|default('Subscribe') }}</button>
+      </div>
+      {% if data.privacy_text %}<p class="aegov-newsletter__privacy">{{ data.privacy_text }}</p>{% endif %}
+    </form>
+  </div>
+</section>

@@ -1,5 +1,0 @@
-entity.user_group.add_form:
-  route_name: entity.user_group.add_form
-  title: 'Add User Group'
-  appears_on:
-    - entity.user_group.collection

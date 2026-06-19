@@ -1,0 +1,12 @@
+{# AEGov Design System — Radio Component #}
+<fieldset class="aegov-radio-group aegov-radio-group--{{ data.layout|default('vertical') }}">
+  <legend class="aegov-label">{{ data.legend }}</legend>
+  {% for i, option in data.options %}
+    <div class="aegov-radio">
+      <input type="radio" id="radio-{{ data.name }}-{{ i }}" name="{{ data.name }}" value="{{ option.value }}"
+        {% if option.checked %}checked{% endif %}
+        {% if data.required %}required{% endif %}>
+      <label for="radio-{{ data.name }}-{{ i }}">{{ option.label }}</label>
+    </div>
+  {% endfor %}
+</fieldset>

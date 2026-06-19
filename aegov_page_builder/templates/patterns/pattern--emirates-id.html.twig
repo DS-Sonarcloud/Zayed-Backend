@@ -1,0 +1,20 @@
+{# AEGov Design System — Emirates ID Pattern #}
+{% if data.mode == 'display' %}
+  <div class="aegov-emirates-id">
+    <span class="aegov-label">{{ data.label|default('Emirates ID') }}:</span>
+    <strong>{{ data.value }}</strong>
+  </div>
+{% else %}
+  <div class="aegov-form-group">
+    <label for="eid-field" class="aegov-label">
+      {{ data.label|default('Emirates ID') }}
+      {% if data.required %}<span class="aegov-required" aria-hidden="true">*</span>{% endif %}
+    </label>
+    <input type="text" id="eid-field" name="emirates_id" class="aegov-input"
+      placeholder="{{ data.placeholder|default('784-XXXX-XXXXXXX-X') }}"
+      pattern="784-[0-9]{4}-[0-9]{7}-[0-9]{1}"
+      inputmode="numeric" maxlength="18"
+      {% if data.required %}required{% endif %}>
+    {% if data.helper_text %}<span class="aegov-field-helper">{{ data.helper_text }}</span>{% endif %}
+  </div>
+{% endif %}

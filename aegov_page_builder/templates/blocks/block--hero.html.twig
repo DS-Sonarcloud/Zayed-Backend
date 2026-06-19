@@ -1,0 +1,29 @@
+{#
+ * AEGov Design System — Hero Block
+ * @var data.variant, data.eyebrow, data.title, data.subtitle,
+ *      data.primary_cta_text, data.primary_cta_url,
+ *      data.secondary_cta_text, data.secondary_cta_url,
+ *      data.image, data.image_alt, data.background_color
+#}
+{% set bg_map = { 'gold': 'background-color:#F9F7ED', 'dark': 'background-color:#1a1a2e;color:#fff', 'gradient': 'background:linear-gradient(135deg,#B8860B 0%,#DAA520 100%)', 'white': '' } %}
+{% set bg_style = bg_map[data.background_color] ?? '' %}
+{% set layout_class = data.variant == 'split' ? 'aegov-hero--split' : (data.variant == 'centered' ? 'aegov-hero--centered' : '') %}
+
+<section class="aegov-hero {{ layout_class }}" {% if bg_style %}style="{{ bg_style }}"{% endif %}>
+  <div class="aegov-hero__container">
+    <div class="aegov-hero__content">
+      {% if data.eyebrow %}<span class="aegov-hero__eyebrow">{{ data.eyebrow }}</span>{% endif %}
+      <h1 class="aegov-hero__title">{{ data.title }}</h1>
+      {% if data.subtitle %}<p class="aegov-hero__subtitle">{{ data.subtitle }}</p>{% endif %}
+      <div class="aegov-hero__actions">
+        {% if data.primary_cta_text %}<a href="{{ data.primary_cta_url|default('#') }}" class="aegov-btn aegov-btn--primary">{{ data.primary_cta_text }}</a>{% endif %}
+        {% if data.secondary_cta_text %}<a href="{{ data.secondary_cta_url|default('#') }}" class="aegov-btn aegov-btn--outline">{{ data.secondary_cta_text }}</a>{% endif %}
+      </div>
+    </div>
+    {% if data.image %}
+    <div class="aegov-hero__image">
+      <img src="{{ data.image }}" alt="{{ data.image_alt|default('') }}" loading="eager">
+    </div>
+    {% endif %}
+  </div>
+</section>

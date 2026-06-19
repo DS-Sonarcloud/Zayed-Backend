@@ -1,0 +1,14 @@
+{# AEGov Design System — Accordion Component #}
+<div class="aegov-accordion">
+  {% for i, item in data.items %}
+    <div class="aegov-accordion__item">
+      <button class="aegov-accordion__trigger" aria-expanded="{{ item.open ? 'true' : 'false' }}" aria-controls="accordion-panel-{{ i }}">
+        {{ item.title }}
+        <svg class="aegov-accordion__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      <div class="aegov-accordion__panel" id="accordion-panel-{{ i }}" role="region"{% if item.open %} open{% endif %}>
+        <div class="aegov-accordion__content">{{ item.content }}</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,33 @@
+aegov_design_system:
+  version: '3.0'
+  css:
+    theme:
+      css/aegov.min.css: { minified: true }
+  js:
+    js/aegov.bundle.js: { minified: false }
+  dependencies:
+    - core/drupal
+
+page_builder_admin:
+  version: '2.0'
+  css:
+    theme:
+      css/page-builder-admin.css: {}
+  js:
+    js/page-builder-visual.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+    - core/drupalSettings
+    - aegov_page_builder/aegov_design_system
+
+page_builder_preview:
+  version: '1.0'
+  css:
+    theme:
+      css/aegov.min.css: { minified: true }
+  js:
+    js/aegov.bundle.js: {}
+  dependencies:
+    - core/drupal

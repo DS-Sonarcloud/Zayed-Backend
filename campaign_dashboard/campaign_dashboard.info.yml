@@ -1,8 +1,0 @@
-name: 'Campaign Dashboard'
-type: module
-description: 'Provides a custom dashboard for campaigns, templates, and users.'
-core_version_requirement: ^10 || ^11
-package: Custom
-dependencies:
-  - drupal:node
-  - drupal:user

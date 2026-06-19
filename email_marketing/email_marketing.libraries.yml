@@ -1,8 +1,0 @@
-select_all:
-  version: 1.x
-  js:
-    js/select_all.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-    - core/drupal

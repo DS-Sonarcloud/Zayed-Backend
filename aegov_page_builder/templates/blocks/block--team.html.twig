@@ -1,0 +1,25 @@
+{# AEGov Design System — Team Block #}
+<section class="aegov-team">
+  <div class="aegov-team__container">
+    <h2 class="aegov-team__title">{{ data.title|default('Our Team') }}</h2>
+    {% if data.description %}<p>{{ data.description }}</p>{% endif %}
+    <div class="aegov-team__grid aegov-team__grid--{{ data.columns|default('3') }}col">
+      {% for member in data.members %}
+        <div class="aegov-team__card">
+          <div class="aegov-team__photo">
+            {% if member.image %}
+              <img src="{{ member.image }}" alt="{{ member.name }}" loading="lazy">
+            {% else %}
+              <div class="aegov-team__avatar-placeholder">{{ member.name|slice(0,1) }}</div>
+            {% endif %}
+          </div>
+          <div class="aegov-team__info">
+            <h3 class="aegov-team__name">{{ member.name }}</h3>
+            {% if member.title %}<p class="aegov-team__title">{{ member.title }}</p>{% endif %}
+            {% if member.bio %}<p class="aegov-team__bio">{{ member.bio }}</p>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

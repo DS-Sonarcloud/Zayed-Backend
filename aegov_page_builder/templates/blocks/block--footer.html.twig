@@ -1,0 +1,30 @@
+{# AEGov Design System — Footer Block #}
+<footer class="aegov-footer" role="contentinfo">
+  <div class="aegov-footer__container">
+    <div class="aegov-footer__top">
+      <div class="aegov-footer__brand">
+        <a href="/" class="aegov-footer__logo">
+          {% if data.logo_url %}<img src="{{ data.logo_url }}" alt="{{ data.logo_alt|default('UAE Government') }}">
+          {% else %}<span>{{ data.logo_alt|default('UAE Government') }}</span>{% endif %}
+        </a>
+        {% if data.description %}<p class="aegov-footer__desc">{{ data.description }}</p>{% endif %}
+      </div>
+      <div class="aegov-footer__cols">
+        {% for col in data.columns %}
+          <div class="aegov-footer__col">
+            <h3 class="aegov-footer__col-title">{{ col.title }}</h3>
+            <ul>
+              {% set links = col.links|json_decode %}
+              {% for link in links %}
+                <li><a href="{{ link.url|default('#') }}">{{ link.label }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="aegov-footer__bottom">
+      <p class="aegov-footer__copy">{{ data.copyright_text }}</p>
+    </div>
+  </div>
+</footer>

@@ -1,7 +1,0 @@
-services:
-  zu_permission_matrix.sync:
-    class: Drupal\zu_permission_matrix\PermissionSyncService
-    arguments:
-      - '@config.factory'
-      - '@entity_type.manager'
-      - '@logger.factory'

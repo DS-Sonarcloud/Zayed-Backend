@@ -1,0 +1,7 @@
+{# AEGov Design System — Tooltip Component #}
+<span class="aegov-tooltip-wrapper">
+  <span class="aegov-tooltip-trigger" data-tooltip="{{ data.content }}" data-placement="{{ data.placement|default('top') }}">
+    {{ data.trigger_text|default('Hover me') }}
+  </span>
+  <span class="aegov-tooltip" role="tooltip">{{ data.content }}</span>
+</span>
